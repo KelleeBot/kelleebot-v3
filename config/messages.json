@@ -1,0 +1,12 @@
+{
+  "NO_POINTS": "You don't have any points to gamble.",
+  "NOT_ENOUGH": "You don't have enough points! You only have `{POINTS}` {PLURALIZE}!",
+  "ALL_IN_LOSE": "You went all in and lost all of your points <:kelleeCry:824727343511633973>",
+  "ALL_IN_WIN": "You went all in and won! You now have `{POINTS}` points!",
+  "VALID_POINTS": "Please provide a valid number of points.",
+  "ONE_POINT": "You must gamble at least 1 point!",
+  "NO_GAMBLING_CHANNEL_SET": "A gambling channel needs to be set first in order for this command to be used.",
+  "GREATER_THAN_ZERO": "Please enter a positive number greater than 0.",
+  "ALREADY_CLAIMED": "❌ | You have already claimed your daily reward within the last day. Please try again in {REMAINING}",
+  "CLAIMED": "✅ | You have claimed your daily reward of `{DAILY}` points!"
+}
