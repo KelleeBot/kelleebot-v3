@@ -1,0 +1,9 @@
+{
+    "devs": ["464635440801251328"],
+    "testServers": ["785593545187917824"],
+    "giveawayReactEmoji": "🎉",
+    "defaultRafflePoints": 500,
+    "pointsToGive": 1000,
+    "monthlyPrize": "Discord Nitro",
+    "timeZone": "America/New_York"
+}

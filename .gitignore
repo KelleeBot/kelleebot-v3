@@ -1,0 +1,7 @@
+# Files
+.env
+.prettierrc
+
+# Directories
+node_modules/
+dist/
