@@ -4,7 +4,7 @@ import { guildSettings } from "../prefab/schemas";
 
 const guild = new Schema({
   _id: String,
-  settings: guildSettings,
+  //settings: guildSettings,
   prefix: {
     default: "k!",
     type: String

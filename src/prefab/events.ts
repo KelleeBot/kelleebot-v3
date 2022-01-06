@@ -8,6 +8,7 @@ import {
   TextChannel
 } from "discord.js";
 import { Client } from "../util/client";
+import { KelleeBotCommand } from "../util/command";
 
 const getDefaultChannel = (guild: Guild): TextChannel => {
   let channel;
@@ -80,6 +81,25 @@ async function guildCreate(client: Client, guild: Guild) {
 
 async function interactionCreate(client: Client, interaction: Interaction) {
   try {
+    if (interaction.isAutocomplete()) {
+      const command = client.commands.get(interaction.commandName);
+      if (!command) return;
+
+      const group = interaction.options.getSubcommandGroup(false)!;
+      const subcommand = interaction.options.getSubcommand(false)!;
+
+      let sub;
+      if (command.groups) sub = command.groups[group].subcommands[subcommand];
+      else if (command.subcommands) sub = command.subcommands[subcommand];
+
+      if (sub && sub.isAutocomplete && sub.autocomplete) {
+        await sub.autocomplete({ client, interaction })
+      }
+    }
+
+    const userInfo = await client.profileInfo.get(interaction.user.id)
+    if (userInfo.isBlacklisted) return;
+
     if (interaction.isCommand()) {
       const command = client.commands.get(interaction.commandName);
 
@@ -101,14 +121,14 @@ async function interactionCreate(client: Client, interaction: Interaction) {
 
           const guildInfo = await client.guildInfo.get(interaction.guildId);
 
-          if (guildInfo.settings.disabledCommands.includes(command.name))
+          if (guildInfo.disabledCommands.includes(command.name))
             return await quickReply(
               client,
               interaction,
               "This command is currently disabled in this server."
             );
           if (
-            guildInfo.settings.disabledChannels.includes(
+            guildInfo.disabledChannels.includes(
               interaction.channelId
             ) &&
             !command.ignoreDisabledChannels
@@ -136,11 +156,11 @@ async function interactionCreate(client: Client, interaction: Interaction) {
             );
 
           if (
-            guildInfo.settings.commandPerms &&
-            guildInfo.settings.commandPerms[command.name] &&
+            guildInfo.commandPerms &&
+            guildInfo.commandPerms[command.name] &&
             //@ts-ignore
             !interaction.member.permissions.has(
-              guildInfo.settings.commandPerms[command.name],
+              guildInfo.commandPerms[command.name],
               true
             )
           )
@@ -149,7 +169,7 @@ async function interactionCreate(client: Client, interaction: Interaction) {
               interaction,
               `You are missing the following permissions: ${client.utils.missingPermissions(
                 interaction.member! as GuildMember,
-                guildInfo.settings.commandPerms[command.name]
+                guildInfo.commandPerms[command.name]
               )}.`
             );
           else if (
@@ -224,6 +244,7 @@ async function interactionCreate(client: Client, interaction: Interaction) {
         else if (command.subcommands) sub = command.subcommands[subcommand];
 
         if (sub && sub.execute)
+          //@ts-ignore
           return await sub.execute({ client, interaction, group, subcommand });
 
         //@ts-ignore
@@ -231,7 +252,7 @@ async function interactionCreate(client: Client, interaction: Interaction) {
       } catch (e) {
         client.utils.log(
           "ERROR",
-          "src/events/interaction/interactionCreate.js",
+          `${__filename}`,
           `Error running command '${command.name}'`
         );
         console.log(e);
@@ -240,7 +261,7 @@ async function interactionCreate(client: Client, interaction: Interaction) {
   } catch (e) {
     client.utils.log(
       "ERROR",
-      "src/events/interaction/interactionCreate.js",
+      `${__filename}`,
       ""
     );
     console.log(e);

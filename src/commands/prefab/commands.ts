@@ -24,15 +24,14 @@ export default class Commands extends KelleeBotCommand {
               await client.utils.CustomEmbed({ userID: interaction.user.id })
             ).setTimestamp();
 
-            if (!guildInfo?.settings?.disabledCommands?.length) {
+            if (!guildInfo?.disabledCommands?.length) {
               embed.setDescription(
                 `${interaction.user}, there are currently no disabled commands in this server.`
               );
             } else {
               embed.setDescription(
-                `${
-                  interaction.user
-                }, these are the disabled commands:\n\`${guildInfo.settings.disabledCommands.join(
+                `${interaction.user
+                }, these are the disabled commands:\n\`${guildInfo.disabledCommands.join(
                   "`, `"
                 )}\``
               );
@@ -75,7 +74,7 @@ export default class Commands extends KelleeBotCommand {
                 `${interaction.user}, the command \`${command.name}\` can not be disabled.`
               );
             else if (
-              guildInfo?.settings?.disabledCommands?.includes(command.name)
+              guildInfo?.disabledCommands?.includes(command.name)
             )
               embed.setDescription(
                 `${interaction.user}, the command \`${command.name}\` is already disabled.`
@@ -129,7 +128,7 @@ export default class Commands extends KelleeBotCommand {
                 `${interaction.user}, the command \`${command.name}\` can not be enabled.`
               );
             else if (
-              !guildInfo?.settings?.disabledCommands?.includes(command.name)
+              !guildInfo?.disabledCommands?.includes(command.name)
             )
               embed.setDescription(
                 `${interaction.user}, the command \`${command.name}\` is already enabled.`

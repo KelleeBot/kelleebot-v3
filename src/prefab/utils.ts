@@ -204,9 +204,8 @@ class KelleeBotUtils {
       );
 
     return missingPerms.length > 1
-      ? `${missingPerms.slice(0, -1).join(", ")} and ${
-          missingPerms.slice(-1)[0]
-        }`
+      ? `${missingPerms.slice(0, -1).join(", ")} and ${missingPerms.slice(-1)[0]
+      }`
       : missingPerms[0];
   }
 
@@ -238,11 +237,11 @@ class KelleeBotUtils {
     if (message.guildId) {
       const guildInfo = await this.client.guildInfo.get(message.guildId);
       if (
-        guildInfo.settings.commandCooldowns &&
-        guildInfo.settings.commandCooldowns[command.name]
+        guildInfo.commandCooldowns &&
+        guildInfo.commandCooldowns[command.name]
       ) {
         let roles = Object.keys(
-          guildInfo.settings.commandCooldowns[command.name]
+          guildInfo.commandCooldowns[command.name]
         );
         //@ts-ignore
         let highestRole = message.member.roles.cache
@@ -254,7 +253,7 @@ class KelleeBotUtils {
           .first();
         if (highestRole)
           cd =
-            guildInfo.settings.commandCooldowns[command.name][highestRole.id] /
+            guildInfo.commandCooldowns[command.name][highestRole.id] /
             1000;
       }
     }

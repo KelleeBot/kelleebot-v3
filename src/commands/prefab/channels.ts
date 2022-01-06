@@ -25,13 +25,13 @@ export default class Channels extends KelleeBotCommand {
               await client.utils.CustomEmbed({ userID: interaction.user.id })
             ).setTimestamp();
 
-            if (!guildInfo?.settings?.disabledChannels?.length)
+            if (!guildInfo?.disabledChannels?.length)
               embed.setDescription(
                 `${interaction.user}, there are no disabled channels in this server!`
               );
             else
               embed.setDescription(
-                `These channels are currently disabled:\n${guildInfo.settings.disabledChannels
+                `These channels are currently disabled:\n${guildInfo.disabledChannels
                   .map((id) => `<#${id}>`)
                   .join(" ")}`
               );
@@ -65,7 +65,7 @@ export default class Channels extends KelleeBotCommand {
                 `${interaction.user}, you can only disable text channels.`
               );
             else if (
-              guildInfo?.settings?.disabledChannels?.includes(channel!.id)
+              guildInfo?.disabledChannels?.includes(channel!.id)
             )
               embed.setDescription(
                 `${interaction.user}, the channel ${channel} is already disabled.`
@@ -111,7 +111,7 @@ export default class Channels extends KelleeBotCommand {
                 `${interaction.user}, you can only enable text channels.`
               );
             else if (
-              !guildInfo?.settings?.disabledChannels?.includes(channel!.id)
+              !guildInfo?.disabledChannels?.includes(channel!.id)
             )
               embed.setDescription(
                 `${interaction.user}, the channel ${channel} is already enabled.`

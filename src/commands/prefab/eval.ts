@@ -8,7 +8,7 @@ export default class Eval extends KelleeBotCommand {
     super(client, {
       name: "eval",
       description: "Dev-only command",
-      category: "Utility",
+      category: "Dev Only",
       clientPerms: ["SEND_MESSAGES"],
       devOnly: true,
       options: [
@@ -23,24 +23,15 @@ export default class Eval extends KelleeBotCommand {
     });
   }
 
-  async execute({
-    client,
-    interaction,
-    group,
-    subcommand
-  }: {
-    client: Client;
-    interaction: CommandInteraction;
-    group: string;
-    subcommand: string;
-  }) {
+  async execute({ client, interaction }: { client: Client; interaction: CommandInteraction; }) {
     let code = interaction.options.getString("code")!;
     code = code.replace(/[“”]/g, '"').replace(/[‘’]/g, "'");
     let evaled;
 
     try {
       const start = process.hrtime();
-      evaled = eval(`(async () => { ${code} })();`);
+      evaled = eval(code)
+      //evaled = eval(`(async () => { ${code} })();`);
 
       if (evaled instanceof Promise) {
         evaled = await evaled;
@@ -49,10 +40,10 @@ export default class Eval extends KelleeBotCommand {
       const stop = process.hrtime(start);
       const res = `**Output:** \`\`\`js\n${clean(
         client,
+        interaction,
         inspect(evaled, { depth: 0 })
-      )}\n\`\`\`\n**Time Taken:** \`\`\`${
-        (stop[0] * 1e9 + stop[1]) / 1e6
-      }ms\`\`\``;
+      )}\n\`\`\`\n**Time Taken:** \`\`\`${(stop[0] * 1e9 + stop[1]) / 1e6
+        }ms\`\`\``;
 
       if (res.length < 2000) {
         await interaction.reply({ content: res, ephemeral: true });
@@ -62,21 +53,22 @@ export default class Eval extends KelleeBotCommand {
       }
     } catch (e: any) {
       await interaction.reply({
-        content: `Error: \`\`\`xl\n${clean(client, e)}\n\`\`\``,
+        content: `Error: \`\`\`xl\n${clean(client, interaction, e)}\n\`\`\``,
         ephemeral: true
       });
     }
   }
 }
 
-function clean(client: Client, text: string) {
+function clean(client: Client, interaction: CommandInteraction, text: string) {
   if (typeof text === "string") {
     text = text
       .replace(/`/g, `\`${String.fromCharCode(8203)}`)
       .replace(/@/g, `@${String.fromCharCode(8203)}`)
       .replace(new RegExp(`${process.env.DISCORD_TOKEN}`, "gi"), "****")
-      .replace(new RegExp(`${process.env.MONGO_PATH}`, "gi"), "****");
+      .replace(new RegExp(`${process.env.MONGO_PATH}`, "gi"), "****")
+      .replace(new RegExp(client.token!, "gi"), "****")
+      .replace(new RegExp(interaction.token, "gi"), "****")
   }
-
   return text;
 }

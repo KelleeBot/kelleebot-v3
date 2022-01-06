@@ -22,7 +22,7 @@ export const registerCommands = async (client: Client, ...dirs: string[]) => {
               await import(path.join(__dirname, dir, file))
             ).default(client);
 
-            const { name, category, hideCommand } = cmdModule;
+            const { name, category, hideCommand, isAutocomplete, autocomplete } = cmdModule;
 
             if (!name) {
               client.utils.log(
@@ -66,6 +66,13 @@ export const registerCommands = async (client: Client, ...dirs: string[]) => {
             client.commands.set(name, cmdModule);
 
             if (hideCommand) continue;
+
+            if (isAutocomplete) {
+              if (!autocomplete) {
+                client.utils.log("WARNING", `${__filename}`, `The command '${name}' doesn't have an autocomplete callback. This is required as isAutocomplete is true.`)
+                continue
+              }
+            }
 
             if (category) {
               let commands = client.categories.get(category.toLowerCase());

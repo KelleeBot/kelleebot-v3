@@ -87,7 +87,7 @@ export default class Help extends KelleeBotCommand {
       if (interaction.inGuild()) {
         const guildInfo = await client.guildInfo.get(interaction.guildId);
 
-        if (guildInfo.settings.disabledCommands.includes(command.name))
+        if (guildInfo.disabledCommands.includes(command.name))
           embed.setAuthor(languageHelp.isDisabled);
       }
 

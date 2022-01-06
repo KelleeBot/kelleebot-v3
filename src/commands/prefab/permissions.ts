@@ -108,8 +108,8 @@ export default class Permissions extends KelleeBotCommand {
     const guildInfo = await client.guildInfo.get(interaction.guildId!);
 
     if (
-      !guildInfo?.settings?.commandPerms ||
-      !guildInfo.settings.commandPerms[command.name]
+      !guildInfo?.commandPerms ||
+      !guildInfo.commandPerms[command.name]
     ) {
       if (command.perms && command.perms.length !== 0)
         embed.setDescription("`" + command.perms.join("`, `") + "`");
@@ -119,7 +119,7 @@ export default class Permissions extends KelleeBotCommand {
         );
     } else {
       embed.setDescription(
-        "`" + guildInfo.settings.commandPerms[command.name].join("`, `") + "`"
+        "`" + guildInfo.commandPerms[command.name].join("`, `") + "`"
       );
     }
 
@@ -143,7 +143,7 @@ export default class Permissions extends KelleeBotCommand {
           b.customId === "change" && b.user.id === interaction.user.id,
         time: 30000
       })
-      .catch(() => {});
+      .catch(() => { });
 
     if (!button) {
       const embed = (

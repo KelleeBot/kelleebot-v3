@@ -45,8 +45,8 @@ export default class Cooldowns extends KelleeBotCommand {
                 `${interaction.user}, you can not set a cooldown for this command.`
               );
             else if (
-              !guildInfo?.settings?.commandCooldowns ||
-              !guildInfo?.settings?.commandCooldowns[command.name]
+              !guildInfo?.commandCooldowns ||
+              !guildInfo?.commandCooldowns[command.name]
             )
               embed.setDescription(
                 `${interaction.user}, there are no modified cooldowns on this command.`
@@ -55,7 +55,7 @@ export default class Cooldowns extends KelleeBotCommand {
               let desc = "";
 
               for (const [role, cooldown] of Object.entries(
-                guildInfo.settings.commandCooldowns[command.name]
+                guildInfo.commandCooldowns[command.name]
               )) {
                 //@ts-ignore
                 desc += `<@&${role}> \`${client.utils.msToTime(cooldown)}\`\n`;
@@ -63,7 +63,7 @@ export default class Cooldowns extends KelleeBotCommand {
 
               embed.setDescription(
                 `${interaction.user}, here are the cooldowns for the command \`${name}\`:\n` +
-                  desc
+                desc
               );
             }
 
@@ -151,8 +151,7 @@ export default class Cooldowns extends KelleeBotCommand {
                 );
 
                 embed.setDescription(
-                  `${interaction.user}, the cooldown on the command ${
-                    command.name
+                  `${interaction.user}, the cooldown on the command ${command.name
                   } for the role <@&${role}> has been set to \`${client.utils.msToTime(
                     time * 1000
                   )}\`.`
@@ -201,12 +200,10 @@ export default class Cooldowns extends KelleeBotCommand {
               );
 
               embed.setDescription(
-                `${interaction.user}, the cooldown on the command ${
-                  command.name
-                } has been set to the default (\`${
-                  command.cooldown
-                    ? client.utils.msToTime(command.cooldown)
-                    : "No cooldown"
+                `${interaction.user}, the cooldown on the command ${command.name
+                } has been set to the default (\`${command.cooldown
+                  ? client.utils.msToTime(command.cooldown)
+                  : "No cooldown"
                 }\`).`
               );
             }
