@@ -26,7 +26,7 @@ export const cat = async (client: Client, interaction: CommandInteraction) => {
   } catch (e) {
     client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
     return interaction.editReply({
-      content: "Looks like an error has occurred. Please try again."
+      content: "Oops! Looks like an error occurred. No cat pics as of right meow :("
     });
   }
 };
