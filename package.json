@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "prettier --config .prettierrc \"src/**/*.ts\" --write && ts-node ./src/index.ts",
-    "run-js": "tsc -p . && node ./dist/index.js",
+    "run-js": "tsc -p . && node ./dist/src/index.js",
     "compile": "tsc -p .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --config .prettierrc \"src/**/*.ts\" --write"
