@@ -43,7 +43,7 @@ export default class Language extends KelleeBotCommand {
     if (!language) {
       embed.setDescription(
         `${interaction.user}, your current set language is \`${
-          userInfo.prefab.language
+          userInfo.language
         }\`.\n\nThese are the supported languages: \`${Object.keys(
           client.languages
         ).join("`, `")}\``

@@ -1,9 +1,8 @@
 declare interface Profile {
   _id: string;
-  prefab: {
-    language: string;
-    embedColor: string;
-  };
+  language: string;
+  embedColor: string;
+  isBlacklisted: boolean;
 }
 
 export { Profile };

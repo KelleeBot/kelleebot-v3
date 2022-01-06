@@ -1,6 +1,6 @@
 declare interface Guild {
   _id: string;
-  prefab: {
+  settings: {
     disabledCommands: string[];
     disabledChannels: string[];
     commandPerms: any;

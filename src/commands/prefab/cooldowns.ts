@@ -45,8 +45,8 @@ export default class Cooldowns extends KelleeBotCommand {
                 `${interaction.user}, you can not set a cooldown for this command.`
               );
             else if (
-              !guildInfo?.prefab?.commandCooldowns ||
-              !guildInfo?.prefab?.commandCooldowns[command.name]
+              !guildInfo?.settings?.commandCooldowns ||
+              !guildInfo?.settings?.commandCooldowns[command.name]
             )
               embed.setDescription(
                 `${interaction.user}, there are no modified cooldowns on this command.`
@@ -55,7 +55,7 @@ export default class Cooldowns extends KelleeBotCommand {
               let desc = "";
 
               for (const [role, cooldown] of Object.entries(
-                guildInfo.prefab.commandCooldowns[command.name]
+                guildInfo.settings.commandCooldowns[command.name]
               )) {
                 //@ts-ignore
                 desc += `<@&${role}> \`${client.utils.msToTime(cooldown)}\`\n`;

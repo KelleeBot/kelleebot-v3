@@ -44,7 +44,7 @@ export default class Color extends KelleeBotCommand {
     if (!color) {
       embed.setDescription(
         `${interaction.user}, your current embed color is \`${
-          userInfo.prefab.embedColor
+          userInfo.embedColor
         }\`\n\nThese are the available colors: \`${Object.keys(
           client.colors
         ).join("`, `")}\``

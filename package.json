@@ -17,6 +17,7 @@
     "@discordjs/builders": "^0.11.0",
     "@discordjs/rest": "^0.2.0-canary.0",
     "@discordjs/voice": "^0.7.5",
+    "axios": "^0.24.0",
     "canvas": "^2.8.0",
     "common-tags": "^1.8.2",
     "convert": "^4.3.0",

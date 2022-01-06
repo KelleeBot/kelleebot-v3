@@ -1,4 +1,4 @@
-const guild = {
+export const guildSettings = {
   disabledCommands: [String],
   disabledChannels: [String],
   commandPerms: {},
@@ -6,7 +6,7 @@ const guild = {
   commandAlias: {}
 };
 
-const prefabProfile = {
+export const userProfile = {
   language: {
     default: "english",
     type: String
@@ -16,5 +16,3 @@ const prefabProfile = {
     type: String
   }
 };
-
-export { guild, prefabProfile };

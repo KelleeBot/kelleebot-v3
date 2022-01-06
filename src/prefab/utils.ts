@@ -11,6 +11,14 @@ import {
 } from "discord.js";
 import { Client } from "../util/client";
 import { KelleeBotCommand } from "../util/command";
+import utc from "dayjs/plugin/utc";
+import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import advanced from "dayjs/plugin/advancedFormat";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(advanced);
 
 const reactions = ["⏪", "◀️", "⏸️", "▶️", "⏩", "🔢"];
 const consoleColors = {
@@ -189,23 +197,25 @@ class KelleeBotUtils {
   }
 
   missingPermissions(member: GuildMember, perms: PermissionString[]) {
-    const missingPerms = member.permissions.missing(perms).map(
-      (str) =>
-        `\`${str
-          .replace(/_/g, " ")
-          .toLowerCase()
-          .replace(/\b(\w)/g, (char) => char.toUpperCase())}\``
-    );
+    const missingPerms = member.permissions
+      .missing(perms)
+      .map(
+        (str) => `\`${this.titleCase(str.replace(/_/g, " ").toLowerCase())}\``
+      );
 
     return missingPerms.length > 1
-      ? `${missingPerms.slice(0, -1).join(", ")} and ${missingPerms.slice(-1)[0]
-      }`
+      ? `${missingPerms.slice(0, -1).join(", ")} and ${
+          missingPerms.slice(-1)[0]
+        }`
       : missingPerms[0];
   }
 
   log(type: "SUCCESS" | "WARNING" | "ERROR", path: string, text: string) {
+    const timestamp = dayjs()
+      .tz("America/Denver")
+      .format("MM-DD-YYYY HH:mm:ss");
     console.log(
-      `\u001b[36;1m<bot-prefab>\u001b[0m\u001b[34m [${path}]\u001b[0m - ${consoleColors[type]}${text}\u001b[0m`
+      `\u001b[36;1m<${timestamp}>\u001b[0m\u001b[34m [${path}]\u001b[0m - ${consoleColors[type]}${text}\u001b[0m`
     );
   }
 
@@ -213,7 +223,7 @@ class KelleeBotUtils {
     const userInfo = await this.client.profileInfo.get(userID);
 
     const embed = new MessageEmbed().setColor(
-      this.client.colors[userInfo.prefab.embedColor]
+      this.client.colors[userInfo.embedColor]
     );
 
     return embed;
@@ -228,18 +238,24 @@ class KelleeBotUtils {
     if (message.guildId) {
       const guildInfo = await this.client.guildInfo.get(message.guildId);
       if (
-        guildInfo.prefab.commandCooldowns &&
-        guildInfo.prefab.commandCooldowns[command.name]
+        guildInfo.settings.commandCooldowns &&
+        guildInfo.settings.commandCooldowns[command.name]
       ) {
         let roles = Object.keys(
-          guildInfo.prefab.commandCooldowns[command.name]
+          guildInfo.settings.commandCooldowns[command.name]
         );
         //@ts-ignore
         let highestRole = message.member.roles.cache
-          .filter((role: { id: string; }) => roles.includes(role.id))
-          .sort((a: { position: number; }, b: { position: number; }) => b.position - a.position)
+          .filter((role: { id: string }) => roles.includes(role.id))
+          .sort(
+            (a: { position: number }, b: { position: number }) =>
+              b.position - a.position
+          )
           .first();
-        if (highestRole) cd = guildInfo.prefab.commandCooldowns[command.name][highestRole.id] / 1000;
+        if (highestRole)
+          cd =
+            guildInfo.settings.commandCooldowns[command.name][highestRole.id] /
+            1000;
       }
     }
 
@@ -323,7 +339,20 @@ class KelleeBotUtils {
 
   removeCommas(str: string) {
     return str.replace(/,/g, "");
-  };
+  }
+
+  isValidNumber(str: string) {
+    const numberRegExp = /^(\d*\.?\d+|\d{1,3}(,\d{3})*(\.\d+)?)$/;
+    return numberRegExp.test(str);
+  }
+
+  pluralize(amount: number, string: string) {
+    return amount !== 1 ? `${string}s` : string;
+  }
+
+  titleCase(string: string) {
+    return string.replace(/\b(\w)/g, (char) => char.toUpperCase());
+  }
 }
 
 export { KelleeBotUtils };
@@ -369,7 +398,7 @@ const fullTimeUnitNames: { [x: string]: { [y: string]: string } } = {
   cen: { short: "cen", medium: "cent", long: "century" }
 };
 
-function getUnitAndNumber(timeString: string) {
+const getUnitAndNumber = (timeString: string) => {
   timeString = timeString.toLowerCase().replace(/ /g, "");
 
   let unit = timeString.replace(/[0-9.,:]/g, " ");
@@ -399,9 +428,9 @@ function getUnitAndNumber(timeString: string) {
       unit: units[i]
     });
   return ans;
-}
+};
 
-function getExactUnits(thisUnits: string[]) {
+const getExactUnits = (thisUnits: string[]) => {
   let exactUnits = [];
 
   for (let newUnit of thisUnits) {
@@ -426,9 +455,9 @@ function getExactUnits(thisUnits: string[]) {
   if (exactUnits.length !== thisUnits.length) return;
 
   return exactUnits;
-}
+};
 
-function getMs(number: string, unit: string) {
+const getMs = (number: string, unit: string) => {
   if (number.includes(":")) {
     switch (unit) {
       case "min":
@@ -447,4 +476,4 @@ function getMs(number: string, unit: string) {
   }
 
   return Number(number) * timeUnitValues[unit];
-}
+};

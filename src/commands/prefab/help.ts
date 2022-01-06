@@ -36,7 +36,7 @@ export default class Help extends KelleeBotCommand {
 
     const userInfo = await client.profileInfo.get(interaction.user.id);
 
-    const language = userInfo.prefab.language;
+    const language = userInfo.language;
     const languageHelp = client.languages[language].help.names;
 
     const name = interaction.options.getString("name")?.toLowerCase();
@@ -53,8 +53,12 @@ export default class Help extends KelleeBotCommand {
       userID: interaction.user.id
     });
 
-    //@ts-ignore
-    if (command && !command.hideCommand && !(command.nsfw && !interaction.channel!.nsfw)) {
+    if (
+      command &&
+      !command.hideCommand &&
+      //@ts-ignore
+      !(command.nsfw && !interaction.channel!.nsfw)
+    ) {
       const commandHelp = client.languages[language][command.name];
 
       embed
@@ -83,7 +87,7 @@ export default class Help extends KelleeBotCommand {
       if (interaction.inGuild()) {
         const guildInfo = await client.guildInfo.get(interaction.guildId);
 
-        if (guildInfo.prefab.disabledCommands.includes(command.name))
+        if (guildInfo.settings.disabledCommands.includes(command.name))
           embed.setAuthor(languageHelp.isDisabled);
       }
 
