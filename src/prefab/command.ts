@@ -3,7 +3,8 @@ import {
   Collection,
   ApplicationCommandPermissionData,
   CommandInteraction,
-  ApplicationCommandOptionData
+  ApplicationCommandOptionData,
+  AutocompleteInteraction
 } from "discord.js";
 import { Client } from "../util/client";
 
@@ -30,6 +31,8 @@ class Command {
   canNotSetCooldown: boolean;
   groups: { [x: string]: SubcommandGroup } | null;
   subcommands: { [x: string]: Subcommand } | null;
+  isAutocomplete: boolean;
+  autocomplete: Autocomplete | null | undefined;
 
   constructor(
     client: Client,
@@ -54,7 +57,9 @@ class Command {
       canNotDisable = false,
       canNotSetCooldown = true,
       groups = null,
-      subcommands = null
+      subcommands = null,
+      isAutocomplete = false,
+      autocomplete = null
     }: CommandOptions
   ) {
     this.client = client;
@@ -79,6 +84,8 @@ class Command {
     this.ignoreDisabledChannels = ignoreDisabledChannels;
     this.groups = groups;
     this.subcommands = subcommands;
+    this.isAutocomplete = isAutocomplete;
+    this.autocomplete = autocomplete
 
     if (options && options.length) this.options = options;
     else if (groups && Object.keys(groups))
@@ -162,8 +169,14 @@ declare interface SubcommandGroup {
   subcommands: { [x: string]: Subcommand };
 }
 
+declare interface Autocomplete {
+  execute?({ client, interaction }: { client: Client; interaction: AutocompleteInteraction }): any;
+}
+
 declare interface Subcommand {
   description: string;
+  isAutocomplete?: boolean;
+  autocomplete?({ client, interaction }: { client: Client; interaction: AutocompleteInteraction }): any
   args?: Argument[];
   execute?({
     client,
@@ -180,18 +193,19 @@ declare interface Subcommand {
 
 declare interface Argument {
   type:
-    | "STRING"
-    | "INTEGER"
-    | "BOOLEAN"
-    | "USER"
-    | "CHANNEL"
-    | "ROLE"
-    | "MENTIONABLE"
-    | "NUMBER";
+  | "STRING"
+  | "INTEGER"
+  | "BOOLEAN"
+  | "USER"
+  | "CHANNEL"
+  | "ROLE"
+  | "MENTIONABLE"
+  | "NUMBER";
   name: string;
   description: string;
   choices?: Choice[];
   required?: boolean;
+  autocomplete?: boolean
 }
 
 declare interface Choice {
@@ -221,4 +235,6 @@ declare interface CommandOptions {
   ignoreDisabledChannels?: boolean;
   groups?: { [x: string]: SubcommandGroup } | null;
   subcommands?: { [x: string]: Subcommand } | null;
+  isAutocomplete?: boolean;
+  autocomplete?: Autocomplete | null
 }
