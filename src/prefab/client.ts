@@ -93,6 +93,7 @@ class KelleeBotClient extends Client {
   }
 
   async loadFeatures() {
+    //@ts-ignore
     await registerFeatures(this, "../features");
   }
 

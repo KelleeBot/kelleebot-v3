@@ -204,8 +204,9 @@ class KelleeBotUtils {
       );
 
     return missingPerms.length > 1
-      ? `${missingPerms.slice(0, -1).join(", ")} and ${missingPerms.slice(-1)[0]
-      }`
+      ? `${missingPerms.slice(0, -1).join(", ")} and ${
+          missingPerms.slice(-1)[0]
+        }`
       : missingPerms[0];
   }
 
