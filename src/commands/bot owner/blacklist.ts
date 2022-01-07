@@ -8,6 +8,7 @@ export default class Blacklist extends KelleeBotCommand {
             name: "blacklist",
             category: "Bot Owner",
             description: "Blacklist/whitelist a user from using the bot commands.",
+            devOnly: true,
             options: [
                 {
                     name: "action",
