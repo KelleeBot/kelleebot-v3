@@ -1,5 +1,6 @@
 import { Intents } from "discord.js";
 import { Client } from "./util/client";
+import "./util/prototype";
 import dotenv from "dotenv";
 dotenv.config();
 
