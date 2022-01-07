@@ -1,7 +1,6 @@
 import { CommandInteraction } from "discord.js";
 import { Client } from "../../util/client";
 import axios from "axios";
-import { MessageEmbed } from "discord.js";
 import { Artwork } from "../../types/animalCrossing";
 
 export const artwork = async (client: Client, interaction: CommandInteraction) => {

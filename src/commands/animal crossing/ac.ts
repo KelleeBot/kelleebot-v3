@@ -1,11 +1,12 @@
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
-import { artwork, villager } from ".";
-import { Artwork, Villagers } from "../../types/animalCrossing";
+import { artwork, bug, villager } from ".";
+import * as AC from "../../types/animalCrossing";
 import axios from "axios";
 
-let villagers: string[] = [];
 let artworks: string[] = [];
+let bugs: string[] = [];
+let villagers: string[] = [];
 
 export default class AnimalCrossing extends KelleeBotCommand {
     constructor(client: Client) {
@@ -18,7 +19,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
             guildOnly: true,
             subcommands: {
                 artwork: {
-                    description: "Retrieve information about a specific artwork in Animal Crossing: New Horizons*.",
+                    description: "Retrieve information about a specific artwork in Animal Crossing: New Horizons.",
                     args: [
                         {
                             name: "artwork",
@@ -31,7 +32,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                     isAutocomplete: true,
                     autocomplete: async ({ client, interaction }) => {
                         const focusedValue = interaction.options.getFocused() as string;
-                        const choices = await fetchAllArtworks();
+                        const choices = await fetchData("https://api.nookipedia.com/nh/art", "artworks");
                         const filtered = choices.filter((choice) => choice.toLowerCase().startsWith(focusedValue.toLowerCase())
                         );
                         await interaction.respond(
@@ -46,6 +47,65 @@ export default class AnimalCrossing extends KelleeBotCommand {
                         await artwork(client, interaction);
                     }
                 },
+                bug: {
+                    description: "Retrieve information about a specific bug in Animal Crossing: New Horizons.",
+                    args: [
+                        {
+                            name: "bug",
+                            description: "The bug name.",
+                            type: "STRING",
+                            required: true,
+                            autocomplete: true
+                        }
+                    ],
+                    isAutocomplete: true,
+                    autocomplete: async ({ client, interaction }) => {
+                        const focusedValue = interaction.options.getFocused() as string;
+                        const choices = await fetchData("https://api.nookipedia.com/nh/bugs", "bugs");
+                        const filtered = choices.filter((choice) => choice.toLowerCase().startsWith(focusedValue.toLowerCase())
+                        );
+                        await interaction.respond(
+                            filtered.slice(0, Math.min(25, filtered.length)).map((choice) => ({
+                                name: client.utils.titleCase(choice),
+                                value: client.utils.titleCase(choice)
+                            }))
+                        );
+                    },
+                    execute: async ({ client, interaction }) => {
+                        await this.setCooldown(interaction);
+                        await bug(client, interaction);
+                    }
+                },
+                // clothing: {
+                //     description: "",
+                // },
+                // diy: {
+                //     description: ""
+                // },
+                // dream: {
+                //     description: "",
+                // },
+                // fish: {
+                //     description: "",
+                // },
+                // furniture: {
+                //     description: "",
+                // },
+                // interior: {
+                //     description: "",
+                // },
+                // item: {
+                //     description: "",
+                // },
+                // photo: {
+                //     description: "",
+                // },
+                // sea: {
+                //     description: "",
+                // },
+                // tool: {
+                //     description: "",
+                // },
                 villager: {
                     description: "Retrieve information about a specific villager in any Animal Crossing game.",
                     args: [
@@ -60,7 +120,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                     isAutocomplete: true,
                     autocomplete: async ({ client, interaction }) => {
                         const focusedValue = interaction.options.getFocused() as string;
-                        const choices = await fetchAllVillagerNames();
+                        const choices = await fetchData("https://api.nookipedia.com/villagers", "villagers");
                         const filtered = choices.filter((choice) => choice.toLowerCase().startsWith(focusedValue.toLowerCase())
                         );
                         await interaction.respond(
@@ -78,36 +138,33 @@ export default class AnimalCrossing extends KelleeBotCommand {
             }
         });
     }
-}
-
-const fetchAllVillagerNames = async () => {
-    if (villagers.length) return villagers;
-
-    const resp = await axios.get("https://api.nookipedia.com/villagers", {
-        headers: {
-            "X-API-KEY": `${process.env.NOOK_API_KEY}`,
-            "Accept-Version": "2.0.0"
-        }
-    });
-
-    const { data } = resp
-    villagers = data.map((villager: Villagers) => villager.name);
-
-    return villagers;
 };
 
-const fetchAllArtworks = async () => {
-    if (artworks.length) return artworks;
+const fetchData = async (url: string, arrayType: "artworks" | "bugs" | "villagers") => {
+    if (arrayType === "artworks") {
+        if (artworks.length) return artworks;
+    } else if (arrayType === "bugs") {
+        if (bugs.length) return bugs;
+    } else { //if (arrayType === "villagers") {
+        if (villagers.length) return villagers;
+    }
 
-    const resp = await axios.get("https://api.nookipedia.com/nh/art", {
+    const resp = await axios.get(url, {
         headers: {
             "X-API-KEY": `${process.env.NOOK_API_KEY}`,
             "Accept-Version": "2.0.0"
         }
     });
-
     const { data } = resp;
-    artworks = data.map((art: Artwork) => art.name);
 
-    return artworks;
-}
+    if (arrayType === "artworks") {
+        artworks = data.map((art: AC.Artwork) => art.name);
+        return artworks;
+    } else if (arrayType === "bugs") {
+        bugs = data.map((bug: AC.Bug) => bug.name);
+        return bugs;
+    } else { //if (arrayType === "villagers") {
+        villagers = data.map((villager: AC.Villagers) => villager.name)
+        return villagers;
+    }
+};
