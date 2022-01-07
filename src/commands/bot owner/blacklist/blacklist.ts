@@ -1,6 +1,5 @@
-import { CommandInteraction } from "discord.js";
-import { Client } from "../../util/client";
-import { KelleeBotCommand } from "../../util/command";
+import { Client } from "../../../util/client";
+import { KelleeBotCommand } from "../../../util/command";
 import { add, remove } from ".";
 
 export default class Blacklist extends KelleeBotCommand {

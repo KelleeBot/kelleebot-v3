@@ -1,4 +1,4 @@
-import { Client } from "../../util/client"
+import { Client } from "../../../util/client"
 import { CommandInteraction } from "discord.js"
 
 export const remove = async (client: Client, interaction: CommandInteraction) => {
