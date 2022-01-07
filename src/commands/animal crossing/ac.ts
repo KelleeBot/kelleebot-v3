@@ -2,6 +2,7 @@ import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 import { artwork, bug, villager } from ".";
 import * as AC from "../../types/animalCrossing";
+import { AutocompleteInteraction } from "discord.js";
 import axios from "axios";
 
 let artworks: string[] = [];
@@ -16,7 +17,6 @@ export default class AnimalCrossing extends KelleeBotCommand {
             description: `All commands that are related to Animal Crossing.`,
             cooldown: 15,
             clientPerms: ["SEND_MESSAGES", "EMBED_LINKS"],
-            guildOnly: true,
             subcommands: {
                 artwork: {
                     description: "Retrieve information about a specific artwork in Animal Crossing: New Horizons.",
@@ -31,16 +31,9 @@ export default class AnimalCrossing extends KelleeBotCommand {
                     ],
                     isAutocomplete: true,
                     autocomplete: async ({ client, interaction }) => {
-                        const focusedValue = interaction.options.getFocused() as string;
                         const choices = await fetchData("https://api.nookipedia.com/nh/art", "artworks");
-                        const filtered = choices.filter((choice) => choice.toLowerCase().startsWith(focusedValue.toLowerCase())
-                        );
-                        await interaction.respond(
-                            filtered.slice(0, Math.min(25, filtered.length)).map((choice) => ({
-                                name: client.utils.titleCase(choice),
-                                value: client.utils.titleCase(choice)
-                            }))
-                        );
+                        await autocomplete(client, interaction, choices);
+
                     },
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
@@ -60,16 +53,8 @@ export default class AnimalCrossing extends KelleeBotCommand {
                     ],
                     isAutocomplete: true,
                     autocomplete: async ({ client, interaction }) => {
-                        const focusedValue = interaction.options.getFocused() as string;
                         const choices = await fetchData("https://api.nookipedia.com/nh/bugs", "bugs");
-                        const filtered = choices.filter((choice) => choice.toLowerCase().startsWith(focusedValue.toLowerCase())
-                        );
-                        await interaction.respond(
-                            filtered.slice(0, Math.min(25, filtered.length)).map((choice) => ({
-                                name: client.utils.titleCase(choice),
-                                value: client.utils.titleCase(choice)
-                            }))
-                        );
+                        await autocomplete(client, interaction, choices);
                     },
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
@@ -119,16 +104,8 @@ export default class AnimalCrossing extends KelleeBotCommand {
                     ],
                     isAutocomplete: true,
                     autocomplete: async ({ client, interaction }) => {
-                        const focusedValue = interaction.options.getFocused() as string;
                         const choices = await fetchData("https://api.nookipedia.com/villagers", "villagers");
-                        const filtered = choices.filter((choice) => choice.toLowerCase().startsWith(focusedValue.toLowerCase())
-                        );
-                        await interaction.respond(
-                            filtered.slice(0, Math.min(25, filtered.length)).map((choice) => ({
-                                name: client.utils.titleCase(choice),
-                                value: client.utils.titleCase(choice)
-                            }))
-                        );
+                        await autocomplete(client, interaction, choices);
                     },
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
@@ -138,6 +115,18 @@ export default class AnimalCrossing extends KelleeBotCommand {
             }
         });
     }
+};
+
+const autocomplete = async (client: Client, interaction: AutocompleteInteraction, choices: string[]) => {
+    const focusedValue = interaction.options.getFocused() as string;
+    const filtered = choices.filter((choice) => choice.toLowerCase().startsWith(focusedValue.toLowerCase())
+    );
+    await interaction.respond(
+        filtered.slice(0, Math.min(25, filtered.length)).map((choice) => ({
+            name: client.utils.titleCase(choice),
+            value: client.utils.titleCase(choice)
+        }))
+    );
 };
 
 const fetchData = async (url: string, arrayType: "artworks" | "bugs" | "villagers") => {
