@@ -8,6 +8,7 @@ export default class Gambling extends KelleeBotCommand {
             name: "gambling",
             category: "Gambling",
             description: "Gamble away all your points.",
+            guildOnly: true,
             subcommands: {
                 daily: {
                     description: `Claim your daily reward.`,
