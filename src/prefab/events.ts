@@ -92,6 +92,10 @@ async function interactionCreate(client: Client, interaction: Interaction) {
       const command = client.commands.get(interaction.commandName);
       if (!command) return;
 
+      if (command.isAutocomplete && command.autocomplete) {
+        await command.autocomplete({ client, interaction })
+      }
+
       const group = interaction.options.getSubcommandGroup(false)!;
       const subcommand = interaction.options.getSubcommand(false)!;
 

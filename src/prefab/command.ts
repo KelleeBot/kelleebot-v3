@@ -32,7 +32,7 @@ class Command {
   groups: { [x: string]: SubcommandGroup } | null;
   subcommands: { [x: string]: Subcommand } | null;
   isAutocomplete: boolean;
-  autocomplete: Autocomplete | null | undefined;
+  autocomplete?({ client, interaction }: { client: Client; interaction: AutocompleteInteraction }): any;
 
   constructor(
     client: Client,
@@ -59,7 +59,7 @@ class Command {
       groups = null,
       subcommands = null,
       isAutocomplete = false,
-      autocomplete = null
+      autocomplete = undefined
     }: CommandOptions
   ) {
     this.client = client;
@@ -85,7 +85,7 @@ class Command {
     this.groups = groups;
     this.subcommands = subcommands;
     this.isAutocomplete = isAutocomplete;
-    this.autocomplete = autocomplete
+    this.autocomplete = autocomplete;
 
     if (options && options.length) this.options = options;
     else if (groups && Object.keys(groups))
@@ -236,5 +236,5 @@ declare interface CommandOptions {
   groups?: { [x: string]: SubcommandGroup } | null;
   subcommands?: { [x: string]: Subcommand } | null;
   isAutocomplete?: boolean;
-  autocomplete?: Autocomplete | null
+  autocomplete?({ client, interaction }: { client: Client; interaction: AutocompleteInteraction }): any
 }
