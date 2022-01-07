@@ -1,1 +1,2 @@
-export * from "./daily"
+export * from "./daily";
+export * from "./points";
