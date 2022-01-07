@@ -32,7 +32,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                     isAutocomplete: true,
                     autocomplete: async ({ client, interaction }) => {
                         const choices = await fetchData("https://api.nookipedia.com/nh/art", "artworks");
-                        await autocomplete(client, interaction, choices);
+                        await client.utils.getAutocomplete(client, interaction, choices);
 
                     },
                     execute: async ({ client, interaction }) => {
@@ -54,7 +54,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                     isAutocomplete: true,
                     autocomplete: async ({ client, interaction }) => {
                         const choices = await fetchData("https://api.nookipedia.com/nh/bugs", "bugs");
-                        await autocomplete(client, interaction, choices);
+                        await client.utils.getAutocomplete(client, interaction, choices);
                     },
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
@@ -105,7 +105,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                     isAutocomplete: true,
                     autocomplete: async ({ client, interaction }) => {
                         const choices = await fetchData("https://api.nookipedia.com/villagers", "villagers");
-                        await autocomplete(client, interaction, choices);
+                        await client.utils.getAutocomplete(client, interaction, choices);
                     },
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
@@ -115,18 +115,6 @@ export default class AnimalCrossing extends KelleeBotCommand {
             }
         });
     }
-};
-
-const autocomplete = async (client: Client, interaction: AutocompleteInteraction, choices: string[]) => {
-    const focusedValue = interaction.options.getFocused() as string;
-    const filtered = choices.filter((choice) => choice.toLowerCase().startsWith(focusedValue.toLowerCase())
-    );
-    await interaction.respond(
-        filtered.slice(0, Math.min(25, filtered.length)).map((choice) => ({
-            name: client.utils.titleCase(choice),
-            value: client.utils.titleCase(choice)
-        }))
-    );
 };
 
 const fetchData = async (url: string, arrayType: "artworks" | "bugs" | "villagers") => {

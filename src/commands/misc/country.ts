@@ -24,16 +24,8 @@ export default class Country extends KelleeBotCommand {
             ],
             isAutocomplete: true,
             autocomplete: async ({ client, interaction }) => {
-                const focusedValue = interaction.options.getFocused() as string;
                 const choices = await fetchAllCountries();
-                const filtered = choices.filter((choice) => choice.toLowerCase().startsWith(focusedValue.toLowerCase())
-                );
-                await interaction.respond(
-                    filtered.slice(0, Math.min(25, filtered.length)).map((choice) => ({
-                        name: client.utils.titleCase(choice),
-                        value: client.utils.titleCase(choice)
-                    }))
-                );
+                await client.utils.getAutocomplete(client, interaction, choices);
             },
         });
     }
