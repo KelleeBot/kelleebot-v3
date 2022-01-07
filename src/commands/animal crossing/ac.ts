@@ -7,6 +7,14 @@ import axios from "axios";
 let artworks: string[] = [];
 let bugs: string[] = [];
 let clothings: string[] = [];
+let diys: string[] = [];
+let fishes: string[] = [];
+let furnitures: string[] = [];
+let interiors: string[] = [];
+let items: string[] = [];
+let photos: string[] = [];
+let seaCreatures: string[] = [];
+let tools: string[] = [];
 let villagers: string[] = [];
 
 export default class AnimalCrossing extends KelleeBotCommand {
@@ -14,7 +22,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
         super(client, {
             name: "ac",
             category: "Animal Crossing",
-            description: `All commands that are related to Animal Crossing.`,
+            description: "All commands that are related to Animal Crossing.",
             cooldown: 15,
             clientPerms: ["SEND_MESSAGES", "EMBED_LINKS"],
             subcommands: {
@@ -135,14 +143,30 @@ export default class AnimalCrossing extends KelleeBotCommand {
     }
 };
 
-const fetchData = async (url: string, arrayType: "artworks" | "bugs" | "clothing" | "villagers") => {
+const fetchData = async (url: string, arrayType: "artworks" | "bugs" | "clothing" | "diys" | "fishes" | "furnitures" | "interiors" | "items" | "photos" | "seaCreatures" | "tools" | "villagers") => {
     if (arrayType === "artworks") {
         if (artworks.length) return artworks;
     } else if (arrayType === "bugs") {
         if (bugs.length) return bugs;
     } else if (arrayType === "clothing") {
-        if (clothings.length) return clothings
-    } else { //if (arrayType === "villagers") {
+        if (clothings.length) return clothings;
+    } else if (arrayType === "diys") {
+        if (diys.length) return diys;
+    } else if (arrayType === "fishes") {
+        if (fishes.length) return fishes;
+    } else if (arrayType === "furnitures") {
+        if (furnitures.length) return furnitures;
+    } else if (arrayType === "interiors") {
+        if (interiors.length) return interiors;
+    } else if (arrayType === "items") {
+        if (items.length) return items;
+    } else if (arrayType === "photos") {
+        if (photos.length) return photos;
+    } else if (arrayType === "seaCreatures") {
+        if (seaCreatures.length) return seaCreatures;
+    } else if (arrayType === "tools") {
+        if (tools.length) return tools;
+    } else {
         if (villagers.length) return villagers;
     }
 
@@ -163,7 +187,31 @@ const fetchData = async (url: string, arrayType: "artworks" | "bugs" | "clothing
     } else if (arrayType === "clothing") {
         clothings = data.map((clothing: AC.Clothing) => clothing.name);
         return clothings;
-    } else { //if (arrayType === "villagers") {
+    } else if (arrayType === "diys") {
+        diys = data.map((diy: AC.Recipe) => diy.name);
+        return diys;
+    } else if (arrayType === "fishes") {
+        fishes = data.map((fish: AC.Fish) => fish.name);
+        return fishes;
+    } else if (arrayType === "furnitures") {
+        furnitures = data.map((furniture: AC.Furniture) => furniture.name);
+        return furnitures;
+    } else if (arrayType === "interiors") {
+        interiors = data.map((interior: AC.Interior) => interior.name);
+        return interiors;
+    } else if (arrayType === "items") {
+        items = data.map((item: AC.Item) => item.name);
+        return items;
+    } else if (arrayType === "photos") {
+        photos = data.map((photo: AC.Photo) => photo.name);
+        return photos;
+    } else if (arrayType === "seaCreatures") {
+        seaCreatures = data.map((seaCreature: AC.Sea) => seaCreature.name);
+        return seaCreatures;
+    } else if (arrayType === "tools") {
+        tools = data.map((tool: AC.Tool) => tool.name);
+        return tools;
+    } else {
         villagers = data.map((villager: AC.Villagers) => villager.name)
         return villagers;
     }
