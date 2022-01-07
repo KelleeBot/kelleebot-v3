@@ -7,12 +7,12 @@ import { Villagers } from "../../types/animalCrossing";
 export const villager = async (client: Client, interaction: CommandInteraction) => {
     await interaction.deferReply();
     try {
-        const villager = interaction.options.getString("name")!
-        const data = await fetchVillagerName(villager)
+        const villager = interaction.options.getString("name")!;
+        const data = await fetchVillagerName(villager);
 
         if (data.length == 1) {
-            const msgEmbed = createVillagerEmbed(data[0])
-            return interaction.editReply({ embeds: [msgEmbed] })
+            const msgEmbed = createVillagerEmbed(data[0]);
+            return interaction.editReply({ embeds: [msgEmbed] });
         }
 
         const embedArray = [];
@@ -27,7 +27,7 @@ export const villager = async (client: Client, interaction: CommandInteraction) 
             content: "An error has occurred. Please try again."
         });
     }
-}
+};
 
 const fetchVillagerName = async (name: string) => {
     const resp = await axios.get(
@@ -41,7 +41,7 @@ const fetchVillagerName = async (name: string) => {
             }
         }
     );
-    return resp.data
+    return resp.data;
 };
 
 const createVillagerEmbed = (data: Villagers) => {

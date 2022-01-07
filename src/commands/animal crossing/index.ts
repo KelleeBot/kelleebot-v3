@@ -1,1 +1,2 @@
-export * from "./villager"
+export * from "./art";
+export * from "./villager";
