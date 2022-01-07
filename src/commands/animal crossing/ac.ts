@@ -1,12 +1,12 @@
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
-import { artwork, bug, villager } from ".";
+import { artwork, bug, clothing, villager } from ".";
 import * as AC from "../../types/animalCrossing";
-import { AutocompleteInteraction } from "discord.js";
 import axios from "axios";
 
 let artworks: string[] = [];
 let bugs: string[] = [];
+let clothings: string[] = [];
 let villagers: string[] = [];
 
 export default class AnimalCrossing extends KelleeBotCommand {
@@ -61,9 +61,27 @@ export default class AnimalCrossing extends KelleeBotCommand {
                         await bug(client, interaction);
                     }
                 },
-                // clothing: {
-                //     description: "",
-                // },
+                clothing: {
+                    description: "Retrieve information about a specific clothing item in Animal Crossing: New Horizons.",
+                    args: [
+                        {
+                            name: "clothing",
+                            description: "The clothing name.",
+                            type: "STRING",
+                            required: true,
+                            autocomplete: true
+                        }
+                    ],
+                    isAutocomplete: true,
+                    autocomplete: async ({ client, interaction }) => {
+                        const choices = await fetchData("https://api.nookipedia.com/nh/clothing", "clothing");
+                        await client.utils.getAutocomplete(client, interaction, choices);
+                    },
+                    execute: async ({ client, interaction }) => {
+                        await this.setCooldown(interaction);
+                        await clothing(client, interaction);
+                    }
+                },
                 // diy: {
                 //     description: ""
                 // },
@@ -117,11 +135,13 @@ export default class AnimalCrossing extends KelleeBotCommand {
     }
 };
 
-const fetchData = async (url: string, arrayType: "artworks" | "bugs" | "villagers") => {
+const fetchData = async (url: string, arrayType: "artworks" | "bugs" | "clothing" | "villagers") => {
     if (arrayType === "artworks") {
         if (artworks.length) return artworks;
     } else if (arrayType === "bugs") {
         if (bugs.length) return bugs;
+    } else if (arrayType === "clothing") {
+        if (clothings.length) return clothings
     } else { //if (arrayType === "villagers") {
         if (villagers.length) return villagers;
     }
@@ -140,6 +160,9 @@ const fetchData = async (url: string, arrayType: "artworks" | "bugs" | "villager
     } else if (arrayType === "bugs") {
         bugs = data.map((bug: AC.Bug) => bug.name);
         return bugs;
+    } else if (arrayType === "clothing") {
+        clothings = data.map((clothing: AC.Clothing) => clothing.name);
+        return clothings;
     } else { //if (arrayType === "villagers") {
         villagers = data.map((villager: AC.Villagers) => villager.name)
         return villagers;
