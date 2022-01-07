@@ -38,6 +38,7 @@ export default class Country extends KelleeBotCommand {
         });
     }
     async execute({ client, interaction }: { client: Client; interaction: CommandInteraction }) {
+        await this.setCooldown(interaction);
         await interaction.deferReply();
         try {
             const country = interaction.options.getString("country")!;
