@@ -1,6 +1,8 @@
-import { AutocompleteInteraction, Snowflake } from "discord.js";
+import { AutocompleteInteraction, CommandInteraction, Guild, GuildMember, Message, MessageActionRow, MessageButton, MessageEmbed, Snowflake, TextChannel } from "discord.js";
 import { KelleeBotUtils } from "../prefab/utils";
 import { Client } from "./client";
+
+const buttons = ["⬅️", "⛔", "➡️"];
 
 class Utils extends KelleeBotUtils {
   constructor(client: Client) {
@@ -29,6 +31,104 @@ class Utils extends KelleeBotUtils {
       );
     }
     return twitchLiveInfo;
+  }
+
+  async sendMessageToBotLog(client: Client, guild: Guild, msg: Message | MessageEmbed) {
+    const guildInfo = await client.guildInfo.get(guild.id);
+    if (!guildInfo.botLoggingChannel) return;
+
+    const channel = client.channels.cache.get(guildInfo.botLoggingChannel) as TextChannel;
+    if (!channel) return;
+
+    const modLogWebhook = await this.getWebhook(client, channel);
+    if (!modLogWebhook) return
+
+    return await modLogWebhook.send(msg instanceof Message ? { content: `${msg}` } : { embeds: [msg] });
+  }
+
+  async getWebhook(client: Client, channel: TextChannel) {
+    const webhook = await channel.fetchWebhooks();
+    const botWebhook = webhook.find((hook) => hook.owner?.id == client.user?.id);
+    return !webhook || !botWebhook
+      ? await channel.createWebhook(`${client.user?.username}`, { avatar: `${client.user?.displayAvatarURL({ dynamic: true })}` })
+      : webhook.get(botWebhook.id);
+  }
+
+  async buttonPagination(interaction: CommandInteraction, embeds: MessageEmbed[], options?: { time: number }) {
+    try {
+      let time = 30000; // 30 seconds
+      if (options) {
+        if (options.time) time = options.time
+      }
+
+      const msgButtons: MessageButton[] = [];
+      for (let i = 0; i < buttons.length; i++) {
+        msgButtons.push(
+          new MessageButton()
+            .setLabel(buttons[i])
+            .setCustomId(buttons[i])
+            .setStyle("PRIMARY")
+        );
+
+        const row = new MessageActionRow().addComponents(msgButtons);
+        const pageMsg = await interaction.reply({
+          embeds: [embeds[0]],
+          components: [row],
+          fetchReply: true
+        }) as Message;
+
+        let pageIndex = 0;
+
+        const collector = pageMsg.createMessageComponentCollector({ componentType: "BUTTON", time });
+        collector.on("collect", async (i) => {
+          try {
+            await i.deferUpdate();
+            if ((i.member as GuildMember).id !== interaction.user.id)
+              return i.reply({
+                content: `This is locked to **${(interaction.member as GuildMember).user.tag}**.`,
+                ephemeral: true
+              })
+
+            if (i.customId === "➡️") {
+              if (pageIndex < embeds.length - 1) {
+                pageIndex++;
+                await pageMsg.edit({ embeds: [embeds[pageIndex]] });
+              } else {
+                pageIndex = 0;
+                await pageMsg.edit({ embeds: [embeds[pageIndex]] });
+              }
+            } else if (i.customId === "⛔") {
+              collector.stop();
+            } else if (i.customId === "⬅️") {
+              if (pageIndex > 0) {
+                pageIndex--;
+                await pageMsg.edit({ embeds: [embeds[pageIndex]] });
+              } else {
+                pageIndex = embeds.length - 1;
+                await pageMsg.edit({ embeds: [embeds[pageIndex]] });
+              }
+            }
+          } catch (e) {
+            return this.client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}.`);
+          }
+        });
+
+        collector.on("end", async () => {
+          try {
+            msgButtons.forEach((button) => {
+              button.setDisabled(true);
+              return button;
+            });
+
+            await pageMsg.edit({ components: [new MessageActionRow().addComponents(msgButtons)] });
+          } catch (e) {
+            this.client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
+          }
+        });
+      }
+    } catch (e) {
+      return this.client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
+    }
   }
 }
 
