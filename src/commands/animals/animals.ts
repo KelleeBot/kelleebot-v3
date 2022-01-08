@@ -1,6 +1,6 @@
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
-import { bunny, cat, dog, fox, koala, panda, shiba } from "./";
+import { bunny, cat, dog, fox, koala, panda, shiba } from "../../subcommandHelpers/animals";
 
 export default class Animals extends KelleeBotCommand {
     constructor(client: Client) {

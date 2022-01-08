@@ -1,6 +1,6 @@
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
-import { ban, history, timeout, unban } from ".";
+import { ban, history, timeout, unban } from "../../subcommandHelpers/moderation";
 
 export default class Moderation extends KelleeBotCommand {
     constructor(client: Client) {

@@ -1,7 +1,7 @@
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 import { PokemonInfo } from "../../types/pokemon"
-import { pokeInfo } from ".";
+import { pokeInfo } from "../../subcommandHelpers/pokemon";
 import axios from "axios";
 
 let pokemon: string[] = []

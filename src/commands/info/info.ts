@@ -1,6 +1,6 @@
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
-import { guild, user } from ".";
+import { guild, user } from "../../subcommandHelpers/info";
 
 export default class Info extends KelleeBotCommand {
     constructor(client: Client) {

@@ -1,6 +1,6 @@
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
-import { artwork, bug, clothing, villager } from ".";
+import { artwork, bug, clothing, villager } from "../../subcommandHelpers/animal crossing";
 import * as AC from "../../types/animalCrossing";
 import axios from "axios";
 

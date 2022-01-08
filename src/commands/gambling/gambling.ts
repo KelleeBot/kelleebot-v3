@@ -1,6 +1,6 @@
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
-import { daily, points } from ".";
+import { daily, points } from "../../subcommandHelpers/gambling";
 
 export default class Gambling extends KelleeBotCommand {
     constructor(client: Client) {
