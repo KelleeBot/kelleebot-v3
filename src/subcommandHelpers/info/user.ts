@@ -38,7 +38,7 @@ export const user = async (client: Client, interaction: CommandInteraction) => {
             } else {
                 if (
                     (file.endsWith(".ts") || file.endsWith(".js")) &&
-                    !file.endsWith(".d.ts")
+                    !file.endsWith(".d.ts") && !file.includes("-ignore")
                 ) {
                     let buffer = readFileSync(join(dir, file)).toString();
                     let lines = buffer.split("\n");
