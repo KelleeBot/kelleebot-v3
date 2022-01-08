@@ -1,5 +1,6 @@
 import { AutocompleteInteraction, CommandInteraction, Guild, GuildMember, Message, MessageActionRow, MessageButton, MessageEmbed, Snowflake, TextChannel } from "discord.js";
 import { KelleeBotUtils } from "../prefab/utils";
+import memberInfo from "../schemas/memberInfo";
 import { Client } from "./client";
 
 const buttons = ["⬅️", "⛔", "➡️"];
@@ -129,6 +130,10 @@ class Utils extends KelleeBotUtils {
     } catch (e) {
       return this.client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
     }
+  }
+
+  async fetchMemberInfo(guildID: Snowflake, userID: Snowflake) {
+    return await memberInfo.findOne({ guildID, userID });
   }
 }
 
