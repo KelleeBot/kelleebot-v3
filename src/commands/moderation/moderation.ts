@@ -1,7 +1,6 @@
-import { CommandInteraction } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
-import { history, timeout } from ".";
+import { ban, history, timeout } from ".";
 
 export default class Moderation extends KelleeBotCommand {
     constructor(client: Client) {
@@ -12,6 +11,26 @@ export default class Moderation extends KelleeBotCommand {
             perms: ["BAN_MEMBERS", "KICK_MEMBERS", "MODERATE_MEMBERS"],
             clientPerms: ["SEND_MESSAGES", "EMBED_LINKS", "BAN_MEMBERS", "KICK_MEMBERS", "MODERATE_MEMBERS"],
             subcommands: {
+                ban: {
+                    description: "Ban a user.",
+                    args: [
+                        {
+                            name: "user",
+                            description: "The user to ban.",
+                            type: "USER",
+                            required: true
+                        },
+                        {
+                            name: "reason",
+                            description: "Reason why the user is being banned.",
+                            type: "STRING",
+                            required: true
+                        }
+                    ],
+                    execute: async ({ client, interaction }) => {
+                        await ban(client, interaction);
+                    }
+                },
                 history: {
                     description: "See moderation history of a user.",
                     args: [

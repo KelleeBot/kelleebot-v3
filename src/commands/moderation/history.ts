@@ -1,5 +1,5 @@
 import ms from "ms";
-import { CommandInteraction, Snowflake, Util } from "discord.js";
+import { CommandInteraction, Util } from "discord.js";
 import { Client } from "../../util/client";
 import memberInfo from "../../schemas/memberInfo";
 
