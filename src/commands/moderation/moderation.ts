@@ -1,6 +1,6 @@
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
-import { ban, history, timeout } from ".";
+import { ban, history, timeout, unban } from ".";
 
 export default class Moderation extends KelleeBotCommand {
     constructor(client: Client) {
@@ -69,6 +69,26 @@ export default class Moderation extends KelleeBotCommand {
                     ],
                     execute: async ({ client, interaction }) => {
                         await timeout(client, interaction);
+                    }
+                },
+                unban: {
+                    description: "Unban's a user from the server.",
+                    args: [
+                        {
+                            name: "id",
+                            description: "The ID of the user you want to unban.",
+                            type: "STRING",
+                            required: true
+                        },
+                        {
+                            name: "reason",
+                            description: "The reason why this user is being unbanned.",
+                            type: "STRING",
+                            required: true
+                        }
+                    ],
+                    execute: async ({ client, interaction }) => {
+                        await unban(client, interaction);
                     }
                 }
             }
