@@ -128,14 +128,6 @@ class KelleeBotClient extends Client {
     }
 
     try {
-      this.utils.log("WARNING", `${__filename}`, `Loading features...`);
-      await this.loadFeatures();
-      this.utils.log("SUCCESS", `${__filename}`, "Loaded all features!");
-    } catch (e) {
-      this.utils.log("ERROR", `${__filename}`, `Error loading features: ${e}`);
-    }
-
-    try {
       this.utils.log("WARNING", `${__filename}`, "Logging in...");
       await super.login(token);
       this.utils.log(
@@ -154,6 +146,14 @@ class KelleeBotClient extends Client {
       this.utils.log("SUCCESS", `${__filename}`, "Loaded all commands!");
     } catch (e) {
       this.utils.log("ERROR", `${__filename}`, `Error loading commands: ${e}`);
+    }
+
+    try {
+      this.utils.log("WARNING", `${__filename}`, `Loading features...`);
+      await this.loadFeatures();
+      this.utils.log("SUCCESS", `${__filename}`, "Loaded all features!");
+    } catch (e) {
+      this.utils.log("ERROR", `${__filename}`, `Error loading features: ${e}`);
     }
 
     return this.token!;
