@@ -80,7 +80,7 @@ const showAllShows = async (query: string, results: TvResult[], interaction: Com
             collector.stop();
             const tvEmbed = await showTvInfo(client, i.user.id, show);
             interaction.followUp({
-                content: `${interaction.user}, here's some information about **${results[choice].original_name}:**`,
+                content: `${interaction.user}, here's some information about **${results[choice].name}:**`,
                 embeds: [tvEmbed],
                 allowedMentions: { parse: [] }
             });
