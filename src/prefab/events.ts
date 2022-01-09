@@ -63,23 +63,21 @@ async function quickReply(
   }
 }
 
-async function guildCreate(client: Client, guild: Guild) {
+export const guildCreate = async (client: Client, guild: Guild) => {
   try {
     if (guild.available) {
       const channel = getDefaultChannel(guild);
       if (!channel) return;
 
-      await channel.send(
-        `Thanks for adding me! For a list of commands, type \`/help\``
-      );
+      await channel.send(`Thanks for adding me! For a list of commands, type \`/help\``);
     }
   } catch (e) {
-    client.utils.log("ERROR", "src/events/guild/guildCreate.js", "");
+    client.utils.log("ERROR", `${__filename}`, "");
     console.log(e);
   }
 }
 
-async function interactionCreate(client: Client, interaction: Interaction) {
+export const interactionCreate = async (client: Client, interaction: Interaction) => {
   try {
     const userInfo = await client.profileInfo.get(interaction.user.id)
     const botOwner = client.users.cache.get(client.config.devs[0])
@@ -297,8 +295,6 @@ async function interactionCreate(client: Client, interaction: Interaction) {
   }
 }
 
-async function messageCreate(client: Client, message: Message) {
+export const messageCreate = async (client: Client, message: Message) => {
   //
 }
-
-export { guildCreate, interactionCreate, messageCreate };
