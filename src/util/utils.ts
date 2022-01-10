@@ -1,4 +1,5 @@
-import { AutocompleteInteraction, CommandInteraction, Guild, GuildMember, Message, MessageActionRow, MessageButton, MessageEmbed, Snowflake, TextChannel } from "discord.js";
+import { AutocompleteInteraction, CommandInteraction, Guild, GuildAuditLogsAction, GuildMember, Message, MessageActionRow, MessageButton, MessageEmbed, Permissions, Snowflake, TextChannel } from "discord.js";
+import { ChannelTypes } from "../types/channelTypes";
 import { KelleeBotUtils } from "../prefab/utils";
 import memberInfo from "../schemas/memberInfo";
 import { Client } from "./client";
@@ -132,6 +133,12 @@ class Utils extends KelleeBotUtils {
     }
   }
 
+  async fetchAuditLog(guild: Guild, auditLogAction: GuildAuditLogsAction) {
+    return guild.me?.permissions.has(Permissions.FLAGS.VIEW_AUDIT_LOG)
+      ? await guild.fetchAuditLogs({ limit: 1, type: auditLogAction })
+      : false;
+  }
+
   async fetchMemberInfo(guildID: Snowflake, userID: Snowflake) {
     return await memberInfo.findOne({ guildID, userID });
   }
@@ -144,6 +151,10 @@ class Utils extends KelleeBotUtils {
     } catch (e) {
       client.utils.log("ERROR", `${__filename}`, 'An error has occurred: ${e}');
     }
+  }
+
+  getChannelDescription(channel: ChannelTypes) {
+    return `**${this.titleCase(channel.toString().replace(/_/g, " ").replace(/GUILD/g, "").toLowerCase())} Channel`;
   }
 
   getGuildIcon(guild: Guild) {
