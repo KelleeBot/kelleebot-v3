@@ -66,7 +66,7 @@ const showAllMovies = async (query: string, results: MovieResult[], interaction:
         .setFooter({ text: "Select the movie from the dropdown you want to see information for." });
 
     const row = new MessageActionRow().addComponents(selectMenu);
-    const msg = await interaction.reply({ embeds: [msgEmbed], components: [row], ephemeral: true, fetchReply: true }) as Message;
+    const msg = await interaction.reply({ embeds: [msgEmbed], components: [row], fetchReply: true }) as Message;
 
     const filter = async (i: SelectMenuInteraction) => {
         await i.deferUpdate();
@@ -80,11 +80,7 @@ const showAllMovies = async (query: string, results: MovieResult[], interaction:
 
             collector.stop();
             const movieEmbed = await showMovieInfo(client, i.user.id, movie);
-            interaction.followUp({
-                content: `${interaction.user}, here's some information about **${results[choice].original_title}:**`,
-                embeds: [movieEmbed],
-                allowedMentions: { parse: [] }
-            });
+            msg.edit({ embeds: [movieEmbed], components: [] });
         }
     });
 
@@ -95,7 +91,7 @@ const showAllMovies = async (query: string, results: MovieResult[], interaction:
                 .setDescription("You did not choose a movie in time.")
                 .setFooter({ text: "" });
 
-            interaction.followUp({ embeds: [msgEmbed], ephemeral: true });
+            msg.edit({ embeds: [msgEmbed], components: [] });
         }
     });
 }
@@ -112,6 +108,9 @@ const showMovieInfo = async (client: Client, userID: Snowflake, movie: MovieResu
         overview
     } = movie;
 
+    const movieInfo = await client.movieDb.movieInfo({ id: `${id}` });
+    const { budget, genres, revenue, runtime, homepage, production_companies } = movieInfo;
+
     const timestamp = DateTime.fromISO(new Date(`${release_date}`).toISOString()).toSeconds();
     const releaseTimestamp = timestamp ? `<t:${timestamp}:F> (<t:${timestamp}:R>)` : '';
     const movieReleaseDate = release_date ? releaseTimestamp : "Unknown";
@@ -123,10 +122,15 @@ const showMovieInfo = async (client: Client, userID: Snowflake, movie: MovieResu
             url: `https://www.themoviedb.org/movie/${id}`
         })
         .setThumbnail(poster_path ? `https://image.tmdb.org/t/p/w500/${poster_path}` : "")
-        .setDescription(`${overview}\n\nMore info: https://www.themoviedb.org/movie/${id}`)
+        .setDescription(`${overview}\n\n${homepage ? `Homepage: ${homepage}\n` : ""}More info: https://www.themoviedb.org/movie/${id}`)
         .addFields(
-            { name: "**Release Date**", value: movieReleaseDate, inline: true },
-            { name: "**Rating (out of 10)**", value: `${vote_average}`, inline: true }
+            { name: "**Release Date**", value: movieReleaseDate, inline: false },
+            { name: "**Budget**", value: `$${client.utils.formatNumber(budget!)}`, inline: true },
+            { name: "**Revenue**", value: `$${client.utils.formatNumber(revenue!)}`, inline: true },
+            { name: "**Runtime**", value: `${runtime} minutes`, inline: true },
+            { name: "**Rating (out of 10)**", value: `${vote_average}`, inline: true },
+            { name: "**Produced By**", value: (production_companies && production_companies.length) ? production_companies.map(company => company.name).join(", ") : "-", inline: true },
+            { name: "**Genres**", value: (genres && genres.length) ? genres.map(genre => genre.name).join(", ") : "-", inline: true },
         )
         .setFooter({
             text: "Powered by TMDB",
