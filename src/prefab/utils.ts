@@ -1,6 +1,5 @@
 import {
   CommandInteraction,
-  Guild,
   GuildMember,
   Message,
   MessageEmbed,
@@ -200,13 +199,11 @@ class KelleeBotUtils {
     const missingPerms = member.permissions
       .missing(perms)
       .map(
-        (str) => `\`${this.titleCase(str.replace(/_/g, " ").toLowerCase())}\``
+        (str) => `\`${this.client.utils.titleCase(str.replace(/_/g, " ").toLowerCase())}\``
       );
 
     return missingPerms.length > 1
-      ? `${missingPerms.slice(0, -1).join(", ")} and ${
-          missingPerms.slice(-1)[0]
-        }`
+      ? `${missingPerms.slice(0, -1).join(", ")} or ${missingPerms.slice(-1)[0]}`
       : missingPerms[0];
   }
 
@@ -325,33 +322,6 @@ class KelleeBotUtils {
 
     if (timeStr === "") return;
     else return timeStr;
-  }
-
-  getGuildIcon(guild: Guild) {
-    return guild.iconURL()
-      ? guild.iconURL({ dynamic: true })
-      : "https://i.imgur.com/XhpH3KD.png";
-  }
-
-  formatNumber(number: number) {
-    return number.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-  }
-
-  removeCommas(str: string) {
-    return str.replace(/,/g, "");
-  }
-
-  isValidNumber(str: string) {
-    const numberRegExp = /^(\d*\.?\d+|\d{1,3}(,\d{3})*(\.\d+)?)$/;
-    return numberRegExp.test(str);
-  }
-
-  pluralize(amount: number, string: string) {
-    return amount !== 1 ? `${string}s` : string;
-  }
-
-  titleCase(string: string) {
-    return string.replace(/\b(\w)/g, (char) => char.toUpperCase());
   }
 }
 

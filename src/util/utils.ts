@@ -135,6 +135,33 @@ class Utils extends KelleeBotUtils {
   async fetchMemberInfo(guildID: Snowflake, userID: Snowflake) {
     return await memberInfo.findOne({ guildID, userID });
   }
+
+  getGuildIcon(guild: Guild) {
+    return guild.iconURL()
+      ? guild.iconURL({ dynamic: true })
+      : "https://i.imgur.com/XhpH3KD.png";
+  }
+
+  formatNumber(number: number) {
+    return number.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  removeCommas(str: string) {
+    return str.replace(/,/g, "");
+  }
+
+  isValidNumber(str: string) {
+    const numberRegExp = /^(\d*\.?\d+|\d{1,3}(,\d{3})*(\.\d+)?)$/;
+    return numberRegExp.test(str);
+  }
+
+  pluralize(amount: number, string: string) {
+    return amount !== 1 ? `${string}s` : string;
+  }
+
+  titleCase(string: string) {
+    return string.replace(/(^|\s)\S/g, (char) => char.toUpperCase());
+  }
 }
 
 export { Utils };
