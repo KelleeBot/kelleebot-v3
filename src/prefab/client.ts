@@ -103,19 +103,11 @@ class KelleeBotClient extends Client {
    */
   async login(token?: string) {
     try {
-      this.utils.log(
-        "WARNING",
-        `${__filename}`,
-        "Connecting to the database..."
-      );
+      this.utils.log("WARNING", `${__filename}`, "Connecting to the database...");
       await connect(`${process.env.MONGO_PATH}`);
       this.utils.log("SUCCESS", `${__filename}`, "Connected to the database!");
     } catch (e) {
-      this.utils.log(
-        "ERROR",
-        `${__filename}`,
-        `Error connecting to the database: ${e}`
-      );
+      this.utils.log("ERROR", `${__filename}`, `Error connecting to the database: ${e}`);
       process.exit(1);
     }
 
@@ -130,11 +122,8 @@ class KelleeBotClient extends Client {
     try {
       this.utils.log("WARNING", `${__filename}`, "Logging in...");
       await super.login(token);
-      this.utils.log(
-        "SUCCESS",
-        `${__filename}`,
-        `Logged in as ${this.user!.tag}`
-      );
+      this.user!.setActivity("everything will be okellee 💓");
+      this.utils.log("SUCCESS", `${__filename}`, `Logged in as ${this.user!.tag}`);
     } catch (e) {
       this.utils.log("ERROR", `${__filename}`, `Error logging in: ${e}`);
       process.exit(1);
@@ -162,9 +151,7 @@ class KelleeBotClient extends Client {
 
 export { KelleeBotClient };
 
-function toApplicationCommand(
-  collection: Collection<string, KelleeBotCommand>
-): ApplicationCommandData[] {
+function toApplicationCommand(collection: Collection<string, KelleeBotCommand>): ApplicationCommandData[] {
   return collection.map((s) => {
     return {
       name: s.name,
