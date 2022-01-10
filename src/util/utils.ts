@@ -136,6 +136,16 @@ class Utils extends KelleeBotUtils {
     return await memberInfo.findOne({ guildID, userID });
   }
 
+  async quickReply(client: Client, interaction: CommandInteraction, content: string) {
+    const embed = (await client.utils.CustomEmbed({ userID: interaction.user.id })).setDescription(content);
+
+    try {
+      await interaction.reply({ embeds: [embed], ephemeral: true });
+    } catch (e) {
+      client.utils.log("ERROR", `${__filename}`, 'An error has occurred: ${e}');
+    }
+  }
+
   getGuildIcon(guild: Guild) {
     return guild.iconURL()
       ? guild.iconURL({ dynamic: true })
