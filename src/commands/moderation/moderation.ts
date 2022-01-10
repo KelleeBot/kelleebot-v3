@@ -1,6 +1,6 @@
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
-import { ban, history, timeout, unban } from "../../subcommandHelpers/moderation";
+import { ban, history, purge, timeout, unban } from "../../subcommandHelpers/moderation";
 
 export default class Moderation extends KelleeBotCommand {
     constructor(client: Client) {
@@ -8,7 +8,7 @@ export default class Moderation extends KelleeBotCommand {
             name: "moderation",
             category: "Moderation",
             description: "Commands used for moderation purposes.",
-            perms: ["BAN_MEMBERS", "KICK_MEMBERS", "MODERATE_MEMBERS"],
+            perms: ["BAN_MEMBERS", "KICK_MEMBERS", "MODERATE_MEMBERS", "MANAGE_MESSAGES"],
             clientPerms: ["SEND_MESSAGES", "EMBED_LINKS", "BAN_MEMBERS", "KICK_MEMBERS", "MODERATE_MEMBERS"],
             subcommands: {
                 ban: {
@@ -43,6 +43,25 @@ export default class Moderation extends KelleeBotCommand {
                     ],
                     execute: async ({ client, interaction }) => {
                         await history(client, interaction);
+                    }
+                },
+                purge: {
+                    description: "Purge messages from a channel.",
+                    args: [
+                        {
+                            name: "number",
+                            description: "The number of messages to purge (between 1 - 100).",
+                            type: "NUMBER",
+                            required: true
+                        },
+                        {
+                            name: "channel",
+                            description: "The channel to purge messages from.",
+                            type: "CHANNEL",
+                        }
+                    ],
+                    execute: async ({ client, interaction }) => {
+                        await purge(client, interaction);
                     }
                 },
                 timeout: {
