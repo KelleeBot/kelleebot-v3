@@ -26,7 +26,8 @@ export default class Edit extends KelleeBotCommand {
                 {
                     name: "channel",
                     description: "The channel the message you want to edit is in.",
-                    type: "CHANNEL"
+                    type: "CHANNEL",
+                    channelTypes: ["GUILD_TEXT"]
                 }
             ]
         });
