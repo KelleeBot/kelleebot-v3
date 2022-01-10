@@ -3,6 +3,7 @@ import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 import { TvResult } from "moviedb-promise/dist/request-types";
 import { DateTime } from "luxon";
+import axios from "axios";
 
 export default class TV extends KelleeBotCommand {
     constructor(client: Client) {
@@ -65,7 +66,7 @@ const showAllShows = async (query: string, results: TvResult[], interaction: Com
         .setFooter({ text: "Select the TV show from the dropdown you want to see information for." });
 
     const row = new MessageActionRow().addComponents(selectMenu);
-    const msg = await interaction.reply({ embeds: [msgEmbed], components: [row], ephemeral: true, fetchReply: true }) as Message;
+    const msg = await interaction.reply({ embeds: [msgEmbed], components: [row], fetchReply: true }) as Message;
 
     const filter = async (i: SelectMenuInteraction) => {
         await i.deferUpdate();
@@ -79,11 +80,7 @@ const showAllShows = async (query: string, results: TvResult[], interaction: Com
 
             collector.stop();
             const tvEmbed = await showTvInfo(client, i.user.id, show);
-            interaction.followUp({
-                content: `${interaction.user}, here's some information about **${results[choice].name}:**`,
-                embeds: [tvEmbed],
-                allowedMentions: { parse: [] }
-            });
+            msg.edit({ embeds: [tvEmbed], components: [] });
         }
     });
 
@@ -94,7 +91,7 @@ const showAllShows = async (query: string, results: TvResult[], interaction: Com
                 .setDescription("You did not choose a TV show in time.")
                 .setFooter({ text: "" });
 
-            interaction.followUp({ embeds: [msgEmbed], ephemeral: true });
+            msg.edit({ embeds: [msgEmbed], components: [] });
         }
     });
 }
@@ -103,6 +100,7 @@ const showTvInfo = async (client: Client, userID: Snowflake, show: TvResult) => 
     const {
         id,
         name,
+        origin_country,
         original_language,
         original_name,
         poster_path,
@@ -111,8 +109,11 @@ const showTvInfo = async (client: Client, userID: Snowflake, show: TvResult) => 
         overview
     } = show;
 
-    const timestamp = DateTime.fromISO(new Date(`${first_air_date}`).toISOString()).toSeconds();
-    const firstAirTimestamp = timestamp ? `<t:${timestamp}:F> (<t:${timestamp}:R>)` : '';
+    const tvDetails = await client.movieDb.tvInfo({ id: `${id}` });
+    const { genres, in_production, last_air_date, number_of_episodes, number_of_seasons } = tvDetails
+
+    const firstAirDateTimestamp = DateTime.fromISO(new Date(`${first_air_date}`).toISOString()).toSeconds();
+    const firstAirTimestamp = firstAirDateTimestamp ? `<t:${firstAirDateTimestamp}:F> (<t:${firstAirDateTimestamp}:R>)` : '';
     const firstAirDate = first_air_date ? firstAirTimestamp : "Unknown";
 
     const msgEmbed = (await client.utils.CustomEmbed({ userID }))
@@ -124,12 +125,47 @@ const showTvInfo = async (client: Client, userID: Snowflake, show: TvResult) => 
         .setThumbnail(poster_path ? `https://image.tmdb.org/t/p/w500/${poster_path}` : "")
         .setDescription(`${overview}\n\nMore info: https://www.themoviedb.org/tv/${id}`)
         .addFields(
-            { name: "**First Air Date**", value: firstAirDate, inline: true },
-            { name: "**Rating (out of 10)**", value: `${vote_average}`, inline: true }
+            { name: "**Number of Seasons**", value: number_of_seasons ? `${number_of_seasons}` : "0", inline: true },
+            { name: "**Number of Episodes**", value: number_of_episodes ? client.utils.formatNumber(number_of_episodes) : "0", inline: true },
+            { name: "**Rating (out of 10)**", value: `${vote_average}`, inline: true },
         )
         .setFooter({
             text: "Powered by TMDB",
             iconURL: "https://pbs.twimg.com/profile_images/1243623122089041920/gVZIvphd_400x400.jpg"
         });
+
+    const info = await getOriginCountryNameAndLanguage(origin_country!);
+    if (origin_country) {
+        const country = info.map(country => country.name);
+        msgEmbed.addFields({ name: "**Origin Country**", value: country.join(", "), inline: true });
+    }
+
+    if (original_language) {
+        const language = info.map(lang => lang.language);
+        msgEmbed.addFields({ name: "**Original Language**", value: language.join(", "), inline: true });
+    }
+    if (original_language !== "en" && original_name)
+        msgEmbed.addFields({ name: "**Original Title**", value: original_name, inline: true });
+
+    msgEmbed.addFields(
+        { name: "**Genres**", value: (genres && genres.length) ? genres.map(genre => genre.name).join(", ") : "-", inline: true },
+        { name: "**First Air Date**", value: firstAirDate, inline: false }
+    );
+
+    if (!in_production) {
+        const lastAirDateTimestamp = DateTime.fromISO(new Date(`${last_air_date}`).toISOString()).toSeconds();
+        const lastAirTimestamp = lastAirDateTimestamp ? `<t:${lastAirDateTimestamp}:F> (<t:${lastAirDateTimestamp}:R>)` : '';
+        msgEmbed.addFields({ name: "**Last Air Date**", value: lastAirTimestamp, inline: false });
+    }
+
     return msgEmbed;
 };
+
+const getOriginCountryNameAndLanguage = async (code: string[]) => {
+    const countryInfo: { name: string, language: string }[] = [];
+    for (let i = 0; i < code.length; i++) {
+        const resp = await axios.get(`https://restcountries.com/v3.1/alpha/${code[i]}`);
+        countryInfo.push({ name: resp.data[0].name.common, language: Object.values(resp.data[0].languages).join(", ") });
+    }
+    return countryInfo;
+}
