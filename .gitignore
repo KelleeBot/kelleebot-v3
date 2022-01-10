@@ -1,6 +1,7 @@
 # Files
 .env
 .prettierrc
+giveaways.json
 
 # Directories
 node_modules/

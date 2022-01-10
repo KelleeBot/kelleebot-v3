@@ -6,12 +6,15 @@ import TwitchLiveModel from "../schemas/twitchLive";
 import { TwitchLive } from "../types/twitchLive"
 import { MovieDb } from "moviedb-promise";
 import Twitter from "twitter-lite";
+import { GiveawaysManager } from "discord-giveaways";
+import { giveawayReactEmoji } from "../../config/config.json"
 
 class Client extends KelleeBotClient {
   twitchLiveInfo: Manager<string, TwitchLive>;
   twitchApi: TwitchApi;
   movieDb: MovieDb;
   twitter: Twitter;
+  giveaways: GiveawaysManager;
 
   constructor(options: ClientOptions) {
     super(options);
@@ -29,6 +32,15 @@ class Client extends KelleeBotClient {
       access_token_key: `${process.env.TWITTER_ACCESS_TOKEN}`,
       access_token_secret: `${process.env.TWITTER_ACCESS_TOKEN_SECRET}`
     });
+    this.giveaways = new GiveawaysManager(this, {
+      storage: "./giveaways.json",
+      default: {
+        botsCanWin: false,
+        exemptPermissions: ["ADMINISTRATOR"],
+        embedColor: "#FF0000",
+        reaction: giveawayReactEmoji
+      }
+    })
   }
 }
 
