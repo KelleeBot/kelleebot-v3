@@ -1,6 +1,6 @@
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
-import { ban, history, purge, timeout, unban } from "../../subcommandHelpers/moderation";
+import { ban, history, kick, purge, timeout, unban } from "../../subcommandHelpers/moderation";
 
 export default class Moderation extends KelleeBotCommand {
     constructor(client: Client) {
@@ -43,6 +43,26 @@ export default class Moderation extends KelleeBotCommand {
                     ],
                     execute: async ({ client, interaction }) => {
                         await history(client, interaction);
+                    }
+                },
+                kick: {
+                    description: "Kicks a member from the server.",
+                    args: [
+                        {
+                            name: "member",
+                            description: "The member to kick.",
+                            type: "USER",
+                            required: true
+                        },
+                        {
+                            name: "reason",
+                            description: "Reason why member is being kicked.",
+                            type: "STRING",
+                            required: true
+                        }
+                    ],
+                    execute: async ({ client, interaction }) => {
+                        await kick(client, interaction);
                     }
                 },
                 purge: {
