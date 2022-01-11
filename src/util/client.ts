@@ -6,6 +6,7 @@ import TwitchLiveModel from "../schemas/twitchLive";
 import { TwitchLive } from "../types/twitchLive"
 import { MovieDb } from "moviedb-promise";
 import Twitter from "twitter-lite";
+import { Player } from "discord-player";
 import { GiveawaysManager } from "discord-giveaways";
 import { giveawayReactEmoji } from "../../config/config.json"
 
@@ -15,6 +16,7 @@ class Client extends KelleeBotClient {
   movieDb: MovieDb;
   twitter: Twitter;
   giveaways: GiveawaysManager;
+  player: Player;
 
   constructor(options: ClientOptions) {
     super(options);
@@ -40,7 +42,8 @@ class Client extends KelleeBotClient {
         embedColor: "#FF0000",
         reaction: giveawayReactEmoji
       }
-    })
+    });
+    this.player = new Player(this);
   }
 }
 
