@@ -16,7 +16,7 @@ export default class Add extends KelleeBotCommand {
                 {
                     name: "points",
                     description: "The amount of points to give.",
-                    type: "NUMBER",
+                    type: "INTEGER",
                     required: true
                 },
                 {
@@ -28,7 +28,7 @@ export default class Add extends KelleeBotCommand {
         });
     }
     async execute({ client, interaction }: { client: Client, interaction: CommandInteraction }) {
-        const points = interaction.options.getNumber("points")!;
+        const points = interaction.options.getInteger("points")!;
         const member = interaction.options.getMember("user") ?? "all";
 
         if (points <= 0)

@@ -65,7 +65,7 @@ export default class Giveaways extends KelleeBotCommand {
                         {
                             name: "winners",
                             description: "The number of winners.",
-                            type: "NUMBER",
+                            type: "INTEGER",
                             required: true
                         },
                         {

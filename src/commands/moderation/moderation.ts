@@ -71,7 +71,7 @@ export default class Moderation extends KelleeBotCommand {
                         {
                             name: "number",
                             description: "The number of messages to purge (between 1 - 100).",
-                            type: "NUMBER",
+                            type: "INTEGER",
                             required: true
                         },
                         {

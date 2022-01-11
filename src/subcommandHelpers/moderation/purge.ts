@@ -3,7 +3,7 @@ import { Client } from "../../util/client";
 import { MESSAGE_EVENTS } from "../../../config/embedColours.json";
 
 export const purge = async (client: Client, interaction: CommandInteraction) => {
-    const number = interaction.options.getNumber("number")!;
+    const number = interaction.options.getInteger("number")!;
     const channel = interaction.options.getChannel("channel") ?? interaction.channel;
 
     if (number < 1 || number > 100)

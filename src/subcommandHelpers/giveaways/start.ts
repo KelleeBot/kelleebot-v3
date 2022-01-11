@@ -5,7 +5,7 @@ import ms from "ms";
 
 export const start = async (client: Client, interaction: CommandInteraction) => {
     const duration = interaction.options.getString("duration")!;
-    const winners = interaction.options.getNumber("winners")!;
+    const winners = interaction.options.getInteger("winners")!;
     const prize = interaction.options.getString("prize")!;
     const channel = interaction.options.getChannel("channel") ?? interaction.channel;
 
