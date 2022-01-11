@@ -45,7 +45,7 @@ export const kick = async (client: Client, interaction: CommandInteraction) => {
         }
 
         const msg = await interaction.reply({
-            content: `Are you sure you want to ban **${member.user.tag}** for ${reason}?`,
+            content: `Are you sure you want to kick **${member.user.tag}** for ${reason}?`,
             embeds: [memberInfoEmbed],
             components: [buttonRow],
             fetchReply: true
@@ -61,7 +61,7 @@ export const kick = async (client: Client, interaction: CommandInteraction) => {
         const collector = msg.createMessageComponentCollector({ filter, componentType: "BUTTON", time: 1000 * 15 });
         collector.on("collect", async (i) => {
             if (i.customId === "kick_yes") {
-
+                await kickMember(member, msg, interaction.user, client, reason);
             } else {
                 await msg.edit({
                     content: `**${member.user.tag}** was not kicked.`,
