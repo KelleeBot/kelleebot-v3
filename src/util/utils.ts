@@ -176,8 +176,10 @@ class Utils extends KelleeBotUtils {
     return numberRegExp.test(str);
   }
 
-  pluralize(amount: number, string: string) {
-    return amount !== 1 ? `${string}s` : string;
+  pluralize(amount: number, string: string, format?: boolean) {
+    return amount !== 1
+      ? format ? `\`${this.formatNumber(amount)}\` ${string}s` : `${this.formatNumber(amount)} ${string}s`
+      : format ? `\`${this.formatNumber(amount)}\` ${string}` : `${this.formatNumber(amount)} ${string}`;
   }
 
   titleCase(string: string) {
