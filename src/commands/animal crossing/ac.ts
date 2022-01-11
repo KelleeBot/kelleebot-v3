@@ -1,6 +1,6 @@
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
-import { artwork, bug, clothing, villager } from "../../subcommandHelpers/animal crossing";
+import { artwork, bug, clothing, diy, fish, furniture, interior, items, photo, sea, tool, villager } from "../../subcommandHelpers/animal crossing";
 import * as AC from "../../types/animalCrossing";
 import axios from "axios";
 
@@ -11,7 +11,7 @@ let diys: string[] = [];
 let fishes: string[] = [];
 let furnitures: string[] = [];
 let interiors: string[] = [];
-let items: string[] = [];
+let item: string[] = [];
 let photos: string[] = [];
 let seaCreatures: string[] = [];
 let tools: string[] = [];
@@ -31,7 +31,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                     args: [
                         {
                             name: "artwork",
-                            description: "The artwork name.",
+                            description: "The name of the artwork you wish to retrieve information about.",
                             type: "STRING",
                             required: true,
                             autocomplete: true
@@ -53,7 +53,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                     args: [
                         {
                             name: "bug",
-                            description: "The bug name.",
+                            description: "The name of the bug you wish to retrieve information about.",
                             type: "STRING",
                             required: true,
                             autocomplete: true
@@ -74,7 +74,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                     args: [
                         {
                             name: "clothing",
-                            description: "The clothing name.",
+                            description: "The name of the clothing you wish to retrieve information about.",
                             type: "STRING",
                             required: true,
                             autocomplete: true
@@ -90,39 +90,192 @@ export default class AnimalCrossing extends KelleeBotCommand {
                         await clothing(client, interaction);
                     }
                 },
-                // diy: {
-                //     description: ""
-                // },
-                // dream: {
-                //     description: "",
-                // },
-                // fish: {
-                //     description: "",
-                // },
-                // furniture: {
-                //     description: "",
-                // },
-                // interior: {
-                //     description: "",
-                // },
-                // item: {
-                //     description: "",
-                // },
-                // photo: {
-                //     description: "",
-                // },
-                // sea: {
-                //     description: "",
-                // },
-                // tool: {
-                //     description: "",
-                // },
+                diy: {
+                    description: "Retrieve information about a specific diy/recipe in Animal Crossing: New Horizons.",
+                    args: [
+                        {
+                            name: "diy",
+                            description: "The name of the item you wish to retrieve recipe information about.",
+                            type: "STRING",
+                            required: true,
+                            autocomplete: true
+                        }
+                    ],
+                    isAutocomplete: true,
+                    autocomplete: async ({ client, interaction }) => {
+                        const choices = await fetchData("https://api.nookipedia.com/nh/recipes", "diys");
+                        await client.utils.getAutocomplete(client, interaction, choices);
+                    },
+                    execute: async ({ client, interaction }) => {
+                        await this.setCooldown(interaction);
+                        await diy(client, interaction);
+                    }
+                },
+                dream: {
+                    description: "Show's the server owner's ACNH dream address, if they have one set.",
+                    execute: async ({ client, interaction }) => {
+                        await this.setCooldown(interaction);
+                        const guildInfo = await client.guildInfo.get(interaction.guildId!);
+                        if (!guildInfo.dreamAddress)
+                            return interaction.reply({ content: "Looks like the server owner has not set their dream address yet." });
+
+                        const owner = await interaction.guild?.fetchOwner();
+                        return interaction.reply({ content: `${owner?.user.username}'s ACNH dream address is ${guildInfo.dreamAddress}.` });
+                    }
+                },
+                fish: {
+                    description: "Retrieve information about a specific fish in Animal Crossing: New Horizons",
+                    args: [
+                        {
+                            name: "fish",
+                            description: "The name of the fish you wish to retrieve information about.",
+                            type: "STRING",
+                            required: true,
+                            autocomplete: true
+                        }
+                    ],
+                    isAutocomplete: true,
+                    autocomplete: async ({ client, interaction }) => {
+                        const choices = await fetchData("https://api.nookipedia.com/nh/fish", "fishes");
+                        await client.utils.getAutocomplete(client, interaction, choices);
+                    },
+                    execute: async ({ client, interaction }) => {
+                        await this.setCooldown(interaction);
+                        await fish(client, interaction);
+                    }
+                },
+                furniture: {
+                    description: "Retrieve information about a specific furniture in Animal Crossing: New Horizons",
+                    args: [
+                        {
+                            name: "furniture",
+                            description: "The name of the furniture you wish to retrieve information about.",
+                            type: "STRING",
+                            required: true,
+                            autocomplete: true
+                        }
+                    ],
+                    isAutocomplete: true,
+                    autocomplete: async ({ client, interaction }) => {
+                        const choices = await fetchData("https://api.nookipedia.com/nh/furniture", "furnitures");
+                        await client.utils.getAutocomplete(client, interaction, choices);
+                    },
+                    execute: async ({ client, interaction }) => {
+                        await this.setCooldown(interaction);
+                        await furniture(client, interaction);
+                    }
+                },
+                interior: {
+                    description: "Retrieve information about a specific interior item in Animal Crossing: New Horizons.",
+                    args: [
+                        {
+                            name: "interior",
+                            description: "The name of the interior item you wish to retrieve information about.",
+                            type: "STRING",
+                            required: true,
+                            autocomplete: true
+                        }
+                    ],
+                    isAutocomplete: true,
+                    autocomplete: async ({ client, interaction }) => {
+                        const choices = await fetchData("https://api.nookipedia.com/nh/interior", "interiors");
+                        await client.utils.getAutocomplete(client, interaction, choices);
+                    },
+                    execute: async ({ client, interaction }) => {
+                        await this.setCooldown(interaction);
+                        await interior(client, interaction);
+                    }
+                },
+                item: {
+                    description: "Retrieve information about a miscellaneous item in Animal Crossing: New Horizons.",
+                    args: [
+                        {
+                            name: "item",
+                            description: "The name of the item you wish to retrieve information about.",
+                            type: "STRING",
+                            required: true,
+                            autocomplete: true
+                        }
+                    ],
+                    isAutocomplete: true,
+                    autocomplete: async ({ client, interaction }) => {
+                        const choices = await fetchData("https://api.nookipedia.com/nh/items", "items");
+                        await client.utils.getAutocomplete(client, interaction, choices);
+                    },
+                    execute: async ({ client, interaction }) => {
+                        await this.setCooldown(interaction);
+                        await items(client, interaction);
+                    }
+                },
+                photo: {
+                    description: "Retrieve information about a character photo or poster in Animal Crossing: New Horizons.",
+                    args: [
+                        {
+                            name: "photo",
+                            description: "The name of the photo or poster you wish to retrieve information about.",
+                            type: "STRING",
+                            required: true,
+                            autocomplete: true
+                        }
+                    ],
+                    isAutocomplete: true,
+                    autocomplete: async ({ client, interaction }) => {
+                        const choices = await fetchData("https://api.nookipedia.com/nh/photos", "photos");
+                        await client.utils.getAutocomplete(client, interaction, choices);
+                    },
+                    execute: async ({ client, interaction }) => {
+                        await this.setCooldown(interaction);
+                        await photo(client, interaction);
+                    }
+                },
+                sea: {
+                    description: "Retrieve information about a specific sea creature in Animal Crossing: New Horizons.",
+                    args: [
+                        {
+                            name: "creature",
+                            description: "The name of the sea creature you wish to retrieve information about.",
+                            type: "STRING",
+                            required: true,
+                            autocomplete: true
+                        }
+                    ],
+                    isAutocomplete: true,
+                    autocomplete: async ({ client, interaction }) => {
+                        const choices = await fetchData("https://api.nookipedia.com/nh/sea", "seaCreatures");
+                        await client.utils.getAutocomplete(client, interaction, choices);
+                    },
+                    execute: async ({ client, interaction }) => {
+                        await this.setCooldown(interaction);
+                        await sea(client, interaction);
+                    }
+                },
+                tool: {
+                    description: "Retrieve information about a specific tool in Animal Crossing: New Horizons.",
+                    args: [
+                        {
+                            name: "tool",
+                            description: "The name of the tool item you wish to retrieve information about.",
+                            type: "STRING",
+                            required: true,
+                            autocomplete: true
+                        }
+                    ],
+                    isAutocomplete: true,
+                    autocomplete: async ({ client, interaction }) => {
+                        const choices = await fetchData("https://api.nookipedia.com/nh/tools", "tools");
+                        await client.utils.getAutocomplete(client, interaction, choices);
+                    },
+                    execute: async ({ client, interaction }) => {
+                        await this.setCooldown(interaction);
+                        await tool(client, interaction);
+                    }
+                },
                 villager: {
                     description: "Retrieve information about a specific villager in any Animal Crossing game.",
                     args: [
                         {
                             name: "name",
-                            description: "The villager's name.",
+                            description: "The name of the villager you wish to retrieve information about.",
                             type: "STRING",
                             required: true,
                             autocomplete: true
@@ -159,7 +312,7 @@ const fetchData = async (url: string, arrayType: "artworks" | "bugs" | "clothing
     } else if (arrayType === "interiors") {
         if (interiors.length) return interiors;
     } else if (arrayType === "items") {
-        if (items.length) return items;
+        if (item.length) return item;
     } else if (arrayType === "photos") {
         if (photos.length) return photos;
     } else if (arrayType === "seaCreatures") {
@@ -200,8 +353,8 @@ const fetchData = async (url: string, arrayType: "artworks" | "bugs" | "clothing
         interiors = data.map((interior: AC.Interior) => interior.name);
         return interiors;
     } else if (arrayType === "items") {
-        items = data.map((item: AC.Item) => item.name);
-        return items;
+        item = data.map((item: AC.Item) => item.name);
+        return item;
     } else if (arrayType === "photos") {
         photos = data.map((photo: AC.Photo) => photo.name);
         return photos;
