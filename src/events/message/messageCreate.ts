@@ -8,7 +8,12 @@ export default async (client: Client, message: Message) => {
   try {
     const userInfo = await client.profileInfo.get(message.author.id);
 
-    if (message.author.bot || message.channel.type === "DM" || userInfo.isBlacklisted) return;
+    if (message.author.bot || !message.guild || userInfo.isBlacklisted) return;
+
+    // Delete any @everyone/@here ping attempts if they don't have the correct perms
+    if (!message.member?.permissions.has(["MENTION_EVERYONE"], true) && (message.content.includes("@everyone") || message.content.includes("@here"))) {
+      message.delete();
+    }
 
     const guildInfo = await client.guildInfo.get(message.guildId!);
     if (!guildInfo.botChatChannel) return;
