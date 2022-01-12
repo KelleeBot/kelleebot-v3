@@ -12,7 +12,7 @@ export default class Roles extends KelleeBotCommand {
             clientPerms: ["SEND_MESSAGES", "MANAGE_ROLES"],
             subcommands: {
                 add: {
-                    description: "Configure the server's role dropdowns.",
+                    description: "Adds a role to the dropdown menu.",
                     args: [
                         {
                             name: "messageid",
@@ -42,7 +42,7 @@ export default class Roles extends KelleeBotCommand {
                     }
                 },
                 remove: {
-                    description: "Configure the server's role dropdowns.",
+                    description: "Removes a role from the dropdwon menu.",
                     args: [
                         {
                             name: "messageid",
