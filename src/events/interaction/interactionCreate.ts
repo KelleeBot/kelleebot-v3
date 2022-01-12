@@ -21,19 +21,16 @@ export default async (client: Client, interaction: Interaction) => {
 
         for (const id of removed) {
           removedRoles.push(id.value);
-          // member.roles.remove(id.value);
+          member.roles.remove(id.value);
         }
 
         for (const id of values) {
           addedRoles.push(id);
-          // member.roles.add(id);
+          member.roles.add(id);
         }
 
         const allRemoved = currentRoles.filter((val) => removedRoles.includes(val));
         const allAdded = addedRoles.filter((val) => !currentRoles.includes(val));
-
-        member.roles.remove(allRemoved);
-        member.roles.add(allAdded);
 
         const addedMsg = allAdded.length
           ? `\n**Added:**\n${allAdded.map((r) => `• <@&${r}>`).join("\n")}`
