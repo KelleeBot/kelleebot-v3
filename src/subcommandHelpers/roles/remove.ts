@@ -25,7 +25,7 @@ export const remove = async (client: Client, interaction: CommandInteraction) =>
         if (!menu)
             return await interaction.reply({ content: "Looks like there's no dropdown menu attached to that message.", ephemeral: true });
 
-        if (index > menu.options.length)
+        if (index < 1 || index > menu.options.length)
             return await interaction.reply({ content: `Please enter a number from 1 to ${menu.options.length}.`, ephemeral: true });
 
         const removedRole = menu.options[index - 1].label;
