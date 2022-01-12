@@ -1,6 +1,6 @@
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
-import { daily, points } from "../../subcommandHelpers/gambling";
+import { daily, gamble, points } from "../../subcommandHelpers/gambling";
 
 export default class Gambling extends KelleeBotCommand {
     constructor(client: Client) {
@@ -14,6 +14,20 @@ export default class Gambling extends KelleeBotCommand {
                     description: "Claim your daily reward.",
                     execute: async ({ client, interaction }) => {
                         await daily(client, interaction);
+                    }
+                },
+                gamble: {
+                    description: "Gamble your points.",
+                    args: [
+                        {
+                            name: "amount",
+                            description: "The amount (or all) to gamble.",
+                            type: "STRING",
+                            required: true
+                        }
+                    ],
+                    execute: async ({ client, interaction }) => {
+                        await gamble(client, interaction);
                     }
                 },
                 points: {
