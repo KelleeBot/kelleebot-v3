@@ -5,19 +5,18 @@ export default class Cooldowns extends KelleeBotCommand {
   constructor(client: Client) {
     super(client, {
       name: "cooldowns",
-      description:
-        "Check the all the custom cooldowns of a command and add new cooldowns",
+      description: "Check the all the custom cooldowns of a command and add new cooldowns.",
       category: "Utility",
       ownerOnly: true,
       clientPerms: ["SEND_MESSAGES", "EMBED_LINKS"],
       cooldown: 5,
       subcommands: {
         list: {
-          description: "List all cooldowns on a command",
+          description: "List all cooldowns on a command.",
           args: [
             {
               name: "command",
-              description: "The command to check",
+              description: "The command to check.",
               type: "STRING",
               required: true
             }
@@ -31,9 +30,7 @@ export default class Cooldowns extends KelleeBotCommand {
               await client.utils.CustomEmbed({ userID: interaction.user.id })
             ).setTimestamp();
 
-            const name = interaction.options
-              .getString("command")!
-              .toLowerCase();
+            const name = interaction.options.getString("command")!.toLowerCase();
             const command = client.commands.get(name);
 
             if (!command)
@@ -71,23 +68,23 @@ export default class Cooldowns extends KelleeBotCommand {
           }
         },
         set: {
-          description: "Set a cooldown for a certain role",
+          description: "Set a cooldown for a certain role.",
           args: [
             {
               name: "command",
-              description: "The command to add the cooldown to",
+              description: "The command to add the cooldown to.",
               type: "STRING",
               required: true
             },
             {
               name: "role",
-              description: "The role this cooldown should apply to",
+              description: "The role this cooldown should apply to.",
               type: "ROLE",
               required: true
             },
             {
               name: "cooldown",
-              description: "The cooldown (in seconds)",
+              description: "The cooldown (in seconds).",
               type: "NUMBER",
               required: true
             }
@@ -99,9 +96,7 @@ export default class Cooldowns extends KelleeBotCommand {
               await client.utils.CustomEmbed({ userID: interaction.user.id })
             ).setTimestamp();
 
-            const name = interaction.options
-              .getString("command")!
-              .toLowerCase();
+            const name = interaction.options.getString("command")!.toLowerCase();
             const role = interaction.options.getRole("role")!.id;
             const time = interaction.options.getNumber("cooldown")!;
 
@@ -127,11 +122,7 @@ export default class Cooldowns extends KelleeBotCommand {
               if (time === 0) {
                 await client.guildInfo.findByIdAndUpdate(
                   interaction.guildId!,
-                  {
-                    $unset: {
-                      [`prefab.commandCooldowns.${command.name}.${role}`]: 1
-                    }
-                  },
+                  { $unset: { [`commandCooldowns.${command.name}.${role}`]: 1 } },
                   { new: true, upsert: true, setDefaultsOnInsert: true }
                 );
 
@@ -141,12 +132,7 @@ export default class Cooldowns extends KelleeBotCommand {
               } else {
                 await client.guildInfo.findByIdAndUpdate(
                   interaction.guildId!,
-                  {
-                    $set: {
-                      [`prefab.commandCooldowns.${command.name}.${role}`]:
-                        time * 1000
-                    }
-                  },
+                  { $set: { [`commandCooldowns.${command.name}.${role}`]: time * 1000 } },
                   { new: true, upsert: true, setDefaultsOnInsert: true }
                 );
 
@@ -163,11 +149,11 @@ export default class Cooldowns extends KelleeBotCommand {
           }
         },
         clear: {
-          description: "Clear all cooldowns for a command",
+          description: "Clear all cooldowns for a command.",
           args: [
             {
               name: "command",
-              description: "The command to clear",
+              description: "The command to clear.",
               type: "STRING",
               required: true
             }
@@ -179,9 +165,7 @@ export default class Cooldowns extends KelleeBotCommand {
               await client.utils.CustomEmbed({ userID: interaction.user.id })
             ).setTimestamp();
 
-            const name = interaction.options
-              .getString("command")!
-              .toLowerCase();
+            const name = interaction.options.getString("command")!.toLowerCase();
             const command = client.commands.get(name);
 
             if (!command)
@@ -195,7 +179,7 @@ export default class Cooldowns extends KelleeBotCommand {
             else {
               await client.guildInfo.findByIdAndUpdate(
                 interaction.guildId!,
-                { $unset: { [`prefab.commandCooldowns.${command.name}`]: 1 } },
+                { $unset: { [`commandCooldowns.${command.name}`]: 1 } },
                 { new: true, upsert: true, setDefaultsOnInsert: true }
               );
 
@@ -214,4 +198,4 @@ export default class Cooldowns extends KelleeBotCommand {
       }
     });
   }
-}
+};

@@ -17,14 +17,20 @@ export default class Eval extends KelleeBotCommand {
           description: "Code to evaluate",
           type: "STRING",
           required: true
+        },
+        {
+          name: "show",
+          description: "Whether to send the reply as ephemeral or not.",
+          type: "BOOLEAN"
         }
       ],
       hideCommand: true
     });
   }
-
   async execute({ client, interaction }: { client: Client; interaction: CommandInteraction; }) {
     let code = interaction.options.getString("code")!;
+    const show = interaction.options.getBoolean("show")!;
+
     code = code.replace(/[“”]/g, '"').replace(/[‘’]/g, "'");
     let evaled;
 
@@ -38,7 +44,7 @@ export default class Eval extends KelleeBotCommand {
       }
 
       const stop = process.hrtime(start);
-      const res = `**Output:** \`\`\`js\n${clean(
+      const res = `**Input:**\`\`\`js\n${code}\n\`\`\`\n**Output:** \`\`\`js\n${clean(
         client,
         interaction,
         inspect(evaled, { depth: 0 })
@@ -46,15 +52,15 @@ export default class Eval extends KelleeBotCommand {
         }ms\`\`\``;
 
       if (res.length < 2000) {
-        await interaction.reply({ content: res, ephemeral: true });
+        await interaction.reply({ content: res, ephemeral: !show ? true : false });
       } else {
         const output = new MessageAttachment(Buffer.from(res), "output.txt");
-        await interaction.reply({ files: [output], ephemeral: true });
+        await interaction.reply({ files: [output], ephemeral: !show ? true : false });
       }
     } catch (e: any) {
       await interaction.reply({
         content: `Error: \`\`\`xl\n${clean(client, interaction, e)}\n\`\`\``,
-        ephemeral: true
+        ephemeral: !show ? true : false
       });
     }
   }

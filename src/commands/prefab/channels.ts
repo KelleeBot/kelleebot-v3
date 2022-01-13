@@ -6,8 +6,7 @@ export default class Channels extends KelleeBotCommand {
     super(client, {
       name: "channels",
       category: "Utility",
-      description:
-        "Check all the channels that the bot will ignore and disable/enable them.",
+      description: "Check all the channels that the bot will ignore and disable/enable them.",
       cooldown: 5,
       canNotDisable: true,
       ignoreDisabledChannels: true,
@@ -15,7 +14,7 @@ export default class Channels extends KelleeBotCommand {
       clientPerms: ["SEND_MESSAGES", "EMBED_LINKS"],
       subcommands: {
         list: {
-          description: "Lists all disabled channels",
+          description: "Lists all disabled channels.",
           execute: async ({ client, interaction }) => {
             await this.setCooldown(interaction);
 
@@ -40,11 +39,11 @@ export default class Channels extends KelleeBotCommand {
           }
         },
         disable: {
-          description: "Disable a channel",
+          description: "Disable a channel.",
           args: [
             {
               name: "channel",
-              description: "The channel you want to disable",
+              description: "The channel you want to disable.",
               type: "CHANNEL",
               required: true
             }
@@ -73,7 +72,7 @@ export default class Channels extends KelleeBotCommand {
             else {
               await client.guildInfo.findByIdAndUpdate(
                 interaction.guildId!,
-                { $push: { "prefab.disabledChannels": channel!.id } },
+                { $push: { disabledChannels: channel!.id } },
                 { new: true, upsert: true, setDefaultsOnInsert: true }
               );
 
@@ -86,11 +85,11 @@ export default class Channels extends KelleeBotCommand {
           }
         },
         enable: {
-          description: "Enable a channel",
+          description: "Enable a channel.",
           args: [
             {
               name: "channel",
-              description: "The channel you want to enable",
+              description: "The channel you want to enable.",
               type: "CHANNEL",
               required: true
             }
@@ -119,7 +118,7 @@ export default class Channels extends KelleeBotCommand {
             else {
               await client.guildInfo.findByIdAndUpdate(
                 interaction.guildId!,
-                { $pull: { "prefab.disabledChannels": channel!.id } },
+                { $pull: { disabledChannels: channel!.id } },
                 { new: true, upsert: true, setDefaultsOnInsert: true }
               );
 

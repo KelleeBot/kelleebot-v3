@@ -12,7 +12,7 @@ const permissions = {
   b: "KICK_MEMBERS",
   c: "BAN_MEMBERS",
   d: "ADMINISTRATOR",
-  e: "ADMINISTRATOR",
+  e: "MODERATE_MEMBERS",
   f: "MANAGE_CHANNELS",
   g: "MANAGE_GUILD",
   h: "ADD_REACTIONS",
@@ -53,14 +53,13 @@ export default class Permissions extends KelleeBotCommand {
   constructor(client: Client) {
     super(client, {
       name: "permissions",
-      description:
-        "Set your own custom permissions that your users need to run this command in your server",
+      description: "Set your own custom permissions that your users need to run this command in your server.",
       category: "Utility",
       ownerOnly: true,
       options: [
         {
           name: "command",
-          description: "The command you want to change permissions for",
+          description: "The command you want to change permissions for.",
           type: "STRING",
           required: true
         }
@@ -69,18 +68,7 @@ export default class Permissions extends KelleeBotCommand {
       cooldown: 5
     });
   }
-
-  async execute({
-    client,
-    interaction,
-    group,
-    subcommand
-  }: {
-    client: Client;
-    interaction: CommandInteraction;
-    group: string;
-    subcommand: string;
-  }) {
+  async execute({ client, interaction }: { client: Client; interaction: CommandInteraction; }) {
     await this.setCooldown(interaction);
 
     const name = interaction.options.getString("command")!.toLowerCase();
@@ -107,10 +95,7 @@ export default class Permissions extends KelleeBotCommand {
 
     const guildInfo = await client.guildInfo.get(interaction.guildId!);
 
-    if (
-      !guildInfo?.commandPerms ||
-      !guildInfo.commandPerms[command.name]
-    ) {
+    if (!guildInfo?.commandPerms || !guildInfo.commandPerms[command.name]) {
       if (command.perms && command.perms.length !== 0)
         embed.setDescription("`" + command.perms.join("`, `") + "`");
       else
@@ -137,12 +122,10 @@ export default class Permissions extends KelleeBotCommand {
       ]
     });
 
-    const button = await msg
-      .awaitMessageComponent({
-        filter: (b) =>
-          b.customId === "change" && b.user.id === interaction.user.id,
-        time: 30000
-      })
+    const button = await msg.awaitMessageComponent({
+      filter: (b) => b.customId === "change" && b.user.id === interaction.user.id,
+      time: 30000
+    })
       .catch(() => { });
 
     if (!button) {
@@ -150,9 +133,7 @@ export default class Permissions extends KelleeBotCommand {
         await client.utils.CustomEmbed({ userID: interaction.user.id })
       )
         .setTimestamp()
-        .setDescription(
-          `${interaction.user}, time is over! If you want to change the permissions, run the command again and press the button in time.`
-        );
+        .setDescription(`${interaction.user}, time is over! If you want to change the permissions, run the command again and press the button in time.`);
 
       return await interaction.editReply({ embeds: [embed] });
     }
@@ -171,10 +152,7 @@ export default class Permissions extends KelleeBotCommand {
 
     await button.reply({ embeds: [embed] });
 
-    const reply = await client.utils.getReply(msg, {
-      user: interaction.user,
-      time: 60000
-    });
+    const reply = await client.utils.getReply(msg, { user: interaction.user, time: 60000 });
     if (!reply) {
       const embed = (
         await client.utils.CustomEmbed({ userID: interaction.user.id })
@@ -190,22 +168,18 @@ export default class Permissions extends KelleeBotCommand {
     if (content === "clear") {
       await client.guildInfo.findByIdAndUpdate(
         interaction.guildId!,
-        { $unset: { [`prefab.commandPerms.${command.name}`]: 1 } },
+        { $unset: { [`commandPerms.${command.name}`]: 1 } },
         { new: true, upsert: true, setDefaultsOnInsert: true }
       );
 
-      embed.setDescription(
-        `${interaction.user}, the permissions for \`${command.name}\` have been cleared.`
-      );
+      embed.setDescription(`${interaction.user}, the permissions for \`${command.name}\` have been cleared.`);
     } else {
       if (!permsRegEx.test(content)) {
         const embed = (
           await client.utils.CustomEmbed({ userID: interaction.user.id })
         )
           .setTimestamp()
-          .setDescription(
-            `${interaction.user}, that isn't a valid permission string.`
-          );
+          .setDescription(`${interaction.user}, that isn't a valid permission string.`);
 
         return await interaction.channel!.send({ embeds: [embed] });
       }
@@ -220,12 +194,11 @@ export default class Permissions extends KelleeBotCommand {
 
       await client.guildInfo.findByIdAndUpdate(
         interaction.guildId!,
-        { $set: { [`prefab.commandPerms.${command.name}`]: permsArray } },
+        { $set: { [`commandPerms.${command.name}`]: permsArray } },
         { new: true, upsert: true, setDefaultsOnInsert: true }
       );
-      embed.setDescription(
-        `${interaction.user}, the permissions for \`${command.name}\` have been updated.`
-      );
+
+      embed.setDescription(`${interaction.user}, the permissions for \`${command.name}\` have been updated.`);
     }
 
     embed.spliceFields(0, 1);

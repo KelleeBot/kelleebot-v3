@@ -14,7 +14,7 @@ export default class Commands extends KelleeBotCommand {
       cooldown: 5,
       subcommands: {
         list: {
-          description: "List all disabled commands",
+          description: "List all disabled commands.",
           execute: async ({ client, interaction }) => {
             await this.setCooldown(interaction);
 
@@ -41,11 +41,11 @@ export default class Commands extends KelleeBotCommand {
           }
         },
         disable: {
-          description: "Disable a command",
+          description: "Disable a command.",
           args: [
             {
               name: "command",
-              description: "The command you want to disable",
+              description: "The command you want to disable.",
               type: "STRING",
               required: true
             }
@@ -59,9 +59,7 @@ export default class Commands extends KelleeBotCommand {
               await client.utils.CustomEmbed({ userID: interaction.user.id })
             ).setTimestamp();
 
-            const name = interaction.options
-              .getString("command")!
-              .toLowerCase();
+            const name = interaction.options.getString("command")!.toLowerCase();
 
             const command = client.commands.get(name);
 
@@ -82,7 +80,7 @@ export default class Commands extends KelleeBotCommand {
             else {
               await client.guildInfo.findByIdAndUpdate(
                 interaction.guildId!,
-                { $push: { "prefab.disabledCommands": command.name } },
+                { $push: { disabledCommands: command.name } },
                 { new: true, upsert: true, setDefaultsOnInsert: true }
               );
 
@@ -99,7 +97,7 @@ export default class Commands extends KelleeBotCommand {
           args: [
             {
               name: "command",
-              description: "The command you want to enable",
+              description: "The command you want to enable.",
               type: "STRING",
               required: true
             }
@@ -113,9 +111,7 @@ export default class Commands extends KelleeBotCommand {
               await client.utils.CustomEmbed({ userID: interaction.user.id })
             ).setTimestamp();
 
-            const name = interaction.options
-              .getString("command")!
-              .toLowerCase();
+            const name = interaction.options.getString("command")!.toLowerCase();
 
             const command = client.commands.get(name);
 
@@ -136,7 +132,7 @@ export default class Commands extends KelleeBotCommand {
             else {
               await client.guildInfo.findByIdAndUpdate(
                 interaction.guildId!,
-                { $pull: { "prefab.disabledCommands": command.name } },
+                { $pull: { disabledCommands: command.name } },
                 { new: true, upsert: true, setDefaultsOnInsert: true }
               );
 
@@ -151,4 +147,4 @@ export default class Commands extends KelleeBotCommand {
       }
     });
   }
-}
+};

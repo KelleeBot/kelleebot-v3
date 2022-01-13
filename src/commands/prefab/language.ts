@@ -12,24 +12,13 @@ export default class Language extends KelleeBotCommand {
       options: [
         {
           name: "language",
-          description: "The language you want",
+          description: "The language you want to set.",
           type: "STRING"
         }
       ]
     });
   }
-
-  async execute({
-    client,
-    interaction,
-    group,
-    subcommand
-  }: {
-    client: Client;
-    interaction: CommandInteraction;
-    group: string;
-    subcommand: string;
-  }) {
+  async execute({ client, interaction }: { client: Client; interaction: CommandInteraction; }) {
     await this.setCooldown(interaction);
 
     const userInfo = await client.profileInfo.get(interaction.user.id);
@@ -42,8 +31,7 @@ export default class Language extends KelleeBotCommand {
 
     if (!language) {
       embed.setDescription(
-        `${interaction.user}, your current set language is \`${
-          userInfo.language
+        `${interaction.user}, your current set language is \`${userInfo.language
         }\`.\n\nThese are the supported languages: \`${Object.keys(
           client.languages
         ).join("`, `")}\``
@@ -60,7 +48,7 @@ export default class Language extends KelleeBotCommand {
 
         await client.profileInfo.findByIdAndUpdate(
           interaction.user.id,
-          { $set: { "prefab.language": language } },
+          { $set: { language } },
           { new: true, upsert: true, setDefaultsOnInsert: true }
         );
       }
@@ -68,4 +56,4 @@ export default class Language extends KelleeBotCommand {
 
     await interaction.reply({ embeds: [embed] });
   }
-}
+};

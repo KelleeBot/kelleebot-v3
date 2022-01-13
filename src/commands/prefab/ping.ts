@@ -6,24 +6,13 @@ export default class Ping extends KelleeBotCommand {
   constructor(client: Client) {
     super(client, {
       name: "ping",
-      description: "Get the bots current ping",
+      description: "Get the bots current ping.",
       category: "Misc",
       clientPerms: ["SEND_MESSAGES", "EMBED_LINKS"],
       cooldown: 5
     });
   }
-
-  async execute({
-    client,
-    interaction,
-    group,
-    subcommand
-  }: {
-    client: Client;
-    interaction: CommandInteraction;
-    group: string;
-    subcommand: string;
-  }) {
+  async execute({ client, interaction }: { client: Client; interaction: CommandInteraction; }) {
     await this.setCooldown(interaction);
 
     const embed = (
