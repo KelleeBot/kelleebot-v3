@@ -6,66 +6,49 @@ export default class Color extends KelleeBotCommand {
   constructor(client: Client) {
     super(client, {
       name: "color",
-      description: "Set your own embed color",
+      description: "Set your own embed color.",
       category: "Utility",
       clientPerms: ["SEND_MESSAGES", "EMBED_LINKS"],
-      cooldown: 5,
+      cooldown: 30,
       options: [
         {
           name: "color",
           description: "The new color you want",
-          type: "STRING"
+          type: "STRING",
+          required: true,
+          choices: Object.keys(client.colors).map((c) => { return { name: c, value: c } })
         }
       ]
     });
   }
+  async execute({ client, interaction }: { client: Client; interaction: CommandInteraction; }) {
+    try {
+      await this.setCooldown(interaction);
+      const color = interaction.options.getString("color")!;
 
-  async execute({
-    client,
-    interaction,
-    group,
-    subcommand
-  }: {
-    client: Client;
-    interaction: CommandInteraction;
-    group: string;
-    subcommand: string;
-  }) {
-    await this.setCooldown(interaction);
+      const embed = (
+        await client.utils.CustomEmbed({ userID: interaction.user.id })
+      )
+        .setAuthor({
+          name: interaction.user.tag,
+          iconURL: interaction.user.displayAvatarURL({ dynamic: true })
+        })
+        .setTimestamp();
 
-    const userInfo = await client.profileInfo.get(interaction.user.id);
+      embed
+        .setDescription(`Your embed color has successfully been changed to \`${color}\`.`)
+        .setColor(client.colors[color]);
 
-    const embed = (
-      await client.utils.CustomEmbed({ userID: interaction.user.id })
-    ).setTimestamp();
-
-    const color = interaction.options.getString("color")?.toLowerCase();
-
-    if (!color) {
-      embed.setDescription(
-        `${interaction.user}, your current embed color is \`${
-          userInfo.embedColor
-        }\`\n\nThese are the available colors: \`${Object.keys(
-          client.colors
-        ).join("`, `")}\``
+      await client.profileInfo.findByIdAndUpdate(
+        interaction.user.id,
+        { $set: { embedColor: color } },
+        { new: true, upsert: true, setDefaultsOnInsert: true }
       );
-    } else {
-      if (!Object.keys(client.colors).includes(color))
-        embed.setDescription(
-          `${interaction.user}, the embed color \`${color}\` doesn't exist.`
-        );
-      else {
-        embed.setDescription(
-          `${interaction.user}, your embed color has been changed to \`${color}\``
-        );
-        await client.profileInfo.findByIdAndUpdate(
-          interaction.user.id,
-          { $set: { "prefab.embedColor": color } },
-          { new: true, upsert: true, setDefaultsOnInsert: true }
-        );
-      }
-    }
 
-    await interaction.reply({ embeds: [embed] });
+      return await interaction.reply({ embeds: [embed], ephemeral: true });
+    } catch (e) {
+      client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
+      return await interaction.reply({ content: "An error has occurred. Please try again.", ephemeral: true });
+    }
   }
 }
