@@ -1,6 +1,6 @@
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
-import { play } from "../../subcommandHelpers/music";
+import { lyrics, play } from "../../subcommandHelpers/music";
 
 export default class Music extends KelleeBotCommand {
     constructor(client: Client) {
@@ -11,6 +11,20 @@ export default class Music extends KelleeBotCommand {
             clientPerms: ["SEND_MESSAGES", "SPEAK", "CONNECT", "EMBED_LINKS"],
             cooldown: 15,
             subcommands: {
+                lyrics: {
+                    description: "Search lyrics for either the current song or the specified song.",
+                    args: [
+                        {
+                            name: "query",
+                            description: "The song to search for.",
+                            type: "STRING"
+                        }
+                    ],
+                    execute: async ({ client, interaction }) => {
+                        //this.setCooldown(interaction);
+                        await lyrics(client, interaction);
+                    }
+                },
                 play: {
                     description: "Play some music.",
                     args: [
