@@ -1,5 +1,6 @@
 import { Channel, CommandInteraction, GuildMember } from "discord.js";
 import { Client } from "../../util/client";
+import * as locale from "../../../config/locale.json";
 
 export const guild = async (client: Client, interaction: CommandInteraction) => {
     await interaction.deferReply();
@@ -65,6 +66,12 @@ export const guild = async (client: Client, interaction: CommandInteraction) => 
                 name: "**Boosts**",
                 value: `${premiumSubscriptionCount} Boost${premiumSubscriptionCount !== 1 ? "s" : ""
                     } (Tier ${premiumTier})`,
+                inline: true
+            },
+            {
+                name: "**Guild Locale**",
+                //@ts-ignore
+                value: locale[interaction.guildLocale],
                 inline: true
             },
             {

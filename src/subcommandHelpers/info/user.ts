@@ -2,6 +2,7 @@ import { CommandInteraction, GuildMember, Guild, MessageEmbed, Role, Permissions
 import { Client } from "../../util/client";
 import { lstatSync, readdirSync, readFileSync } from "fs";
 import { join } from "path";
+import * as locale from "../../../config/locale.json";
 
 let linesOfCode = 0;
 let numOfFiles = 0;
@@ -29,6 +30,7 @@ const status = {
 } as { [key: string]: string };
 
 export const user = async (client: Client, interaction: CommandInteraction) => {
+
     const readCode = (dir: string) => {
         let files = readdirSync(dir);
         for (const file of files) {
@@ -151,7 +153,7 @@ export const user = async (client: Client, interaction: CommandInteraction) => {
             {
                 name: "**Joined Discord**",
                 value: `<t:${userCreatedTimestamp}:F> (<t:${userCreatedTimestamp}:R>)`,
-                inline: true
+                inline: false
             },
             {
                 name: "**Joined Server**",
@@ -160,12 +162,16 @@ export const user = async (client: Client, interaction: CommandInteraction) => {
             },
             {
                 name: `**Roles [${member!.roles.cache.size - 1}]**`,
-                value: getAllRoles(member!) === "" ? "None" : getAllRoles(member!),
+                value: !getAllRoles(member!) ? "None" : getAllRoles(member!),
                 inline: false
             }
         )
         .setFooter({ text: `ID: ${user.id}` })
         .setTimestamp();
+
+    if (interaction.user.id === member.id)
+        // @ts-ignore
+        msgEmbed.addFields({ name: "**User Locale**", value: locale[interaction.locale] });
 
     const extraPerms = [];
     if (isServerAdmin(member!, interaction.guild!)) {
