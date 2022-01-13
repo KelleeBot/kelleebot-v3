@@ -71,63 +71,59 @@ class Utils extends KelleeBotUtils {
             .setCustomId(buttons[i])
             .setStyle("PRIMARY")
         );
-
-        const row = new MessageActionRow().addComponents(msgButtons);
-        const pageMsg = await interaction.reply({
-          embeds: [embeds[0]],
-          components: [row],
-          fetchReply: true
-        }) as Message;
-
-        let pageIndex = 0;
-
-        const collector = pageMsg.createMessageComponentCollector({ componentType: "BUTTON", time });
-        collector.on("collect", async (i) => {
-          try {
-            await i.deferUpdate();
-            if ((i.member as GuildMember).id !== interaction.user.id)
-              return i.reply({
-                content: `This is locked to **${(interaction.member as GuildMember).user.tag}**.`,
-                ephemeral: true
-              })
-
-            if (i.customId === "➡️") {
-              if (pageIndex < embeds.length - 1) {
-                pageIndex++;
-                await pageMsg.edit({ embeds: [embeds[pageIndex]] });
-              } else {
-                pageIndex = 0;
-                await pageMsg.edit({ embeds: [embeds[pageIndex]] });
-              }
-            } else if (i.customId === "⛔") {
-              collector.stop();
-            } else if (i.customId === "⬅️") {
-              if (pageIndex > 0) {
-                pageIndex--;
-                await pageMsg.edit({ embeds: [embeds[pageIndex]] });
-              } else {
-                pageIndex = embeds.length - 1;
-                await pageMsg.edit({ embeds: [embeds[pageIndex]] });
-              }
-            }
-          } catch (e) {
-            return this.client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}.`);
-          }
-        });
-
-        collector.on("end", async () => {
-          try {
-            msgButtons.forEach((button) => {
-              button.setDisabled(true);
-              return button;
-            });
-
-            await pageMsg.edit({ components: [new MessageActionRow().addComponents(msgButtons)] });
-          } catch (e) {
-            this.client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
-          }
-        });
       }
+
+      const row = new MessageActionRow().addComponents(msgButtons);
+      const pageMsg = await interaction.channel?.send({ embeds: [embeds[0]], components: [row] }) as Message
+
+      let pageIndex = 0;
+
+      const collector = pageMsg.createMessageComponentCollector({ componentType: "BUTTON", time });
+      collector.on("collect", async (i) => {
+        try {
+          await i.deferUpdate();
+          if ((i.member as GuildMember).id !== interaction.user.id)
+            return i.reply({
+              content: `This is locked to **${(interaction.member as GuildMember).user.tag}**.`,
+              ephemeral: true
+            })
+
+          if (i.customId === "➡️") {
+            if (pageIndex < embeds.length - 1) {
+              pageIndex++;
+              await pageMsg.edit({ embeds: [embeds[pageIndex]] });
+            } else {
+              pageIndex = 0;
+              await pageMsg.edit({ embeds: [embeds[pageIndex]] });
+            }
+          } else if (i.customId === "⛔") {
+            collector.stop();
+          } else if (i.customId === "⬅️") {
+            if (pageIndex > 0) {
+              pageIndex--;
+              await pageMsg.edit({ embeds: [embeds[pageIndex]] });
+            } else {
+              pageIndex = embeds.length - 1;
+              await pageMsg.edit({ embeds: [embeds[pageIndex]] });
+            }
+          }
+        } catch (e) {
+          return this.client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}.`);
+        }
+      });
+
+      collector.on("end", async () => {
+        try {
+          msgButtons.forEach((button) => {
+            button.setDisabled(true);
+            return button;
+          });
+
+          await pageMsg.edit({ components: [new MessageActionRow().addComponents(msgButtons)] });
+        } catch (e) {
+          this.client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
+        }
+      });
     } catch (e) {
       return this.client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
     }
