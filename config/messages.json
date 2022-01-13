@@ -1,6 +1,6 @@
 {
   "NO_POINTS": "You don't have any points to gamble.",
-  "NOT_ENOUGH": "You don't have enough points! You only have `{POINTS}` {PLURALIZE}!",
+  "NOT_ENOUGH": "You don't have enough points! You only have {POINTS}!",
   "ALL_IN_LOSE": "You went all in and lost all of your points <:kelleeCry:824727343511633973>",
   "ALL_IN_WIN": "You went all in and won! You now have `{POINTS}` points!",
   "VALID_POINTS": "Please provide a valid number of points.",

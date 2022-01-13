@@ -53,8 +53,7 @@ export const blackjack = async (client: Client, interaction: CommandInteraction)
             return interaction.reply({ content: ONE_POINT });
 
         if (+pointsToGamble > actualPoints) {
-            const msg = NOT_ENOUGH.replace(/{POINTS}/g, client.utils.formatNumber(actualPoints))
-                .replace(/{PLURALIZE}/g, `${client.utils.pluralize(actualPoints, "point", true)}`);
+            const msg = NOT_ENOUGH.replace(/{POINTS}/g, client.utils.pluralize(actualPoints, "point", true));
             return interaction.reply({ content: msg });
         }
 

@@ -51,7 +51,7 @@ export default class Add extends KelleeBotCommand {
 
             const newPoints = await addPoints(interaction.guildId!, (member as GuildMember).id, points);
             return interaction.reply({
-                content: `You have given **${(member as GuildMember).user.tag}** ${client.utils.pluralize(points, "point", true)}. They now have ${client.utils.pluralize(newPoints, "point")}.`
+                content: `You have given **${(member as GuildMember).user.tag}** ${client.utils.pluralize(points, "point", true)}. They now have ${client.utils.pluralize(newPoints, "point", true)}.`
             });
         } catch (e) {
             client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);

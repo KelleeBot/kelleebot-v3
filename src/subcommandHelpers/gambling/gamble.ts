@@ -36,8 +36,7 @@ export const gamble = async (client: Client, interaction: CommandInteraction) =>
             return await interaction.reply({ content: ONE_POINT });
 
         if (+pointsToGamble > actualPoints) {
-            const msg = NOT_ENOUGH.replace(/{POINTS}/g, client.utils.formatNumber(actualPoints))
-                .replace(/{PLURALIZE}/g, `${client.utils.pluralize(actualPoints, "point", true)}`);
+            const msg = NOT_ENOUGH.replace(/{POINTS}/g, client.utils.pluralize(actualPoints, "point", true));
             return await interaction.reply({ content: msg });
         }
 
