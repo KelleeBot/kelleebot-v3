@@ -181,6 +181,10 @@ class Utils extends KelleeBotUtils {
   titleCase(string: string) {
     return string.replace(/(^|\s)\S/g, (char) => char.toUpperCase());
   }
+
+  chunkArray(arr: any[], size: number): any {
+    return arr.length > size ? [arr.slice(0, size), ...this.chunkArray(arr.slice(size), size)] : [arr];
+  }
 }
 
 export { Utils };
