@@ -15,7 +15,7 @@ const multiplier = slotsEmoji.length;
 export const slots = async (client: Client, interaction: CommandInteraction) => {
     try {
         const { user, guild } = interaction;
-        const points = interaction.options.getString("points")!;
+        const points = interaction.options.getString("amount")!;
 
         const actualPoints = await getPoints(guild!.id, user.id);
         if (actualPoints === 0)

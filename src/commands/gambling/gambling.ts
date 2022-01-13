@@ -1,6 +1,6 @@
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
-import { blackjack, daily, gamble, points, slots } from "../../subcommandHelpers/gambling";
+import { blackjack, daily, gamble, points, scratch, slots } from "../../subcommandHelpers/gambling";
 
 export default class Gambling extends KelleeBotCommand {
     constructor(client: Client) {
@@ -9,6 +9,7 @@ export default class Gambling extends KelleeBotCommand {
             category: "Gambling",
             description: "Gamble away all your points.",
             clientPerms: ["SEND_MESSAGES", "EMBED_LINKS"],
+            cooldown: 15,
             subcommands: {
                 blackjack: {
                     description: "Play blackjack with the bot.",
@@ -58,18 +59,32 @@ export default class Gambling extends KelleeBotCommand {
                         await points(client, interaction);
                     }
                 },
+                scratch: {
+                    description: "Play the scratch ticket to try to win some points.",
+                    args: [
+                        {
+                            name: "amount",
+                            description: "The amount of points (or all) to play scratch tickets with.",
+                            type: "STRING",
+                            required: true
+                        }
+                    ],
+                    execute: async ({ client, interaction }) => {
+                        this.setCooldown(interaction);
+                        await scratch(client, interaction);
+                    }
+                },
                 slots: {
                     description: "Test your luck and play the slots. Each slot win gives you 4 times the amount you bet.",
                     args: [
                         {
-                            name: "points",
+                            name: "amount",
                             description: "The amount of points (or all) to gamble.",
                             type: "STRING",
                             required: true
                         }
                     ],
                     execute: async ({ client, interaction }) => {
-                        await this.setCooldown(interaction);
                         await slots(client, interaction);
                     }
                 }
