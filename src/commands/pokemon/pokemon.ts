@@ -12,6 +12,7 @@ export default class Pokemon extends KelleeBotCommand {
             name: "pokemon",
             category: "Pokemon",
             description: "Commands that are related to Pokémon.",
+            cooldown: 15,
             subcommands: {
                 pokeinfo: {
                     description: "See information about a Pokémon.",
