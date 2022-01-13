@@ -13,9 +13,8 @@ export default class Color extends KelleeBotCommand {
       options: [
         {
           name: "color",
-          description: "The new color you want",
+          description: "The new color you want to set your embed to.",
           type: "STRING",
-          required: true,
           choices: Object.keys(client.colors).map((c) => { return { name: c, value: c } })
         }
       ]
@@ -23,8 +22,8 @@ export default class Color extends KelleeBotCommand {
   }
   async execute({ client, interaction }: { client: Client; interaction: CommandInteraction; }) {
     try {
-      await this.setCooldown(interaction);
-      const color = interaction.options.getString("color")!;
+      const color = interaction.options.getString("color");
+      const userInfo = await client.profileInfo.get(interaction.user.id);
 
       const embed = (
         await client.utils.CustomEmbed({ userID: interaction.user.id })
@@ -34,6 +33,13 @@ export default class Color extends KelleeBotCommand {
           iconURL: interaction.user.displayAvatarURL({ dynamic: true })
         })
         .setTimestamp();
+
+      if (!color) {
+        embed.setDescription(`Your current embed color is \`${userInfo.embedColor}\`.`);
+        return await interaction.reply({ embeds: [embed], ephemeral: true });
+      }
+
+      await this.setCooldown(interaction);
 
       embed
         .setDescription(`Your embed color has successfully been changed to \`${color}\`.`)
