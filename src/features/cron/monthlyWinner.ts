@@ -26,37 +26,44 @@ export default (client: Client) => {
 };
 
 const execute = async (client: Client) => {
-    const guildId = "707103910686621758"; // Lunar Circle
-    const channelId = "724484131643457650";
-    const masterGamblerRoleID = "795356217978388511";
+    client.guilds.cache.forEach(async (guild) => {
+        try {
+            const guildInfo = await client.guildInfo.get(guild.id);
+            if (!guildInfo.gambling) return;
 
-    const guild = client.guilds.cache.get(guildId);
-    if (!guild) return;
+            const { monthlyPrize, resetPointsMonthly } = guildInfo.gambling;
+            if (!resetPointsMonthly) return;
 
-    try {
-        const guildInfo = await client.guildInfo.get(guildId);
-        if (!guildInfo.gambling) return;
+            const channel = client.channels.cache.get(guildInfo.announcementsChannel) as TextChannel;
+            if (!channel) return;
 
-        const { monthlyPrize } = guildInfo.gambling;
-        const channel = client.channels.cache.get(channelId) as TextChannel;
-        if (!channel) return;
+            const winner = await fetchWinner(guild.id);
+            if (!winner) return;
 
-        const winner = await fetchWinner(guildId);
-        if (!winner) return;
+            const { userID, points } = winner;
+            const month = dayjs().tz(timeZone).subtract(1, "months").format("MMMM");
 
-        const { userID, points } = winner;
-        const month = dayjs().tz(timeZone).subtract(1, "months").format("MMMM");
+            if (guild.id === "707103910686621758") { // Lunar Circle
+                const masterGamblerRoleID = "795356217978388511";
+                await channel.send({
+                    content: `Congrats to <@${userID}> for having the most points (${points.toLocaleString()}) for the month of ${month}! You have won a free month of ${monthlyPrize} and have earned the coveted <@&${masterGamblerRoleID}> role! Please check your DM for your gift!`,
+                    allowedMentions: { parse: ["users"] }
+                });
 
-        channel.send({
-            content: `Congrats to <@${userID}> for having the most points (${points.toLocaleString()}) for the month of ${month}! You have won a free month of ${monthlyPrize} and have earned the coveted <@&${masterGamblerRoleID}> role! Please check your DM for your gift!`,
-            allowedMentions: { parse: ["users"] }
-        });
+                await sendDM(client, guildInfo, userID, month, points);
+                await addRemoveRole(masterGamblerRoleID, guild, userID);
+            } else if (guild.id === "674506108764815376") { // Pirate Pandas
+                const currentMonth = dayjs().format("MMMM");
 
-        await sendDM(client, guildInfo, userID, month, points);
-        await addRemoveRole(masterGamblerRoleID, guild, userID);
-    } catch (e) {
-        client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
-    }
+                await channel.send({
+                    content: `Congrats to <@${userID}> for having the most points (${points.toLocaleString()}) for the month of ${month}! You have won ${monthlyPrize} for the month of ${currentMonth}!`,
+                    allowedMentions: { parse: ["users"] }
+                });
+            }
+        } catch (e) {
+            client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
+        }
+    });
 };
 
 const fetchWinner = async (guildID: Snowflake) => {
@@ -99,15 +106,18 @@ const addRemoveRole = async (masterGamblerRoleID: Snowflake, guild: Discord.Guil
     const role = await guild.roles.fetch(masterGamblerRoleID);
     if (!role) return;
 
-    const currentMember = role.members.first(); // Get current member with Master Gambler role
+    //const currentMember = role.members.first(); // Get current member with Master Gambler role
+    const currentMember = (await guild.members.fetch()).filter(member => member.roles.cache.has(role.id))
+        .filter(member => member.id === userID)
+        .first();
 
-    const member = await guild.members.fetch(userID);
-    if (!member) return;
+    const winner = await guild.members.fetch(userID);
+    if (!winner) return;
 
     if (currentMember) {
-        if (currentMember.id === member.id) return;
+        if (currentMember.id === winner.id) return;
         currentMember.roles.remove(role); // Remove the Master Gambler role from the previous month's winner
     }
 
-    member.roles.add(role); // Add the Master Gambler role to the new winner
+    winner.roles.add(role); // Add the Master Gambler role to the new winner
 };

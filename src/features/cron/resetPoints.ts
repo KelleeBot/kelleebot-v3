@@ -15,20 +15,24 @@ export default (client: Client) => {
 };
 
 const execute = async (client: Client) => {
-    try {
-        const guildID = "707103910686621758"; // Lunar Circle
-        const guild = client.guilds.cache.get(guildID);
-        if (!guild) return;
+    client.guilds.cache.forEach(async (guild) => {
+        try {
+            const guildInfo = await client.guildInfo.get(guild.id);
+            if (!guildInfo) return;
 
-        const results = await gambling.find({ guildID });
-        if (!results) return;
+            const { resetPointsMonthly } = guildInfo.gambling;
+            if (!resetPointsMonthly) return;
 
-        for (const result of results) {
-            const { guildID, userID } = result;
-            const newPoints = await setPoints(guildID, userID, 0);
-            client.utils.log("WARNING", '', `${userID} ${newPoints}`);
+            const results = await gambling.find({ guildID: guild.id });
+            if (!results || !results.length) return;
+
+            for (const result of results) {
+                const { guildID, userID } = result;
+                const newPoints = await setPoints(guildID, userID, 0);
+                client.utils.log("WARNING", `${guild.name}`, `${userID} ${newPoints}`);
+            }
+        } catch (e) {
+            client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
         }
-    } catch (e) {
-        client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
-    }
+    });
 }
