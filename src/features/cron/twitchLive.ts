@@ -109,7 +109,7 @@ const execute = async (client: Client) => {
                         .replace(/{STREAM_TITLE}/g, title)
                         .replace(/{GAME}/g, game_name);
 
-                    const msg = await channel.send({ content, embeds: [embed] });
+                    const msg = await channel.send({ content, embeds: [embed], allowedMentions: { parse: ["roles", "everyone"] } });
                     if (!msg) return;
 
                     await client.twitchLiveInfo.findByIdAndUpdate(guild.id,
