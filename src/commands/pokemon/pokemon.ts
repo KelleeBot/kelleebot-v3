@@ -1,7 +1,7 @@
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 import { PokemonInfo } from "../../types/pokemon"
-import { pokeInfo } from "../../subcommandHelpers/pokemon";
+import { pokeInfo, quiz } from "../../subcommandHelpers/pokemon";
 import axios from "axios";
 
 let pokemon: string[] = []
@@ -13,6 +13,7 @@ export default class Pokemon extends KelleeBotCommand {
             category: "Pokemon",
             description: "Commands that are related to Pokémon.",
             cooldown: 15,
+            clientPerms: ["SEND_MESSAGES", "EMBED_LINKS"],
             subcommands: {
                 pokeinfo: {
                     description: "See information about a Pokémon.",
@@ -34,11 +35,18 @@ export default class Pokemon extends KelleeBotCommand {
                         await this.setCooldown(interaction)
                         await pokeInfo(client, interaction)
                     }
+                },
+                quiz: {
+                    description: "Guess that Pokémon.",
+                    execute: async ({ client, interaction }) => {
+                        await this.setCooldown(interaction);
+                        await quiz(client, interaction);
+                    }
                 }
             }
         });
     }
-}
+};
 
 const fetchAllPokemon = async () => {
     if (pokemon.length) return pokemon
@@ -47,4 +55,4 @@ const fetchAllPokemon = async () => {
     pokemon = resp.data.results.map((poke: PokemonInfo) => poke.name)
 
     return pokemon
-}
+};
