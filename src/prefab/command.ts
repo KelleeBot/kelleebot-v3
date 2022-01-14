@@ -43,7 +43,7 @@ class Command {
       options = [],
       defaultPermission = true,
       permissions = [],
-      development = true,
+      development = false,
       devOnly = false,
       hideCommand = false,
       ownerOnly = false,
