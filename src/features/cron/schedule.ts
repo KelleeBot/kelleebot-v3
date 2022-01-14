@@ -15,7 +15,7 @@ const schedule = {
     Monday: "OFF",
     Tuesday: "Taco Tuesday (Stream with <@274641094484951040>)! [7:00PM]",
     Wednesday: "OFF",
-    Thursday: "Teyvat Thursday! (Genshin Impact) [7:00PM]",
+    Thursday: "Teyvat Thursday! (Cozy Grove) [7:00PM]",
     Friday: "OFF",
     Saturday: "OFF",
     Sunday: "OFF"
