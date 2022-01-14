@@ -26,6 +26,10 @@ const guild = new Schema({
       default: pointsToGive,
       type: Number
     },
+    resetPointsMonthly: {
+      default: false,
+      type: Boolean
+    },
     raffleChannel: String,
     rafflePoints: {
       default: defaultRafflePoints,

@@ -18,6 +18,7 @@ export interface Guild {
     gamblingLeaderboardChannel: Snowflake;
     monthlyPrize?: string;
     dailyReward: number;
+    resetPointsMonthly: boolean;
     raffleChannel: Snowflake;
     rafflePoints: number;
     nitroLink?: string;
