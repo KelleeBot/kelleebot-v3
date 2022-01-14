@@ -7,7 +7,7 @@ export default class Setrafflepoints extends KelleeBotCommand {
     constructor(client: Client) {
         super(client, {
             name: "setrafflepoints",
-            category: "Gambling",
+            category: "Admin",
             description: "Sets the points to win for raffles.",
             perms: ["MANAGE_GUILD"],
             clientPerms: ["SEND_MESSAGES"],

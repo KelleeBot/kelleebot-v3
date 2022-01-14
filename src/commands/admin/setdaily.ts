@@ -7,7 +7,7 @@ export default class Setdaily extends KelleeBotCommand {
     constructor(client: Client) {
         super(client, {
             name: "setdaily",
-            category: "Gambling",
+            category: "Admin",
             description: "Sets the daily rewards amount.",
             perms: ["MANAGE_GUILD"],
             clientPerms: ["SEND_MESSAGES"],
