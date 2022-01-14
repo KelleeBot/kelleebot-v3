@@ -67,7 +67,7 @@ const fetchTopGamblers = async (client: Client, guild: Guild) => {
 
     for (let count = 0; count < results.length; count++) {
         const { userID, points = 0 } = results[count];
-        text += `${count + 1}. <@${userID}> has \`${points.toLocaleString()}\` ${client.utils.pluralize(points, "point")}.\n`;
+        text += `${count + 1}. <@${userID}> has ${client.utils.pluralize(points, "point", true)}.\n`;
     }
     text += guild.gambling.monthlyPrize
         ? `\nPoints will be reset back to 0 at 12AM ${timezoneFormat} on ${nextMonth} 1st.\n`
