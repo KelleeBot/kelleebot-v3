@@ -17,23 +17,39 @@
             "usage": "- `/cooldowns [command]` to display all modified cooldowns for a command and update them.\n- `/cooldowns [command] set [role] [cooldown]` to set the cooldown for this command to a certain value.- `/cooldowns [command] clear [role]` to use the default cooldown for this command."
         },
         "help": {
-            "description": "Get help on commands.",
-            "usage": "To get help on a specific command, use `/help [command name]` (without the [ ]).\nFor a full list of all commands, simply use `/help`.",
+            "description": "See information about commands (i.e, usage, cooldowns, aliases, and permissions).",
+            "usage": "Select a category from the dropdown menu first followed by the command. You will have one minute to select from the list of categories/commands before the help menu times out.\nFor a full list of all command categories, simply use `{PREFIX}help`.\n\n**Note:** `<>` means required arguments. `[]` means optional arguments.",
             "examples": "`/help ping`",
             "names": {
                 "usage": "Usage",
                 "aliases": "Aliases",
                 "examples": "Examples",
-                "noCategory": "No category",
+                "noCategory": "No Category",
                 "cooldown": "Cooldown",
+                "permissions": "Permissions",
                 "isDisabled": "This command is currently disabled in this server.",
-                "commandCategories": "Command categories",
+                "commandCategories": "Command Categories",
                 "categoriesHelp": "Use `/help [category]` to get more info on a category, for example: `/help misc`",
                 "categoriesName": "Categories",
+                "commandsName": "Commands",
+                "categoryMenu": "Select a category from the menu below to see all commands associated with it.",
+                "commandsMenu": "Select a command name from the menu below to see more infomation about it or select a new category.",
                 "categories": {
-                    "Utility": "Utility",
+                    "Admin": "Admin",
+                    "Animal Crossing": "Animal Crossing",
+                    "Animals": "Animals",
+                    "Config": "Config",
+                    "Fun": "Fun",
+                    "Gambling": "Gambling",
+                    "Giveaways": "Giveaways",
+                    "Info": "Info",
                     "Misc": "Misc",
-                    "No category": "No category"
+                    "Moderation": "Moderation",
+                    "Music": "Music",
+                    "Pokemon": "Pokemon",
+                    "Roles": "Roles",
+                    "Utility": "Utility",
+                    "No category": "No Category"
                 }
             }
         },
