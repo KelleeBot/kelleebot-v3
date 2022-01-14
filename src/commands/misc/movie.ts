@@ -54,8 +54,8 @@ const showAllMovies = async (query: string, results: MovieResult[], interaction:
         movieList += `${i + 1}. ${title} ${releaseYear ? `(${releaseYear})` : ""}\n`;
 
         selectMenu.addOptions({
-            label: Util.splitMessage(title, { maxLength: 25, char: " " })[0],
-            description: title,
+            label: Util.splitMessage(title, { maxLength: 100, char: " " })[0],
+            description: results[i].original_language !== "en" ? results[i].title : "",
             value: i.toString()
         });
     }

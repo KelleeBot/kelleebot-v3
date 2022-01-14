@@ -63,8 +63,8 @@ const showAllLocations = async (client: Client, query: string, results: any[], i
         text += `${i + 1}. ${results[i].location.name}\n`;
 
         selectMenu.addOptions({
-            label: Util.splitMessage(results[i].location.name, { maxLength: 25, char: " " })[0],
-            description: results[i].location.name,
+            label: Util.splitMessage(results[i].location.name, { maxLength: 100, char: " " })[0],
+            // description: results[i].location.name,
             value: i.toString()
         });
     }
