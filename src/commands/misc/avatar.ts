@@ -6,7 +6,7 @@ export default class Avatar extends KelleeBotCommand {
     constructor(client: Client) {
         super(client, {
             name: "avatar",
-            category: "misc",
+            category: "Misc",
             description: "Displays your avatar or someone elses.",
             cooldown: 15,
             clientPerms: ["SEND_MESSAGES", "EMBED_LINKS"],

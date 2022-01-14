@@ -7,7 +7,7 @@ export default class Dadjoke extends KelleeBotCommand {
     constructor(client: Client) {
         super(client, {
             name: "dadjoke",
-            category: "fun",
+            category: "Fun",
             cooldown: 15,
             clientPerms: ["SEND_MESSAGES"],
             description: `${client.user!.username} tells you a dad joke.`

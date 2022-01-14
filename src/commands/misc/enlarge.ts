@@ -7,7 +7,7 @@ export default class Enlarge extends KelleeBotCommand {
     constructor(client: Client) {
         super(client, {
             name: "enlarge",
-            category: "misc",
+            category: "Misc",
             description: "Enlarges an emoji.",
             cooldown: 15,
             clientPerms: ["SEND_MESSAGES", "EMBED_LINKS"],
