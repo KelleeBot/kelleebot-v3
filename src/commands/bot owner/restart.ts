@@ -8,6 +8,7 @@ export default class Restart extends KelleeBotCommand {
             name: "restart",
             category: "Bot Owner",
             devOnly: true,
+            development: true,
             hideCommand: true,
             description: "You can't use this command, so why bother explaining."
         });
