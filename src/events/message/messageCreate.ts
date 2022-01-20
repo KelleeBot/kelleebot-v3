@@ -19,7 +19,7 @@ export default async (client: Client, message: Message) => {
     }
 
     // Delete any @everyone/@here ping attempts if they don't have the correct perms
-    if (!message.member?.permissions.has(["MENTION_EVERYONE"], true) && (message.content.includes("@everyone") || message.content.includes("@here"))) {
+    if (!message.member?.permissions.has(["MENTION_EVERYONE"], true) && message.mentions.everyone) {
       message.delete();
     }
 
