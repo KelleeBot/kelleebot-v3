@@ -11,6 +11,7 @@ export default class Eval extends KelleeBotCommand {
       category: "Dev Only",
       clientPerms: ["SEND_MESSAGES"],
       devOnly: true,
+      development: true,
       options: [
         {
           name: "code",
