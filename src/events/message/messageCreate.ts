@@ -15,12 +15,7 @@ export default async (client: Client, message: Message) => {
     const scamChecker = (value: string) => scams.links.some((element) => value.includes(element));
 
     if (scamChecker(message.content.toLowerCase())) {
-      await banUser(message.author, message.guild, client);
-    }
-
-    // Delete any @everyone/@here ping attempts if they don't have the correct perms
-    if (!message.member?.permissions.has(["MENTION_EVERYONE"], true) && message.mentions.everyone) {
-      message.delete();
+      return await banUser(message.author, message.guild, client);
     }
 
     if (message.author.bot || userInfo.isBlacklisted) return;
