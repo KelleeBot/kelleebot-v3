@@ -39,6 +39,9 @@ export default class Scams extends KelleeBotCommand {
 
             switch (action.toLowerCase()) {
                 case "add":
+                    if (scams.links.includes(link.toLowerCase()))
+                        return await interaction.reply({ content: "That link is already in the database.", ephemeral: true });
+
                     await client.scams.findByIdAndUpdate(
                         "scams",
                         { $push: { links: link.toLowerCase() } },
