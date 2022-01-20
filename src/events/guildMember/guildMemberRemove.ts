@@ -15,6 +15,7 @@ export default async (client: Client, member: GuildMember) => {
     const msgEmbed = new MessageEmbed()
         .setColor(GUILD_MEMBER_EVENTS as ColorResolvable)
         .setAuthor({ name: user.tag, iconURL: user.displayAvatarURL({ dynamic: true }) })
+        .setDescription(`**${user} has left the server**`)
         .addFields(
             { name: "**Joined**", value: `<t:${joinedTimestamp}:F> (<t:${joinedTimestamp}:R>)`, inline: false },
             { name: "**Left**", value: `<t:${leftTimestamp}:F> (<t:${leftTimestamp}:R>)`, inline: false }
@@ -22,24 +23,24 @@ export default async (client: Client, member: GuildMember) => {
         .setFooter({ text: `ID: ${user.id}` })
         .setTimestamp();
 
-    const fetchedLog = await client.utils.fetchAuditLog(guild, "MEMBER_KICK");
-    if (!fetchedLog) {
-        msgEmbed.setDescription(`**${user} has left the server**`);
-        return client.utils.sendMessageToBotLog(client, guild, msgEmbed);
-    }
+    // const fetchedLog = await client.utils.fetchAuditLog(guild, "MEMBER_KICK");
+    // if (!fetchedLog) {
+    //     msgEmbed.setDescription(`**${user} has left the server**`);
+    //     return client.utils.sendMessageToBotLog(client, guild, msgEmbed);
+    // }
 
-    const kickLog = fetchedLog.entries.first();
-    if (!kickLog) {
-        msgEmbed.setDescription(`**${user} has left the server**`);
-        return client.utils.sendMessageToBotLog(client, guild, msgEmbed);
-    }
+    // const kickLog = fetchedLog.entries.first();
+    // if (!kickLog) {
+    //     msgEmbed.setDescription(`**${user} has left the server**`);
+    //     return client.utils.sendMessageToBotLog(client, guild, msgEmbed);
+    // }
 
-    const { executor, target } = kickLog;
-    msgEmbed.setDescription(
-        `${(target! as GuildMember).id === member.id
-            ? `**${user} was kicked from the server by ${executor}**`
-            : `**${user} has left the server**`
-        }`
-    );
+    // const { executor, target } = kickLog;
+    // msgEmbed.setDescription(
+    //     `${(target! as GuildMember).id === member.id
+    //         ? `**${user} was kicked from the server by ${executor}**`
+    //         : `**${user} has left the server**`
+    //     }`
+    // );
     return client.utils.sendMessageToBotLog(client, guild, msgEmbed);
 }
