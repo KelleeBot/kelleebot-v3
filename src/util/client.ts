@@ -3,7 +3,9 @@ import TwitchApi from "node-twitch";
 import { KelleeBotClient } from "../prefab/client";
 import { Manager } from "../prefab/manager";
 import TwitchLiveModel from "../schemas/twitchLive";
-import { TwitchLive } from "../types/twitchLive"
+import { TwitchLive } from "../types/twitchLive";
+import { Scams } from "../types/scams";
+import ScamLinks from "../schemas/scamLinks";
 import { MovieDb } from "moviedb-promise";
 import Twitter from "twitter-lite";
 import { Player } from "discord-player";
@@ -17,6 +19,7 @@ class Client extends KelleeBotClient {
   twitter: Twitter;
   giveaways: GiveawaysManager;
   player: Player;
+  scams: Manager<string, Scams>;
 
   constructor(options: ClientOptions) {
     super(options);
@@ -44,6 +47,7 @@ class Client extends KelleeBotClient {
       }
     });
     this.player = new Player(this);
+    this.scams = new Manager(this, ScamLinks);
   }
 }
 
