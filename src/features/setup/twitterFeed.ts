@@ -75,7 +75,7 @@ const startTwitterFeed = (client: Client) => {
                         tweet.in_reply_to_user_id || tweet.in_reply_to_user_id_str || tweet.in_reply_to_screen_name)
                         return;
 
-                    const tweeted = DateTime.fromISO(tweet.created_at);
+                    const tweeted = DateTime.fromISO(new Date(tweet.created_at).toISOString());
                     const timeString = `<t:${Math.floor(tweeted.toSeconds())}:F> (<t:${Math.floor(tweeted.toSeconds())}:R>)`;
 
                     const text = `${tweet.user.screen_name} tweeted this on ${timeString}:\n${url}`
