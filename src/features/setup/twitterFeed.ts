@@ -1,5 +1,6 @@
 import { Client } from "../../util/client";
 import { WebhookClient } from "discord.js";
+import { DateTime } from "luxon";
 
 const followedAccounts = [
     "517358431", // @ACWorldBlog
@@ -8,7 +9,8 @@ const followedAccounts = [
     "96879107", // @Pokemon
     "1114253221269245952", // @SerebiiOTD
     "287885794", // @Tetris_Official
-    "437210567" // @TwitchSupport
+    "437210567", // @TwitchSupport
+    "537917040" // @Krisypaulinee
 ];
 
 // Initialize webhooks
@@ -17,6 +19,7 @@ const tetrisWebhook = new WebhookClient({ url: `${process.env.TETRIS_WEBHOOK_URL
 const pokemonWebhook = new WebhookClient({ url: `${process.env.POKEMON_WEBHOOK_URL}` });
 const genshinWebhook = new WebhookClient({ url: `${process.env.GENSHIN_WEBHOOK_URL}` });
 const twitchWebhook = new WebhookClient({ url: `${process.env.TWITCH_WEBHOOK_URL}` });
+const krisyWebhook = new WebhookClient({ url: `${process.env.KRISY_WEBHOOK_URL}` });
 
 export default (client: Client) => {
     startTwitterFeed(client);
@@ -34,15 +37,15 @@ const startTwitterFeed = (client: Client) => {
                     if (tweet.in_reply_to_status_id || tweet.in_reply_to_status_id_str ||
                         tweet.in_reply_to_user_id || tweet.in_reply_to_user_id_str || tweet.in_reply_to_screen_name)
                         return;
-                    acWebhook.send({ content: url });
+                    await acWebhook.send({ content: url });
                     break;
 
                 case "1377451009":
-                    acWebhook.send({ content: url });
+                    await acWebhook.send({ content: url });
                     break;
 
                 case "1072404907230060544":
-                    genshinWebhook.send({ content: url });
+                    await genshinWebhook.send({ content: url });
                     break;
 
                 case "96879107":
@@ -50,7 +53,7 @@ const startTwitterFeed = (client: Client) => {
                     if (tweet.in_reply_to_status_id || tweet.in_reply_to_status_id_str ||
                         tweet.in_reply_to_user_id || tweet.in_reply_to_user_id_str || tweet.in_reply_to_screen_name)
                         return;
-                    pokemonWebhook.send({ content: url });
+                    await pokemonWebhook.send({ content: url });
                     break;
 
                 case "287885794":
@@ -64,7 +67,19 @@ const startTwitterFeed = (client: Client) => {
                     if (tweet.in_reply_to_status_id || tweet.in_reply_to_status_id_str ||
                         tweet.in_reply_to_user_id || tweet.in_reply_to_user_id_str || tweet.in_reply_to_screen_name)
                         return;
-                    twitchWebhook.send({ content: url });
+                    await twitchWebhook.send({ content: url });
+                    break;
+
+                case "537917040":
+                    if (tweet.in_reply_to_status_id || tweet.in_reply_to_status_id_str ||
+                        tweet.in_reply_to_user_id || tweet.in_reply_to_user_id_str || tweet.in_reply_to_screen_name)
+                        return;
+
+                    const tweeted = DateTime.fromISO(tweet.created_at);
+                    const timeString = `<t:${Math.floor(tweeted.toSeconds())}:F> (<t:${Math.floor(tweeted.toSeconds())}:R>)`;
+
+                    const text = `${tweet.user.screen_name} tweeted this on ${timeString}:\n${url}`
+                    await krisyWebhook.send({ content: text });
                     break;
 
                 default:
