@@ -11,7 +11,7 @@ export const setlog = async (client: Client, interaction: CommandInteraction) =>
 
     await client.guildInfo.findByIdAndUpdate(
         interaction.guildId!,
-        { $set: { botChatChannel: channel.id } },
+        { $set: { botLoggingChannel: channel.id } },
         { new: true, upsert: true, setDefaultsOnInsert: true }
     );
     return interaction.reply({ content: `Bot logging channel has successfully been set to ${channel}.`, ephemeral: true });
