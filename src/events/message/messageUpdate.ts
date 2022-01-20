@@ -7,6 +7,7 @@ const urlRegex =
 
 export default async (client: Client, oldMsg: Message, newMsg: Message) => {
     if (!oldMsg.guild || !newMsg.guild) return;
+    if (newMsg.pinned) return;
 
     const msgEmbed = new MessageEmbed()
         .setColor(MESSAGE_EVENTS as ColorResolvable)
