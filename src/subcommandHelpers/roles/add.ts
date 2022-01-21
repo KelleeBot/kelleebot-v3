@@ -21,6 +21,9 @@ export const add = async (client: Client, interaction: CommandInteraction) => {
         if (targetMessage.author.id !== client.user?.id)
             return await interaction.reply({ content: "Please provide a message ID for a message that was actually sent by me.", ephemeral: true });
 
+        if (role.position > interaction.guild?.me?.roles.highest.position!)
+            return await interaction.reply({ content: "You can't add a role that is higher than mine.", ephemeral: true });
+
         let row = targetMessage.components[0] as MessageActionRow;
         if (!row) row = new MessageActionRow();
 
