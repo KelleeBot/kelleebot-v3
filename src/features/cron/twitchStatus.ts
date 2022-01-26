@@ -98,7 +98,7 @@ const embedFromIncident = (incident: StatusPageIncident) => {
         .setColor(color as ColorResolvable)
         .setTimestamp(new Date(incident.started_at))
         .setURL(incident.shortlink)
-        .setTitle(incident.name)
+        .setTitle(`Twitch - ${incident.name}`)
         .setFooter({ text: incident.id });
 
     for (const update of incident.incident_updates.reverse()) {
