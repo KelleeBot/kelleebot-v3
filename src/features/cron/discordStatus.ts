@@ -98,7 +98,7 @@ const embedFromIncident = (incident: StatusPageIncident) => {
         .setColor(color as ColorResolvable)
         .setTimestamp(new Date(incident.started_at))
         .setURL(incident.shortlink)
-        .setTitle(`Discord - ${incident.name}`)
+        .setTitle(`<:discord:936023766495031296> Discord - ${incident.name}`)
         .setFooter({ text: incident.id });
 
     for (const update of incident.incident_updates.reverse()) {
