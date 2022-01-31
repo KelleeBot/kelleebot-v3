@@ -12,7 +12,7 @@ export const play = async (client: Client, interaction: CommandInteraction) => {
 
         if (interaction.guild?.me?.voice.channelId && member.voice.channelId !== interaction.guild?.me?.voice.channelId)
             return await interaction.reply({
-                content: `❌ | You must be in the same voice channel (<#${interaction.guild!.me!.voice.channelId}) as me!`,
+                content: `❌ | You must be in the same voice channel (<#${interaction.guild!.me!.voice.channelId}>) as me!`,
                 ephemeral: true
             });
 
