@@ -98,7 +98,8 @@ const embedFromIncident = (incident: StatusPageIncident) => {
         .setColor(color as ColorResolvable)
         .setTimestamp(new Date(incident.started_at))
         .setURL(incident.shortlink)
-        .setTitle(`<:twitch:936023897516679178> Twitch - ${incident.name}`)
+        .setTitle(incident.name)
+        .setAuthor({ name: "Twitch", iconURL: "https://cdn.discordapp.com/emojis/936023897516679178.png" })
         .setFooter({ text: incident.id });
 
     for (const update of incident.incident_updates.reverse()) {
