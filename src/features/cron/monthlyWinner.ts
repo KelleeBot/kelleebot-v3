@@ -108,7 +108,7 @@ const addRemoveRole = async (masterGamblerRoleID: Snowflake, guild: Discord.Guil
 
     //const currentMember = role.members.first(); // Get current member with Master Gambler role
     const currentMember = (await guild.members.fetch()).filter(member => member.roles.cache.has(role.id))
-        .filter(member => member.id === userID)
+        //.filter(member => member.id === userID)
         .first();
 
     const winner = await guild.members.fetch(userID);
