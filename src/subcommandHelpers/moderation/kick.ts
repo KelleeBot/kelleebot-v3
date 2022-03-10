@@ -123,7 +123,7 @@ const kickMember = async (member: GuildMember, message: Message, author: User, c
         })
         .setThumbnail(kickedMember.user.displayAvatarURL({ dynamic: true }))
         .setDescription(
-            `**Member:** ${kickedMember.user.tag}\n**Action:** Kick\n**Reason:** ${reason})`
+            `**Member:** ${kickedMember.user.tag}\n**Action:** Kick\n**Reason:** ${reason}`
         )
         .setTimestamp()
         .setFooter({ text: `ID: ${kickedMember.id}` });
