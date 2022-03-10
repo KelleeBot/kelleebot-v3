@@ -25,13 +25,13 @@ export const purge = async (client: Client, interaction: CommandInteraction) => 
 
         const messages = await channel.bulkDelete(number);
         if (messages) {
-            msgEmbed.setDescription(`Successfully purged **${messages.size}** ${client.utils.pluralize(messages.size, "message")} from ${channel}.`);
+            msgEmbed.setDescription(`Successfully purged ${client.utils.pluralize(messages.size, "message", true)} from ${channel}.`);
             await interaction.reply({ embeds: [msgEmbed], ephemeral: true });
 
             const botEmbed = new MessageEmbed()
                 .setColor(MESSAGE_EVENTS as ColorResolvable)
                 .setAuthor({ name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
-                .setDescription(`${interaction.user} purged **${messages.size}** ${client.utils.pluralize(messages.size, "message")} from ${channel}.`)
+                .setDescription(`${interaction.user} purged ${client.utils.pluralize(messages.size, "message", true)} from ${channel}.`)
                 .setTimestamp();
 
             return client.utils.sendMessageToBotLog(client, interaction.guild!, botEmbed);
