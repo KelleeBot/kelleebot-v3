@@ -25,6 +25,8 @@ export const twitch = async (client: Client, interaction: CommandInteraction) =>
             },
             { new: true, upsert: true, setDefaultsOnInsert: true }
         );
+
+        return await interaction.reply({ content: `You have successfully set \`${twitch}\` as the Twitch go live notification.`, ephemeral: true });
     } catch (e) {
         client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
         return await interaction.reply({ content: "An error has occurred. Please try again.", ephemeral: true });
