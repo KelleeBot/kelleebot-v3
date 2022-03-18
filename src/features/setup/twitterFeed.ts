@@ -10,7 +10,8 @@ const followedAccounts = [
     "1114253221269245952", // @SerebiiOTD
     "287885794", // @Tetris_Official
     "437210567", // @TwitchSupport
-    "537917040" // @Krisypaulinee
+    "537917040", // @Krisypaulinee
+    "1100185089416269824" // @RamenBomber
 ];
 
 // Initialize webhooks
@@ -20,6 +21,7 @@ const pokemonWebhook = new WebhookClient({ url: `${process.env.POKEMON_WEBHOOK_U
 const genshinWebhook = new WebhookClient({ url: `${process.env.GENSHIN_WEBHOOK_URL}` });
 const twitchWebhook = new WebhookClient({ url: `${process.env.TWITCH_WEBHOOK_URL}` });
 const krisyWebhook = new WebhookClient({ url: `${process.env.KRISY_WEBHOOK_URL}` });
+const ramenWebhook = new WebhookClient({ url: `${process.env.RAMEN_WEBHOOK_URL}` });
 
 export default (client: Client) => {
     startTwitterFeed(client);
@@ -32,6 +34,11 @@ const startTwitterFeed = (client: Client) => {
             if (!tweet.user || tweet.retweeted_status) return;
 
             const url = `http://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`;
+
+            const tweeted = DateTime.fromISO(new Date(tweet.created_at).toISOString());
+            const timeString = `<t:${Math.floor(tweeted.toSeconds())}:F> (<t:${Math.floor(tweeted.toSeconds())}:R>)`;
+            const text = `${tweet.user.screen_name} tweeted this on ${timeString}:\n${url}`
+
             switch (tweet.user.id_str) {
                 case "517358431":
                     if (tweet.in_reply_to_status_id || tweet.in_reply_to_status_id_str ||
@@ -75,11 +82,15 @@ const startTwitterFeed = (client: Client) => {
                         tweet.in_reply_to_user_id || tweet.in_reply_to_user_id_str || tweet.in_reply_to_screen_name)
                         return;
 
-                    const tweeted = DateTime.fromISO(new Date(tweet.created_at).toISOString());
-                    const timeString = `<t:${Math.floor(tweeted.toSeconds())}:F> (<t:${Math.floor(tweeted.toSeconds())}:R>)`;
-
-                    const text = `${tweet.user.screen_name} tweeted this on ${timeString}:\n${url}`
                     await krisyWebhook.send({ content: text });
+                    break;
+
+                case "1100185089416269824":
+                    if (tweet.in_reply_to_status_id || tweet.in_reply_to_status_id_str ||
+                        tweet.in_reply_to_user_id || tweet.in_reply_to_user_id_str || tweet.in_reply_to_screen_name)
+                        return;
+
+                    await ramenWebhook.send({ content: text });
                     break;
 
                 default:
