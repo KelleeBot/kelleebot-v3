@@ -16,7 +16,7 @@ export default async (client: Client) => {
 
 const execute = async (client: Client) => {
     const guildID = "678442760092647454"; // Ramen's discord
-    const channelID = "678446136184537098"; // #announcements channel
+    const channelID = "954453689404383312"; // #announcements channel
     try {
         const resp = await google.youtube("v3").search.list({
             key: process.env.YOUTUBE_API_KEY,
