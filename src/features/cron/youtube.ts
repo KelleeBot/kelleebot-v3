@@ -50,8 +50,8 @@ const sendMessage = async (client: Client, item: youtube_v3.Schema$SearchResult,
 
         const url = `https://www.youtube.com/watch?v=${item.id!.videoId}`;
         await channel.send({
-            content: `Ayo @everyone! Looks like RamenBomber just dropped another banger of a video! Let's go check it out! ${url}`,
-            allowedMentions: { parse: ["everyone"] }
+            content: `Ayo <@&954446977758793780>! Looks like RamenBomber just dropped another banger of a video! Let's go check it out! ${url}`,
+            allowedMentions: { parse: ["roles"] }
         });
     } catch (e) {
         client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
