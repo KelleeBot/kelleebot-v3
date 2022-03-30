@@ -28,7 +28,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
             subcommands: {
                 artwork: {
                     description: "Retrieve information about a specific artwork in Animal Crossing: New Horizons.",
-                    args: [
+                    options: [
                         {
                             name: "artwork",
                             description: "The name of the artwork you wish to retrieve information about.",
@@ -50,7 +50,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                 },
                 bug: {
                     description: "Retrieve information about a specific bug in Animal Crossing: New Horizons.",
-                    args: [
+                    options: [
                         {
                             name: "bug",
                             description: "The name of the bug you wish to retrieve information about.",
@@ -71,7 +71,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                 },
                 clothing: {
                     description: "Retrieve information about a specific clothing item in Animal Crossing: New Horizons.",
-                    args: [
+                    options: [
                         {
                             name: "clothing",
                             description: "The name of the clothing you wish to retrieve information about.",
@@ -92,7 +92,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                 },
                 diy: {
                     description: "Retrieve information about a specific diy/recipe in Animal Crossing: New Horizons.",
-                    args: [
+                    options: [
                         {
                             name: "diy",
                             description: "The name of the item you wish to retrieve recipe information about.",
@@ -125,7 +125,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                 },
                 fish: {
                     description: "Retrieve information about a specific fish in Animal Crossing: New Horizons",
-                    args: [
+                    options: [
                         {
                             name: "fish",
                             description: "The name of the fish you wish to retrieve information about.",
@@ -146,7 +146,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                 },
                 furniture: {
                     description: "Retrieve information about a specific furniture in Animal Crossing: New Horizons",
-                    args: [
+                    options: [
                         {
                             name: "furniture",
                             description: "The name of the furniture you wish to retrieve information about.",
@@ -167,7 +167,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                 },
                 interior: {
                     description: "Retrieve information about a specific interior item in Animal Crossing: New Horizons.",
-                    args: [
+                    options: [
                         {
                             name: "interior",
                             description: "The name of the interior item you wish to retrieve information about.",
@@ -188,7 +188,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                 },
                 item: {
                     description: "Retrieve information about a miscellaneous item in Animal Crossing: New Horizons.",
-                    args: [
+                    options: [
                         {
                             name: "item",
                             description: "The name of the item you wish to retrieve information about.",
@@ -209,7 +209,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                 },
                 photo: {
                     description: "Retrieve information about a character photo or poster in Animal Crossing: New Horizons.",
-                    args: [
+                    options: [
                         {
                             name: "photo",
                             description: "The name of the photo or poster you wish to retrieve information about.",
@@ -230,7 +230,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                 },
                 sea: {
                     description: "Retrieve information about a specific sea creature in Animal Crossing: New Horizons.",
-                    args: [
+                    options: [
                         {
                             name: "creature",
                             description: "The name of the sea creature you wish to retrieve information about.",
@@ -251,7 +251,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                 },
                 tool: {
                     description: "Retrieve information about a specific tool in Animal Crossing: New Horizons.",
-                    args: [
+                    options: [
                         {
                             name: "tool",
                             description: "The name of the tool item you wish to retrieve information about.",
@@ -272,7 +272,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                 },
                 villager: {
                     description: "Retrieve information about a specific villager in any Animal Crossing game.",
-                    args: [
+                    options: [
                         {
                             name: "name",
                             description: "The name of the villager you wish to retrieve information about.",

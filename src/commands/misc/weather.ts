@@ -22,34 +22,34 @@ export default class Weather extends KelleeBotCommand {
                     type: "STRING",
                     required: true
                 }
-            ]
+            ],
+            execute: async ({ client, interaction }) => {
+                const location = interaction.options.getString("location")!;
+                try {
+                    weather.find({ search: location, degreeType: "C" },
+                        async (err: any, result: any) => {
+                            if (err) {
+                                client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${err}`);
+                                return interaction.reply({ content: "An error occurred while trying to fetch weather data. Please try again.", ephemeral: true });
+                            }
+
+                            if (!result || !result.length || !result[0])
+                                return interaction.reply({ content: `No results were found for "${location}".`, ephemeral: true });
+
+                            this.setCooldown(interaction);
+                            if (result.length > 1) {
+                                return await showAllLocations(client, location, result, interaction);
+                            } else {
+                                const weatherEmbed = await showWeatherResult(client, interaction.user.id, result[0]);
+                                return interaction.reply({ embeds: [weatherEmbed] });
+                            }
+                        });
+                } catch (e) {
+                    client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
+                    return interaction.reply({ content: "An error has occurred. Please try again.", ephemeral: true });
+                }
+            }
         });
-    }
-    async execute({ client, interaction }: { client: Client, interaction: CommandInteraction }) {
-        const location = interaction.options.getString("location")!;
-        try {
-            weather.find({ search: location, degreeType: "C" },
-                async (err: any, result: any) => {
-                    if (err) {
-                        client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${err}`);
-                        return interaction.reply({ content: "An error occurred while trying to fetch weather data. Please try again.", ephemeral: true });
-                    }
-
-                    if (!result || !result.length || !result[0])
-                        return interaction.reply({ content: `No results were found for "${location}".`, ephemeral: true });
-
-                    this.setCooldown(interaction);
-                    if (result.length > 1) {
-                        return await showAllLocations(client, location, result, interaction);
-                    } else {
-                        const weatherEmbed = await showWeatherResult(client, interaction.user.id, result[0]);
-                        return interaction.reply({ embeds: [weatherEmbed] });
-                    }
-                });
-        } catch (e) {
-            client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
-            return interaction.reply({ content: "An error has occurred. Please try again.", ephemeral: true });
-        }
     }
 }
 

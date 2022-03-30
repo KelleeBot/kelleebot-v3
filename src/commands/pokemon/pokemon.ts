@@ -17,7 +17,7 @@ export default class Pokemon extends KelleeBotCommand {
             subcommands: {
                 pokeinfo: {
                     description: "See information about a Pokémon.",
-                    args: [
+                    options: [
                         {
                             name: "name",
                             description: "The Pokémon to lookup.",

@@ -13,7 +13,7 @@ export default class Info extends KelleeBotCommand {
             subcommands: {
                 user: {
                     description: "Show information about yourself or another user.",
-                    args: [
+                    options: [
                         {
                             name: "user",
                             description: "The other user to see information about.",

@@ -13,7 +13,7 @@ export default class Roles extends KelleeBotCommand {
             subcommands: {
                 add: {
                     description: "Adds a role to the dropdown menu.",
-                    args: [
+                    options: [
                         {
                             name: "messageid",
                             description: "The ID of the message to edit.",
@@ -43,7 +43,7 @@ export default class Roles extends KelleeBotCommand {
                 },
                 remove: {
                     description: "Removes a role from the dropdwon menu.",
-                    args: [
+                    options: [
                         {
                             name: "messageid",
                             description: "The ID of the message to edit.",
@@ -68,7 +68,7 @@ export default class Roles extends KelleeBotCommand {
                 },
                 send: {
                     description: "Sends a message as the bot to be used for roles assignment.",
-                    args: [
+                    options: [
                         {
                             name: "message",
                             description: "The message to send.",

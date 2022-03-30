@@ -13,7 +13,7 @@ export default class Gambling extends KelleeBotCommand {
             subcommands: {
                 blackjack: {
                     description: "Play blackjack with the bot.",
-                    args: [
+                    options: [
                         {
                             name: "amount",
                             description: "The amount of points (or all) to gamble.",
@@ -33,7 +33,7 @@ export default class Gambling extends KelleeBotCommand {
                 },
                 gamble: {
                     description: "Gamble your points.",
-                    args: [
+                    options: [
                         {
                             name: "amount",
                             description: "The amount of points (or all) to gamble.",
@@ -47,7 +47,7 @@ export default class Gambling extends KelleeBotCommand {
                 },
                 points: {
                     description: "Check how many points you or another user has and current ranking.",
-                    args: [
+                    options: [
                         {
                             name: "user",
                             description: "The user to check.",
@@ -61,7 +61,7 @@ export default class Gambling extends KelleeBotCommand {
                 },
                 scratch: {
                     description: "Play the scratch ticket to try to win some points.",
-                    args: [
+                    options: [
                         {
                             name: "amount",
                             description: "The amount of points (or all) to play scratch tickets with.",
@@ -76,7 +76,7 @@ export default class Gambling extends KelleeBotCommand {
                 },
                 slots: {
                     description: "Test your luck and play the slots. Each slot win gives you 4 times the amount you bet.",
-                    args: [
+                    options: [
                         {
                             name: "amount",
                             description: "The amount of points (or all) to gamble.",

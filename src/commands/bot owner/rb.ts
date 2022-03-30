@@ -1,4 +1,4 @@
-import { CommandInteraction, MessageActionRow, MessageButton, TextChannel } from "discord.js";
+import { MessageActionRow, MessageButton, TextChannel } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 
@@ -18,20 +18,25 @@ export default class Rb extends KelleeBotCommand {
                     type: "CHANNEL",
                     channelTypes: ["GUILD_TEXT"]
                 }
-            ]
+            ],
+            execute: async ({ interaction }) => {
+                try {
+                    const channel = interaction.options.getChannel("channel") ?? interaction.channel;
+
+                    const button = new MessageActionRow().addComponents(
+                        new MessageButton()
+                            .setCustomId("roles")
+                            .setLabel("List current roles")
+                            .setStyle("PRIMARY")
+                    );
+
+                    await interaction.reply({ content: `Role button message successully sent to ${channel}.`, ephemeral: true });
+                    return await (channel as TextChannel).send({ content: "Unsure which roles you currently already have? Click here:", components: [button] });
+                } catch (e) {
+                    client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
+                    return await interaction.reply({ content: "An error has occurred. Please try again.", ephemeral: true });
+                }
+            }
         });
-    }
-    async execute({ interaction }: { interaction: CommandInteraction }) {
-        const channel = interaction.options.getChannel("channel") ?? interaction.channel;
-
-        const button = new MessageActionRow().addComponents(
-            new MessageButton()
-                .setCustomId("roles")
-                .setLabel("List current roles")
-                .setStyle("PRIMARY")
-        );
-
-        interaction.reply({ content: `Role button message successully sent to ${channel}.`, ephemeral: true });
-        return (channel as TextChannel).send({ content: "Unsure which roles you currently already have? Click here:", components: [button] });
     }
 }

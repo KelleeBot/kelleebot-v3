@@ -1,10 +1,10 @@
-import { Client } from "../util/client";
 import * as fs from "fs/promises";
 import * as path from "path";
 import { KelleeBotCommand } from "../util/command";
 import { Dirent } from "fs";
+import { KelleeBotClient } from "./client";
 
-export const registerCommands = async (client: Client, ...dirs: string[]) => {
+export const registerCommands = async (client: KelleeBotClient, ...dirs: string[]) => {
   for (const dir of dirs) {
     const files = await fs.readdir(path.join(__dirname, dir));
 
@@ -18,47 +18,25 @@ export const registerCommands = async (client: Client, ...dirs: string[]) => {
       else {
         if (file.endsWith(".js")) {
           try {
-            const cmdModule: KelleeBotCommand = new (
-              await import(path.join(__dirname, dir, file))
-            ).default(client);
+            const cmdModule: KelleeBotCommand = new ((await import(path.join(__dirname, dir, file))).default)(client);
 
             const { name, category, hideCommand, isAutocomplete, autocomplete } = cmdModule;
 
             if (!name) {
-              client.utils.log(
-                "WARNING",
-                `${__filename}`,
-                `The command '${path.join(
-                  __dirname,
-                  dir,
-                  file
-                )}' doesn't have a name`
-              );
+              client.utils.log("WARNING", `${__filename}`, `The command '${path.join(__dirname, dir, file)}' doesn't have a name`);
               continue;
             }
 
             if (client.commands.has(name)) {
-              client.utils.log(
-                "WARNING",
-                `${__filename}`,
-                `The command (slash) name '${name}' (${path.join(
-                  __dirname,
-                  dir,
-                  file
-                )}) has already been added.`
-              );
+              client.utils.log("WARNING", `${__filename}`, `The command (slash) name '${name}' (${path.join(__dirname, dir, file)}) has already been added.`);
               continue;
             }
 
             if (cmdModule.development) {
-              const server = client.config.testServers[0];
+              const server = client.config.TEST_SERVERS[0];
 
               if (!server) {
-                client.utils.log(
-                  "WARNING",
-                  `${__filename}`,
-                  "To add a development only slash command, you need to have at least one test server."
-                );
+                client.utils.log("WARNING", `${__filename}`, "To add a development only slash command, you need to have at least one test server.");
                 continue;
               }
             }
@@ -70,7 +48,7 @@ export const registerCommands = async (client: Client, ...dirs: string[]) => {
             if (isAutocomplete) {
               if (!autocomplete) {
                 client.utils.log("WARNING", `${__filename}`, `The command '${name}' doesn't have an autocomplete callback. This is required as isAutocomplete is true.`)
-                continue
+                continue;
               }
             }
 
@@ -80,22 +58,14 @@ export const registerCommands = async (client: Client, ...dirs: string[]) => {
               commands.push(name);
               client.categories.set(category.toLowerCase(), commands);
             } else {
-              client.utils.log(
-                "WARNING",
-                `${__filename}`,
-                `The command '${name}' doesn't have a category, it will default to 'No category'.`
-              );
-              let commands = client.categories.get("no category");
-              if (!commands) commands = ["No category"];
+              client.utils.log("WARNING", `${__filename}`, `The command '${name}' doesn't have a category, it will default to 'No category'.`);
+              let commands = client.categories.get('no category');
+              if (!commands) commands = ['No category'];
               commands.push(name);
-              client.categories.set("no category", commands);
+              client.categories.set('no category', commands);
             }
-          } catch (e) {
-            client.utils.log(
-              "ERROR",
-              `${__filename}`,
-              `Error loading commands: ${e}`
-            );
+          } catch (e: any) {
+            client.utils.log("ERROR", `${__filename}`, `Error loading commands: ${e.message}`);
           }
         }
       }
@@ -103,7 +73,7 @@ export const registerCommands = async (client: Client, ...dirs: string[]) => {
   }
 };
 
-export const registerEvents = async (client: Client, ...dirs: string[]) => {
+export const registerEvents = async (client: KelleeBotClient, ...dirs: string[]) => {
   for (const dir of dirs) {
     const files = await fs.readdir(path.join(__dirname, dir));
 
@@ -116,15 +86,10 @@ export const registerEvents = async (client: Client, ...dirs: string[]) => {
         if (file.endsWith(".js")) {
           const eventName = file.substring(0, file.indexOf(".js"));
           try {
-            const eventModule = (await import(path.join(__dirname, dir, file)))
-              .default;
+            const eventModule = (await import(path.join(__dirname, dir, file))).default;
             client.on(eventName, eventModule.bind(null, client));
-          } catch (e) {
-            client.utils.log(
-              "ERROR",
-              `${__filename}`,
-              `Error loading events: ${e}`
-            );
+          } catch (e: any) {
+            client.utils.log("ERROR", `${__filename}`, `Error loading events: ${e.message}`);
           }
         }
       }
@@ -132,13 +97,13 @@ export const registerEvents = async (client: Client, ...dirs: string[]) => {
   }
 };
 
-export const registerFeatures = async (client: Client, dir: string) => {
+export const registerFeatures = async (client: KelleeBotClient, dir: string) => {
   for (const [file, fileName] of await getAllFiles(path.join(__dirname, dir))) {
     registerFeature(client, await import(file), fileName);
   }
 };
 
-const registerFeature = (client: Client, file: any, fileName: string) => {
+const registerFeature = (client: KelleeBotClient, file: any, fileName: string) => {
   const { default: func, config } = file;
   if (typeof func !== "function") return;
   func(client);

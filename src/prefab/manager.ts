@@ -4,8 +4,9 @@ import { Client } from "../util/client";
 
 class Manager<K, V> {
   _client: Client;
-  _model: Model<V>;
+  _model: Model<V>
   _cache: Collection<K, V>;
+
   constructor(client: any, model: Model<V>) {
     this._client = client;
     this._model = model;
@@ -16,15 +17,11 @@ class Manager<K, V> {
     let item = this._cache.get(key);
 
     if (!item || force) {
-      item = await this._model.findOneAndUpdate(
-        { _id: key },
-        {},
-        { new: true, upsert: true, setDefaultsOnInsert: true }
-      );
-      this._cache.set(key, item);
+      item = await this._model.findOneAndUpdate({ _id: key }, {}, { new: true, upsert: true, setDefaultsOnInsert: true });
+      this._cache.set(key, item!);
     }
 
-    return item;
+    return item!;
   }
 
   getCache(key: K) {
@@ -53,19 +50,11 @@ class Manager<K, V> {
     return items;
   }
 
-  async findByIdAndUpdate(
-    key: K,
-    update: UpdateQuery<V>,
-    options?: QueryOptions
-  ) {
+  async findByIdAndUpdate(key: K, update: UpdateQuery<V>, options?: QueryOptions) {
     return this.findOneAndUpdate({ _id: key }, update, options);
   }
 
-  async findOneAndUpdate(
-    filter: FilterQuery<V>,
-    update: UpdateQuery<V>,
-    options?: QueryOptions
-  ) {
+  async findOneAndUpdate(filter: FilterQuery<V>, update: UpdateQuery<V>, options?: QueryOptions) {
     const item = await this._model.findOneAndUpdate(filter, update, options);
 
     if (!item) return;
@@ -75,11 +64,7 @@ class Manager<K, V> {
     return item;
   }
 
-  async updateMany(
-    filter: FilterQuery<V>,
-    update: UpdateQuery<V>,
-    options?: QueryOptions
-  ) {
+  async updateMany(filter: FilterQuery<V>, update: UpdateQuery<V>, options?: QueryOptions) {
     const query = await this._model.updateMany(filter, update, options);
 
     return query;

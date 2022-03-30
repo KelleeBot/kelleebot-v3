@@ -1,11 +1,4 @@
-import {
-  PermissionString,
-  Collection,
-  ApplicationCommandPermissionData,
-  CommandInteraction,
-  ApplicationCommandOptionData,
-  AutocompleteInteraction
-} from "discord.js";
+import { AutocompleteInteraction, PermissionString, Collection, ApplicationCommandPermissionData, CommandInteraction, ApplicationCommandOptionData, ApplicationCommandSubCommandData, ApplicationCommandNonOptionsData, ApplicationCommandChannelOptionData, ApplicationCommandChoicesData, ApplicationCommandAutocompleteOption, ApplicationCommandNumericOptionData, ApplicationCommandSubGroupData } from "discord.js";
 import { Client } from "../util/client";
 
 class Command {
@@ -15,7 +8,7 @@ class Command {
   category: string;
   options: ApplicationCommandOptionData[];
   defaultPermission: boolean;
-  permissions: ApplicationCommandPermissionData[];
+  permissions: ApplicationCommandPermissionData[]
   development: boolean;
   devOnly: boolean;
   hideCommand: boolean;
@@ -33,65 +26,39 @@ class Command {
   subcommands: { [x: string]: Subcommand } | null;
   isAutocomplete: boolean;
   autocomplete?({ client, interaction }: { client: Client; interaction: AutocompleteInteraction }): any;
+  execute?: ExecuteFunction;
 
-  constructor(
-    client: Client,
-    {
-      name = "",
-      description = "",
-      category = "No category",
-      options = [],
-      defaultPermission = true,
-      permissions = [],
-      development = false,
-      devOnly = false,
-      hideCommand = false,
-      ownerOnly = false,
-      guildOnly = true,
-      perms = [],
-      clientPerms = [],
-      nsfw = false,
-      cooldown = 0,
-      globalCooldown = true,
-      ignoreDisabledChannels = false,
-      canNotDisable = false,
-      canNotSetCooldown = true,
-      groups = null,
-      subcommands = null,
-      isAutocomplete = false,
-      autocomplete = undefined
-    }: CommandOptions
-  ) {
+  constructor(client: Client, options: CommandOptions) {
     this.client = client;
-    this.name = name;
-    this.description = description;
-    this.category = category;
-    this.options = options;
-    this.defaultPermission = defaultPermission;
-    this.permissions = permissions;
-    this.development = development;
-    this.devOnly = devOnly;
-    this.hideCommand = hideCommand;
-    this.ownerOnly = ownerOnly;
-    this.guildOnly = guildOnly;
-    this.perms = perms;
-    this.clientPerms = clientPerms;
-    this.nsfw = nsfw;
-    this.cooldown = cooldown;
-    this.globalCooldown = globalCooldown;
-    this.canNotDisable = canNotDisable;
-    this.canNotSetCooldown = canNotSetCooldown;
-    this.ignoreDisabledChannels = ignoreDisabledChannels;
-    this.groups = groups;
-    this.subcommands = subcommands;
-    this.isAutocomplete = isAutocomplete;
-    this.autocomplete = autocomplete;
+    this.name = options.name;
+    this.description = options.description;
+    this.execute = options.execute;
 
-    if (options && options.length) this.options = options;
-    else if (groups && Object.keys(groups))
-      this.options = getSubcommandGroupOptions(groups);
-    else if (subcommands && Object.keys(subcommands))
-      this.options = getSubcommandOptions(subcommands);
+    this.options = options.options ?? [];
+    this.groups = options.groups ?? null;
+    this.subcommands = options.subcommands ?? null;
+
+    if (this.groups && Object.keys(this.groups)) this.options = getSubcommandGroupOptions(this.groups);
+    else if (this.subcommands && Object.keys(this.subcommands)) this.options = getSubcommandOptions(this.subcommands);
+
+    this.category = options.category ?? "No category";
+    this.defaultPermission = options.defaultPermission ?? true;
+    this.permissions = options.permissions ?? [];
+    this.development = options.development ?? false;
+    this.devOnly = options.devOnly ?? false;
+    this.hideCommand = options.hideCommand ?? false;
+    this.ownerOnly = options.ownerOnly ?? false;
+    this.guildOnly = options.guildOnly ?? true;
+    this.perms = options.perms ?? [];
+    this.clientPerms = options.clientPerms ?? [];
+    this.nsfw = options.nsfw ?? false;
+    this.cooldown = options.cooldown ?? 0;
+    this.globalCooldown = options.globalCooldown ?? false;
+    this.canNotDisable = options.canNotDisable ?? false;
+    this.canNotSetCooldown = options.canNotSetCooldown ?? false;
+    this.ignoreDisabledChannels = options.ignoreDisabledChannels ?? false;
+    this.isAutocomplete = options.isAutocomplete ?? false;
+    this.autocomplete = options.autocomplete;
   }
 
   async setCooldown(interaction: CommandInteraction) {
@@ -100,19 +67,13 @@ class Command {
     if (!cd) return;
 
     let cooldowns;
-    if (typeof this.globalCooldown === "undefined" || this.globalCooldown) {
-      if (!this.client.globalCooldowns.has(this.name))
-        this.client.globalCooldowns.set(this.name, new Collection());
+    if (typeof this.globalCooldown === 'undefined' || this.globalCooldown) {
+      if (!this.client.globalCooldowns.has(this.name)) this.client.globalCooldowns.set(this.name, new Collection());
       cooldowns = this.client.globalCooldowns;
     } else {
-      if (!this.client.serverCooldowns.has(interaction.guild!.id))
-        this.client.serverCooldowns.set(
-          interaction.guild!.id,
-          new Collection()
-        );
+      if (!this.client.serverCooldowns.has(interaction.guild!.id)) this.client.serverCooldowns.set(interaction.guild!.id, new Collection());
       cooldowns = this.client.serverCooldowns.get(interaction.guild!.id);
-      if (!cooldowns!.has(this.name))
-        cooldowns!.set(this.name, new Collection());
+      if (!cooldowns!.has(this.name)) cooldowns!.set(this.name, new Collection());
     }
 
     const now = Date.now();
@@ -126,91 +87,17 @@ class Command {
 
 export { Command, CommandOptions };
 
-function getSubcommandGroupOptions(groups: { [x: string]: SubcommandGroup }) {
-  const names = Object.keys(groups);
-  const options = [];
-
-  for (const name of names) {
-    const option: ApplicationCommandOptionData = {
-      name,
-      description: groups[name].description,
-      //@ts-ignore
-      options: getSubcommandOptions(groups[name].subcommands),
-      type: "SUB_COMMAND_GROUP"
-    };
-
-    options.push(option);
-  }
-
-  return options;
-}
-
-function getSubcommandOptions(subcommands: { [x: string]: Subcommand }) {
-  const names = Object.keys(subcommands);
-  const options = [];
-
-  for (const name of names) {
-    const option: ApplicationCommandOptionData = {
-      name,
-      description: subcommands[name].description,
-      //@ts-ignore
-      options: subcommands[name].args,
-      type: "SUB_COMMAND"
-    };
-
-    options.push(option);
-  }
-
-  return options;
-}
-
 declare interface SubcommandGroup {
   description: string;
-  subcommands: { [x: string]: Subcommand };
-}
-
-declare interface Autocomplete {
-  execute?({ client, interaction }: { client: Client; interaction: AutocompleteInteraction }): any;
+  subcommands: { [x: string]: Subcommand }
 }
 
 declare interface Subcommand {
   description: string;
+  options?: (ApplicationCommandNonOptionsData | ApplicationCommandChannelOptionData | ApplicationCommandChoicesData | ApplicationCommandAutocompleteOption | ApplicationCommandNumericOptionData)[];
   isAutocomplete?: boolean;
-  autocomplete?({ client, interaction }: { client: Client; interaction: AutocompleteInteraction }): any
-  args?: Argument[];
-  execute?({
-    client,
-    interaction,
-    group,
-    subcommand
-  }: {
-    client: Client;
-    interaction: CommandInteraction;
-    group: string;
-    subcommand: string;
-  }): any;
-}
-
-declare interface Argument {
-  type:
-  | "STRING"
-  | "INTEGER"
-  | "BOOLEAN"
-  | "USER"
-  | "CHANNEL"
-  | "ROLE"
-  | "MENTIONABLE"
-  | "NUMBER";
-  name: string;
-  description: string;
-  choices?: Choice[];
-  required?: boolean;
-  autocomplete?: boolean
-}
-
-declare interface Choice {
-  name: string;
-  value: string | number;
+  autocomplete?: AutocompleteFunction;
+  execute?: ExecuteFunction;
 }
 
 declare interface CommandOptions {
@@ -219,7 +106,7 @@ declare interface CommandOptions {
   category?: string;
   options?: ApplicationCommandOptionData[];
   defaultPermission?: boolean;
-  permissions?: ApplicationCommandPermissionData[];
+  permissions?: ApplicationCommandPermissionData[]
   development?: boolean;
   devOnly?: boolean;
   hideCommand?: boolean;
@@ -233,8 +120,48 @@ declare interface CommandOptions {
   canNotDisable?: boolean;
   canNotSetCooldown?: boolean;
   ignoreDisabledChannels?: boolean;
+  isAutocomplete?: boolean;
+  autocomplete?: AutocompleteFunction;
   groups?: { [x: string]: SubcommandGroup } | null;
   subcommands?: { [x: string]: Subcommand } | null;
-  isAutocomplete?: boolean;
-  autocomplete?({ client, interaction }: { client: Client; interaction: AutocompleteInteraction }): any
+  execute?: ExecuteFunction;
+}
+
+type ExecuteFunction = ({ client, interaction, group, subcommand }: { client: Client, interaction: CommandInteraction, group: string, subcommand: string }) => any;
+type AutocompleteFunction = ({ client, interaction }: { client: Client; interaction: AutocompleteInteraction }) => any;
+
+function getSubcommandGroupOptions(groups: { [key: string]: SubcommandGroup }): ApplicationCommandSubGroupData[] {
+  const names = Object.keys(groups);
+  const options = [];
+
+  for (const name of names) {
+    const option: ApplicationCommandOptionData = {
+      name,
+      description: groups[name].description,
+      options: getSubcommandOptions(groups[name].subcommands),
+      type: "SUB_COMMAND_GROUP"
+    };
+
+    options.push(option);
+  }
+
+  return options;
+}
+
+function getSubcommandOptions(subcommands: { [key: string]: Subcommand }): ApplicationCommandSubCommandData[] {
+  const names = Object.keys(subcommands);
+  const options = [];
+
+  for (const name of names) {
+    const option: ApplicationCommandSubCommandData = {
+      name,
+      description: subcommands[name].description,
+      options: subcommands[name].options,
+      type: "SUB_COMMAND"
+    };
+
+    options.push(option);
+  }
+
+  return options;
 }

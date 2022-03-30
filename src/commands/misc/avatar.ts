@@ -17,21 +17,26 @@ export default class Avatar extends KelleeBotCommand {
                     type: "USER"
                 }
             ],
+            execute: async ({ interaction }) => {
+                this.setCooldown(interaction);
+                try {
+                    const msgEmbed = new MessageEmbed();
+
+                    const member = interaction.options.getMember("user") ?? interaction.member
+
+                    msgEmbed
+                        .setColor((member! as GuildMember).displayHexColor)
+                        .setAuthor({
+                            name: `${(member! as GuildMember).user.username}'s Avatar`,
+                            iconURL: (member! as GuildMember).user.displayAvatarURL({ dynamic: true })
+                        })
+                        .setImage((member! as GuildMember).user.displayAvatarURL({ dynamic: true, size: 256 }));
+                    return await interaction.reply({ embeds: [msgEmbed] });
+                } catch (e) {
+                    client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
+                    return await interaction.reply({ content: "An error has occurred. Please try again.", ephemeral: true });
+                }
+            }
         });
-    }
-    async execute({ interaction }: { interaction: CommandInteraction }) {
-        this.setCooldown(interaction);
-        const msgEmbed = new MessageEmbed();
-
-        const member = interaction.options.getMember("user") ?? interaction.member
-
-        msgEmbed
-            .setColor((member! as GuildMember).displayHexColor)
-            .setAuthor({
-                name: `${(member! as GuildMember).user.username}'s Avatar`,
-                iconURL: (member! as GuildMember).user.displayAvatarURL({ dynamic: true })
-            })
-            .setImage((member! as GuildMember).user.displayAvatarURL({ dynamic: true, size: 256 }));
-        return interaction.reply({ embeds: [msgEmbed] });
     }
 }

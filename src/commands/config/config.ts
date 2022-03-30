@@ -13,7 +13,7 @@ export default class Config extends KelleeBotCommand {
             subcommands: {
                 setlog: {
                     description: "Sets the server's bot logging channel.",
-                    args: [
+                    options: [
                         {
                             name: "channel",
                             description: "The channel to set.",
@@ -27,7 +27,7 @@ export default class Config extends KelleeBotCommand {
                 },
                 twitch: {
                     description: "Sets the channel for where Twitch live notifications will be sent.",
-                    args: [
+                    options: [
                         {
                             name: "twitch",
                             description: "The Twitch channel you'd like to subscribe to.",

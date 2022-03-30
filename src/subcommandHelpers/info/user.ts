@@ -56,7 +56,7 @@ export const user = async (client: Client, interaction: CommandInteraction) => {
     const member = interaction.options.getMember("user") as GuildMember ?? interaction.member as GuildMember;
     const { user, nickname } = member;
 
-    const botCreator = client.users.cache.get(client.config.devs[0]);
+    const botCreator = client.users.cache.get(client.config.DEVS[0]);
     const memberStatus = !member.presence ? "offline" : member.presence.status;
 
     const userCreatedTimestamp = Math.round(user.createdTimestamp / 1000);

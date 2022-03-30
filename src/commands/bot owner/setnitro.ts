@@ -1,4 +1,3 @@
-import { CommandInteraction } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 import { NO_GAMBLING_CHANNEL_SET } from "../../../config/messages.json";
@@ -27,31 +26,31 @@ export default class Setnitro extends KelleeBotCommand {
                     type: "STRING",
                     required: true
                 }
-            ]
+            ],
+            execute: async ({ client, interaction }) => {
+                try {
+                    const id = interaction.options.getString("guildid")!;
+                    const link = interaction.options.getString("link")!;
+
+                    const guildInfo = await client.guildInfo.get(id);
+                    if (!guildInfo.gambling.gamblingChannel)
+                        return await interaction.reply({ content: NO_GAMBLING_CHANNEL_SET, ephemeral: true });
+
+                    if (!nitroRegExp.test(link))
+                        return await interaction.reply({ content: "Invalid Nitro link. Please try again.", ephemeral: true });
+
+                    await client.guildInfo.findByIdAndUpdate(
+                        id,
+                        { "gambling.nitroLink": link },
+                        { new: true, upsert: true, setDefaultsOnInsert: true }
+                    );
+
+                    return await interaction.reply({ content: "Discord Nitro link successfully updated.", ephemeral: true });
+                } catch (e) {
+                    client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
+                    return await interaction.reply({ content: "An error has occurred. Please try again.", ephemeral: true });
+                }
+            }
         });
-    }
-    async execute({ client, interaction }: { client: Client, interaction: CommandInteraction, }) {
-        try {
-            const id = interaction.options.getString("guildid")!;
-            const link = interaction.options.getString("link")!;
-
-            const guildInfo = await client.guildInfo.get(id);
-            if (!guildInfo.gambling.gamblingChannel)
-                return await interaction.reply({ content: NO_GAMBLING_CHANNEL_SET, ephemeral: true });
-
-            if (!nitroRegExp.test(link))
-                return await interaction.reply({ content: "Invalid Nitro link. Please try again.", ephemeral: true });
-
-            await client.guildInfo.findByIdAndUpdate(
-                id,
-                { "gambling.nitroLink": link },
-                { new: true, upsert: true, setDefaultsOnInsert: true }
-            );
-
-            return await interaction.reply({ content: "Discord Nitro link successfully updated.", ephemeral: true });
-        } catch (e) {
-            client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
-            return await interaction.reply({ content: "An error has occurred. Please try again.", ephemeral: true });
-        }
     }
 };

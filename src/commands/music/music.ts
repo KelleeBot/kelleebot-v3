@@ -19,7 +19,7 @@ export default class Music extends KelleeBotCommand {
                 },
                 lyrics: {
                     description: "Search lyrics for either the current song or the specified song.",
-                    args: [
+                    options: [
                         {
                             name: "query",
                             description: "The song to search for.",
@@ -40,7 +40,7 @@ export default class Music extends KelleeBotCommand {
                 },
                 play: {
                     description: "Play some music.",
-                    args: [
+                    options: [
                         {
                             name: "query",
                             description: "The song you want to play.",

@@ -22,3 +22,8 @@ const client = new Client({
 (async () => {
   client.login(process.env.DISCORD_TOKEN);
 })();
+
+process.on("unhandledRejection", (error) => {
+  client.utils.log("ERROR", `${__filename}`, "An error occured:");
+  console.log(error);
+});

@@ -13,7 +13,7 @@ export default class Moderation extends KelleeBotCommand {
             subcommands: {
                 ban: {
                     description: "Ban a user.",
-                    args: [
+                    options: [
                         {
                             name: "user",
                             description: "The user to ban.",
@@ -33,7 +33,7 @@ export default class Moderation extends KelleeBotCommand {
                 },
                 history: {
                     description: "See moderation history of a user.",
-                    args: [
+                    options: [
                         {
                             name: "user",
                             description: "The user to see moderation history for.",
@@ -47,7 +47,7 @@ export default class Moderation extends KelleeBotCommand {
                 },
                 kick: {
                     description: "Kicks a member from the server.",
-                    args: [
+                    options: [
                         {
                             name: "member",
                             description: "The member to kick.",
@@ -67,7 +67,7 @@ export default class Moderation extends KelleeBotCommand {
                 },
                 purge: {
                     description: "Purge messages from a channel.",
-                    args: [
+                    options: [
                         {
                             name: "number",
                             description: "The number of messages to purge (between 1 - 100).",
@@ -86,7 +86,7 @@ export default class Moderation extends KelleeBotCommand {
                 },
                 timeout: {
                     description: "Timeout a member.",
-                    args: [
+                    options: [
                         {
                             name: "member",
                             description: "The member to timeout.",
@@ -112,7 +112,7 @@ export default class Moderation extends KelleeBotCommand {
                 },
                 unban: {
                     description: "Unban's a user from the server.",
-                    args: [
+                    options: [
                         {
                             name: "id",
                             description: "The ID of the user you want to unban.",

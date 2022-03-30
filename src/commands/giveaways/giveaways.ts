@@ -13,7 +13,7 @@ export default class Giveaways extends KelleeBotCommand {
             subcommands: {
                 delete: {
                     description: "Delete a giveaway.",
-                    args: [
+                    options: [
                         {
                             name: "id",
                             description: "The giveaway (message) ID to delete.",
@@ -27,7 +27,7 @@ export default class Giveaways extends KelleeBotCommand {
                 },
                 end: {
                     description: "End a giveaway.",
-                    args: [
+                    options: [
                         {
                             name: "id",
                             description: "The giveaway (message) ID to end.",
@@ -41,7 +41,7 @@ export default class Giveaways extends KelleeBotCommand {
                 },
                 reroll: {
                     description: "Reroll a giveaway.",
-                    args: [
+                    options: [
                         {
                             name: "id",
                             description: "The giveaway (message) ID to reroll.",
@@ -55,7 +55,7 @@ export default class Giveaways extends KelleeBotCommand {
                 },
                 start: {
                     description: "Start a giveaway.",
-                    args: [
+                    options: [
                         {
                             name: "duration",
                             description: "The giveaway duration.",

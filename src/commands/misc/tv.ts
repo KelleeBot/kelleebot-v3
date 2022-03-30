@@ -18,28 +18,28 @@ export default class TV extends KelleeBotCommand {
                 description: "The TV show to lookup",
                 type: "STRING",
                 required: true
-            }]
-        });
-    }
-    async execute({ client, interaction }: { client: Client, interaction: CommandInteraction }) {
-        const tv = interaction.options.getString("show")!;
-        try {
-            const res = await client.movieDb.searchTv({ query: tv, page: 1, include_adult: false });
-            if (!res || !res.results || !res.results[0])
-                return interaction.reply({ content: `No results were found for "${tv}".`, ephemeral: true });
+            }],
+            execute: async ({ client, interaction }) => {
+                const tv = interaction.options.getString("show")!;
+                try {
+                    const res = await client.movieDb.searchTv({ query: tv, page: 1, include_adult: false });
+                    if (!res || !res.results || !res.results[0])
+                        return interaction.reply({ content: `No results were found for "${tv}".`, ephemeral: true });
 
-            this.setCooldown(interaction);
+                    this.setCooldown(interaction);
 
-            if (res.results.length > 1) {
-                return await showAllShows(tv, res.results, interaction, client);
-            } else {
-                const tvEmbed = await showTvInfo(client, interaction.user.id, res.results[0]);
-                return interaction.reply({ embeds: [tvEmbed] });
+                    if (res.results.length > 1) {
+                        return await showAllShows(tv, res.results, interaction, client);
+                    } else {
+                        const tvEmbed = await showTvInfo(client, interaction.user.id, res.results[0]);
+                        return interaction.reply({ embeds: [tvEmbed] });
+                    }
+                } catch (e) {
+                    client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
+                    return interaction.reply({ content: "An error has occurred. Please try again." });
+                }
             }
-        } catch (e) {
-            client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
-            return interaction.reply({ content: "An error has occurred. Please try again." });
-        }
+        });
     }
 }
 

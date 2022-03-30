@@ -7,7 +7,7 @@ export default async (client: Client, interaction: Interaction) => {
   //await interactionCreate(client, interaction);
   try {
     const userInfo = await client.profileInfo.get(interaction.user.id);
-    const botOwner = client.users.cache.get(client.config.devs[0]);
+    const botOwner = client.users.cache.get(client.config.DEVS[0]);
 
     if (interaction.isSelectMenu()) {
       const { customId, values, member } = interaction;
@@ -81,81 +81,60 @@ export default async (client: Client, interaction: Interaction) => {
       const command = client.commands.get(interaction.commandName);
       if (!command) return;
 
-      // if (!client.config.devs.includes(interaction.user.id)) {
+      // if (!client.config.DEVS.includes(interaction.user.id)) {
       if (command.guildOnly) {
-        if (!interaction.inGuild()) {
-          return interaction.reply({
-            content: "Slash commands can only be used within servers.",
-            ephemeral: true
-          });
-        }
+        if (!interaction.inGuild())
+          return await client.utils.quickReply(client, interaction, "Slash commands can only be used within servers.");
 
         const guildInfo = await client.guildInfo.get(interaction.guildId);
 
-        if (command.devOnly && !client.config.devs.includes(interaction.user.id)) {
+        if (command.devOnly && !client.config.DEVS.includes(interaction.user.id))
           return await client.utils.quickReply(client, interaction, `Nice try, but only ${botOwner?.tag} can use this command.`);
-        }
 
         if (command.ownerOnly && interaction.guild!.ownerId !== interaction.user.id)
-          return await client.utils.quickReply(
-            client,
-            interaction,
-            "This command can only be used by the server owner."
-          );
+          return await client.utils.quickReply(client, interaction, "This command can only be used by the server owner.");
 
         if (guildInfo.disabledCommands.includes(command.name))
-          return await client.utils.quickReply(
-            client,
-            interaction,
-            "This command is currently disabled in this server."
-          );
+          return await client.utils.quickReply(client, interaction, "This command is currently disabled in this server.");
 
         if (guildInfo.disabledChannels.includes(interaction.channelId) && !command.ignoreDisabledChannels)
-          return await client.utils.client.utils.quickReply(
-            client,
-            interaction,
-            "You can't use any commands in this channel."
-          );
+          return await client.utils.client.utils.quickReply(client, interaction, "You can't use any commands in this channel.");
 
         if (command.clientPerms && !interaction.channel!.permissionsFor(interaction.guild!.me!).has(command.clientPerms, true))
-          return await client.utils.quickReply(
-            client,
-            interaction,
+          return await client.utils.quickReply(client, interaction,
             `I can't execute this command as I am missing the following permissions: ${client.utils.missingPermissions(
               interaction.guild!.me!,
               command.clientPerms
             )}.`
           );
 
+        const member = await interaction.guild!.members.fetch(interaction.user.id);
         if (
           guildInfo.commandPerms
           && guildInfo.commandPerms[command.name]
-          // @ts-ignore
-          && !interaction.member.permissions.has(guildInfo.commandPerms[command.name], true))
+          && !member.permissions.has(guildInfo.commandPerms[command.name], true))
           return await client.utils.quickReply(
             client,
             interaction,
             `Woah there! Nice try, but you don't have the proper permissions to execute this command. You'll need one of the following permissions: ${client.utils.missingPermissions(
-              interaction.member! as GuildMember,
+              member,
               guildInfo.commandPerms[command.name]
             )}.`
           );
         else if (
           command.perms &&
-          //@ts-ignore
-          !interaction.member.permissions.has(command.perms, true)
+          !member.permissions.has(command.perms, true)
         )
           return await client.utils.quickReply(
             client,
             interaction,
             `Woah there! Nice try, but you don't have the proper permissions to execute this command. You'll need one of the following permissions: ${client.utils.missingPermissions(
-              interaction.member as GuildMember,
+              member,
               command.perms
             )}.`
           );
 
-        //@ts-ignore
-        if (command.nsfw && !interaction.channel.nsfw)
+        if (command.nsfw && (interaction.channel!.isThread() || !interaction.channel!.nsfw))
           return await client.utils.quickReply(client, interaction, `This command may only be used in an NSFW channel.`);
 
         if (command.category === "Gambling") {
@@ -171,6 +150,7 @@ export default async (client: Client, interaction: Interaction) => {
       }
       // }
 
+      // if (!(await command.additionalChecks(interaction))) return;
       const cd = await client.utils.getCooldown(command, interaction);
 
       let cooldowns;
@@ -211,7 +191,6 @@ export default async (client: Client, interaction: Interaction) => {
         else if (command.subcommands) sub = command.subcommands[subcommand];
 
         if (sub && sub.execute)
-          //@ts-ignore
           return await sub.execute({ client, interaction, group, subcommand });
 
         //@ts-ignore

@@ -16,23 +16,22 @@ export default class Setuid extends KelleeBotCommand {
                     type: "STRING",
                     required: true,
                 }
-            ]
+            ],
+            execute: async ({ client, interaction }) => {
+                try {
+                    const uid = interaction.options.getString("uid")!;
+
+                    await client.guildInfo.findByIdAndUpdate(
+                        interaction.guildId!,
+                        { $set: { genshinUID: uid } },
+                        { new: true, upsert: true, setDefaultsOnInsert: true }
+                    );
+                    return await interaction.reply({ content: `Your Genshin UID has been successfully set to \`${uid}\`.`, ephemeral: true });
+                } catch (e) {
+                    client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
+                    return await interaction.reply({ content: "An error has occurred. Please try again." });
+                }
+            }
         });
-    }
-
-    async execute({ client, interaction }: { client: Client, interaction: CommandInteraction }) {
-        try {
-            const uid = interaction.options.getString("uid")!;
-
-            await client.guildInfo.findByIdAndUpdate(
-                interaction.guildId!,
-                { $set: { genshinUID: uid } },
-                { new: true, upsert: true, setDefaultsOnInsert: true }
-            );
-            return await interaction.reply({ content: `Your Genshin UID has been successfully set to \`${uid}\`.`, ephemeral: true });
-        } catch (e) {
-            client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
-            return await interaction.reply({ content: "An error has occurred. Please try again." });
-        }
     }
 };

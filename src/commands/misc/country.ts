@@ -1,4 +1,4 @@
-import { Snowflake, CommandInteraction } from "discord.js";
+import { Snowflake } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 import axios from "axios";
@@ -27,29 +27,29 @@ export default class Country extends KelleeBotCommand {
                 const choices = await fetchAllCountries();
                 await client.utils.getAutocomplete(client, interaction, choices);
             },
-        });
-    }
-    async execute({ client, interaction }: { client: Client; interaction: CommandInteraction }) {
-        await this.setCooldown(interaction);
-        await interaction.deferReply();
-        try {
-            const country = interaction.options.getString("country")!;
-            const data = await fetchCountry(country);
+            execute: async ({ client, interaction }) => {
+                await this.setCooldown(interaction);
+                await interaction.deferReply();
+                try {
+                    const country = interaction.options.getString("country")!;
+                    const data = await fetchCountry(country);
 
-            if (!data || !data.length || data[0] === undefined || !data[0]) {
-                return interaction.editReply({
-                    content: `No results were found for "${country}".`
-                });
+                    if (!data || !data.length || data[0] === undefined || !data[0]) {
+                        return interaction.editReply({
+                            content: `No results were found for "${country}".`
+                        });
+                    }
+
+                    const msgEmbed = await showCountryInfo(client, interaction.user.id, data[0])
+                    return interaction.editReply({ embeds: [msgEmbed] });
+                } catch (e) {
+                    client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
+                    return interaction.editReply({
+                        content: "An error has occurred. Unable to fetch country information."
+                    });
+                }
             }
-
-            const msgEmbed = await showCountryInfo(client, interaction.user.id, data[0])
-            return interaction.editReply({ embeds: [msgEmbed] });
-        } catch (e) {
-            client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
-            return interaction.editReply({
-                content: "An error has occurred. Unable to fetch country information."
-            });
-        }
+        });
     }
 }
 

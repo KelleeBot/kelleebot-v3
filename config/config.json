@@ -1,6 +1,8 @@
 {
-    "devs": ["464635440801251328"],
-    "testServers": ["785593545187917824"],
+    "TOKEN": "",
+    "MONGODB_URI": "",
+    "DEVS": ["464635440801251328"],
+    "TEST_SERVERS": ["785593545187917824"],
     "giveawayReactEmoji": "🎉",
     "defaultRafflePoints": 500,
     "pointsToGive": 1000,
