@@ -1,10 +1,6 @@
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
-import { PokemonInfo } from "../../types/pokemon"
 import { pokeInfo, quiz } from "../../subcommandHelpers/pokemon";
-import axios from "axios";
-
-let pokemon: string[] = []
 
 export default class Pokemon extends KelleeBotCommand {
     constructor(client: Client) {
@@ -28,8 +24,7 @@ export default class Pokemon extends KelleeBotCommand {
                     ],
                     isAutocomplete: true,
                     autocomplete: async ({ client, interaction }) => {
-                        const choices = await fetchAllPokemon();
-                        await client.utils.getAutocomplete(client, interaction, choices);
+                        await client.utils.getAutocomplete(client, interaction, client.pokemon);
                     },
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction)
@@ -46,13 +41,4 @@ export default class Pokemon extends KelleeBotCommand {
             }
         });
     }
-};
-
-const fetchAllPokemon = async () => {
-    if (pokemon.length) return pokemon
-
-    const resp = await axios.get("https://pokeapi.co/api/v2/pokemon?limit=1118")
-    pokemon = resp.data.results.map((poke: PokemonInfo) => poke.name)
-
-    return pokemon
 };

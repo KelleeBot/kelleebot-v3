@@ -13,7 +13,7 @@ class Utils extends KelleeBotUtils {
 
   async getAutocomplete(client: Client, interaction: AutocompleteInteraction, choices: string[]) {
     const focusedValue = interaction.options.getFocused() as string;
-    const filtered = choices.filter((choice) => choice.toLowerCase().startsWith(focusedValue.toLowerCase())
+    const filtered = choices.filter((choice) => choice.toLowerCase().includes(focusedValue.toLowerCase())
     );
     await interaction.respond(
       filtered.slice(0, Math.min(25, filtered.length)).map((choice) => ({

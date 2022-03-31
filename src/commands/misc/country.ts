@@ -3,8 +3,6 @@ import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 import axios from "axios";
 
-let countries: string[] = [];
-
 export default class Country extends KelleeBotCommand {
     constructor(client: Client) {
         super(client, {
@@ -24,8 +22,7 @@ export default class Country extends KelleeBotCommand {
             ],
             isAutocomplete: true,
             autocomplete: async ({ client, interaction }) => {
-                const choices = await fetchAllCountries();
-                await client.utils.getAutocomplete(client, interaction, choices);
+                await client.utils.getAutocomplete(client, interaction, client.country);
             },
             execute: async ({ client, interaction }) => {
                 await this.setCooldown(interaction);
@@ -51,16 +48,6 @@ export default class Country extends KelleeBotCommand {
             }
         });
     }
-}
-
-const fetchAllCountries = async () => {
-    if (countries.length) return countries;
-
-    const resp = await axios.get("https://restcountries.com/v3.1/all");
-    const { data } = resp;
-
-    countries = data.map((country: any) => country.name.common).sort()
-    return countries;
 }
 
 const fetchCountry = async (name: string) => {

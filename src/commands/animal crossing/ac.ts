@@ -1,21 +1,6 @@
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 import { artwork, bug, clothing, diy, fish, furniture, interior, items, photo, sea, tool, villager } from "../../subcommandHelpers/animal crossing";
-import * as AC from "../../types/animalCrossing";
-import axios from "axios";
-
-let artworks: string[] = [];
-let bugs: string[] = [];
-let clothings: string[] = [];
-let diys: string[] = [];
-let fishes: string[] = [];
-let furnitures: string[] = [];
-let interiors: string[] = [];
-let item: string[] = [];
-let photos: string[] = [];
-let seaCreatures: string[] = [];
-let tools: string[] = [];
-let villagers: string[] = [];
 
 export default class AnimalCrossing extends KelleeBotCommand {
     constructor(client: Client) {
@@ -39,8 +24,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                     ],
                     isAutocomplete: true,
                     autocomplete: async ({ client, interaction }) => {
-                        const choices = await fetchData("https://api.nookipedia.com/nh/art", "artworks");
-                        await client.utils.getAutocomplete(client, interaction, choices);
+                        await client.utils.getAutocomplete(client, interaction, client.artworks);
 
                     },
                     execute: async ({ client, interaction }) => {
@@ -61,8 +45,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                     ],
                     isAutocomplete: true,
                     autocomplete: async ({ client, interaction }) => {
-                        const choices = await fetchData("https://api.nookipedia.com/nh/bugs", "bugs");
-                        await client.utils.getAutocomplete(client, interaction, choices);
+                        await client.utils.getAutocomplete(client, interaction, client.bugs);
                     },
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
@@ -82,8 +65,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                     ],
                     isAutocomplete: true,
                     autocomplete: async ({ client, interaction }) => {
-                        const choices = await fetchData("https://api.nookipedia.com/nh/clothing", "clothing");
-                        await client.utils.getAutocomplete(client, interaction, choices);
+                        await client.utils.getAutocomplete(client, interaction, client.clothings);
                     },
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
@@ -103,8 +85,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                     ],
                     isAutocomplete: true,
                     autocomplete: async ({ client, interaction }) => {
-                        const choices = await fetchData("https://api.nookipedia.com/nh/recipes", "diys");
-                        await client.utils.getAutocomplete(client, interaction, choices);
+                        await client.utils.getAutocomplete(client, interaction, client.diys);
                     },
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
@@ -136,8 +117,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                     ],
                     isAutocomplete: true,
                     autocomplete: async ({ client, interaction }) => {
-                        const choices = await fetchData("https://api.nookipedia.com/nh/fish", "fishes");
-                        await client.utils.getAutocomplete(client, interaction, choices);
+                        await client.utils.getAutocomplete(client, interaction, client.fishes);
                     },
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
@@ -157,8 +137,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                     ],
                     isAutocomplete: true,
                     autocomplete: async ({ client, interaction }) => {
-                        const choices = await fetchData("https://api.nookipedia.com/nh/furniture", "furnitures");
-                        await client.utils.getAutocomplete(client, interaction, choices);
+                        await client.utils.getAutocomplete(client, interaction, client.furnitures);
                     },
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
@@ -178,8 +157,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                     ],
                     isAutocomplete: true,
                     autocomplete: async ({ client, interaction }) => {
-                        const choices = await fetchData("https://api.nookipedia.com/nh/interior", "interiors");
-                        await client.utils.getAutocomplete(client, interaction, choices);
+                        await client.utils.getAutocomplete(client, interaction, client.interiors);
                     },
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
@@ -199,8 +177,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                     ],
                     isAutocomplete: true,
                     autocomplete: async ({ client, interaction }) => {
-                        const choices = await fetchData("https://api.nookipedia.com/nh/items", "items");
-                        await client.utils.getAutocomplete(client, interaction, choices);
+                        await client.utils.getAutocomplete(client, interaction, client.item);
                     },
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
@@ -220,8 +197,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                     ],
                     isAutocomplete: true,
                     autocomplete: async ({ client, interaction }) => {
-                        const choices = await fetchData("https://api.nookipedia.com/nh/photos", "photos");
-                        await client.utils.getAutocomplete(client, interaction, choices);
+                        await client.utils.getAutocomplete(client, interaction, client.photos);
                     },
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
@@ -241,8 +217,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                     ],
                     isAutocomplete: true,
                     autocomplete: async ({ client, interaction }) => {
-                        const choices = await fetchData("https://api.nookipedia.com/nh/sea", "seaCreatures");
-                        await client.utils.getAutocomplete(client, interaction, choices);
+                        await client.utils.getAutocomplete(client, interaction, client.sea);
                     },
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
@@ -262,8 +237,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                     ],
                     isAutocomplete: true,
                     autocomplete: async ({ client, interaction }) => {
-                        const choices = await fetchData("https://api.nookipedia.com/nh/tools", "tools");
-                        await client.utils.getAutocomplete(client, interaction, choices);
+                        await client.utils.getAutocomplete(client, interaction, client.tools);
                     },
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
@@ -283,8 +257,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                     ],
                     isAutocomplete: true,
                     autocomplete: async ({ client, interaction }) => {
-                        const choices = await fetchData("https://api.nookipedia.com/villagers", "villagers");
-                        await client.utils.getAutocomplete(client, interaction, choices);
+                        await client.utils.getAutocomplete(client, interaction, client.villager);
                     },
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
@@ -293,79 +266,5 @@ export default class AnimalCrossing extends KelleeBotCommand {
                 }
             }
         });
-    }
-};
-
-const fetchData = async (url: string, arrayType: "artworks" | "bugs" | "clothing" | "diys" | "fishes" | "furnitures" | "interiors" | "items" | "photos" | "seaCreatures" | "tools" | "villagers") => {
-    if (arrayType === "artworks") {
-        if (artworks.length) return artworks;
-    } else if (arrayType === "bugs") {
-        if (bugs.length) return bugs;
-    } else if (arrayType === "clothing") {
-        if (clothings.length) return clothings;
-    } else if (arrayType === "diys") {
-        if (diys.length) return diys;
-    } else if (arrayType === "fishes") {
-        if (fishes.length) return fishes;
-    } else if (arrayType === "furnitures") {
-        if (furnitures.length) return furnitures;
-    } else if (arrayType === "interiors") {
-        if (interiors.length) return interiors;
-    } else if (arrayType === "items") {
-        if (item.length) return item;
-    } else if (arrayType === "photos") {
-        if (photos.length) return photos;
-    } else if (arrayType === "seaCreatures") {
-        if (seaCreatures.length) return seaCreatures;
-    } else if (arrayType === "tools") {
-        if (tools.length) return tools;
-    } else {
-        if (villagers.length) return villagers;
-    }
-
-    const resp = await axios.get(url, {
-        headers: {
-            "X-API-KEY": `${process.env.NOOK_API_KEY}`,
-            "Accept-Version": "2.0.0"
-        }
-    });
-    const { data } = resp;
-
-    if (arrayType === "artworks") {
-        artworks = data.map((art: AC.Artwork) => art.name);
-        return artworks;
-    } else if (arrayType === "bugs") {
-        bugs = data.map((bug: AC.Bug) => bug.name);
-        return bugs;
-    } else if (arrayType === "clothing") {
-        clothings = data.map((clothing: AC.Clothing) => clothing.name);
-        return clothings;
-    } else if (arrayType === "diys") {
-        diys = data.map((diy: AC.Recipe) => diy.name);
-        return diys;
-    } else if (arrayType === "fishes") {
-        fishes = data.map((fish: AC.Fish) => fish.name);
-        return fishes;
-    } else if (arrayType === "furnitures") {
-        furnitures = data.map((furniture: AC.Furniture) => furniture.name);
-        return furnitures;
-    } else if (arrayType === "interiors") {
-        interiors = data.map((interior: AC.Interior) => interior.name);
-        return interiors;
-    } else if (arrayType === "items") {
-        item = data.map((item: AC.Item) => item.name);
-        return item;
-    } else if (arrayType === "photos") {
-        photos = data.map((photo: AC.Photo) => photo.name);
-        return photos;
-    } else if (arrayType === "seaCreatures") {
-        seaCreatures = data.map((seaCreature: AC.Sea) => seaCreature.name);
-        return seaCreatures;
-    } else if (arrayType === "tools") {
-        tools = data.map((tool: AC.Tool) => tool.name);
-        return tools;
-    } else {
-        villagers = data.map((villager: AC.Villagers) => villager.name)
-        return villagers;
     }
 };

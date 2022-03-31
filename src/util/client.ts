@@ -11,6 +11,7 @@ import Twitter from "twitter-lite";
 import { Player } from "discord-player";
 import { GiveawaysManager } from "discord-giveaways";
 import { giveawayReactEmoji } from "../../config/config.json"
+import axios from "axios";
 
 class Client extends KelleeBotClient {
   twitchLiveInfo: Manager<string, TwitchLive>;
@@ -20,6 +21,23 @@ class Client extends KelleeBotClient {
   giveaways: GiveawaysManager;
   player: Player;
   scams: Manager<string, Scams>;
+
+  artworks: Array<string>;
+  bugs: Array<string>;
+  clothings: Array<string>;
+  diys: Array<string>;
+  fishes: Array<string>;
+  furnitures: Array<string>;
+  interiors: Array<string>;
+  item: Array<string>;
+  photos: Array<string>;
+  sea: Array<string>;
+  tools: Array<string>;
+  villager: Array<string>;
+
+  country: Array<string>;
+
+  pokemon: Array<string>;
 
   constructor(options: ClientOptions) {
     super(options);
@@ -48,7 +66,70 @@ class Client extends KelleeBotClient {
     });
     this.player = new Player(this);
     this.scams = new Manager(this, ScamLinks);
+
+    // Animal Crossing auto complete data
+    this.artworks = new Array();
+    this.bugs = new Array();
+    this.clothings = new Array();
+    this.diys = new Array();
+    this.fishes = new Array();
+    this.furnitures = new Array();
+    this.interiors = new Array();
+    this.item = new Array();
+    this.photos = new Array();
+    this.sea = new Array();
+    this.tools = new Array();
+    this.villager = new Array();
+
+    // Country command auto complete data
+    this.country = new Array();
+
+    // Pokemon auto complete data
+    this.pokemon = new Array();
+  }
+
+  async loadACData() {
+    this.artworks = await fetchACData("https://api.nookipedia.com/nh/art");
+    this.bugs = await fetchACData("https://api.nookipedia.com/nh/bugs");
+    this.clothings = await fetchACData("https://api.nookipedia.com/nh/clothing");
+    this.diys = await fetchACData("https://api.nookipedia.com/nh/recipes");
+    this.fishes = await fetchACData("https://api.nookipedia.com/nh/fish");
+    this.furnitures = await fetchACData("https://api.nookipedia.com/nh/furniture");
+    this.interiors = await fetchACData("https://api.nookipedia.com/nh/interior");
+    this.item = await fetchACData("https://api.nookipedia.com/nh/items");
+    this.photos = await fetchACData("https://api.nookipedia.com/nh/photos");
+    this.sea = await fetchACData("https://api.nookipedia.com/nh/sea");
+    this.tools = await fetchACData("https://api.nookipedia.com/nh/tools");
+    this.villager = await fetchACData("https://api.nookipedia.com/villagers");
+  }
+
+  async loadCountryData() {
+    this.country = await fetchAllCountries();
+  }
+
+  async loadPokemonData() {
+    this.pokemon = await fetchAllPokemon();
   }
 }
 
 export { Client };
+
+const fetchACData = async (url: string) => {
+  const resp = await axios.get(url, {
+    headers: {
+      "X-API-KEY": `${process.env.NOOK_API_KEY}`,
+      "Accept-Version": "2.0.0"
+    }
+  });
+  return resp.data.map((ac: { name: string }) => ac.name)
+}
+
+const fetchAllCountries = async () => {
+  const resp = await axios.get("https://restcountries.com/v3.1/all");
+  return resp.data.map((country: any) => country.name.common).sort()
+}
+
+const fetchAllPokemon = async () => {
+  const resp = await axios.get("https://pokeapi.co/api/v2/pokemon?limit=1118")
+  return resp.data.results.map((poke: { name: string }) => poke.name)
+};
