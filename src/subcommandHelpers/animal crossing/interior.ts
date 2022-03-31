@@ -15,7 +15,7 @@ export const interior = async (client: Client, interaction: CommandInteraction) 
         const msgEmbed = (await client.utils.CustomEmbed({ userID: interaction.user.id }))
             .setURL(url)
             .setAuthor({ name, iconURL: image_url, url })
-            .setDescription(`More information about the ${name} can be found here:\n${url}`)
+            .setDescription(`More information about the ${name} can be found [here](${url} "${name}").`)
             .setThumbnail(image_url)
             .addFields(
                 { name: "**Sell Price**", value: client.utils.formatNumber(sell), inline: true },

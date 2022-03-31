@@ -67,7 +67,7 @@ const createVillagerEmbed = (data: Villagers) => {
             iconURL: nh_details ? nh_details.icon_url : image_url,
             url
         })
-        .setDescription(`More info about ${name} can be found here:\n${url}`)
+        .setDescription(`More info about ${name} can be found [here](${url} "${name}").`)
         .setThumbnail(image_url)
         .addFields(
             { name: "**Species**", value: species, inline: true },
