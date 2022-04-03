@@ -58,6 +58,6 @@
     "@types/string-similarity": "^4.0.0",
     "@types/twemoji-parser": "^13.1.1",
     "@types/twit": "^2.2.29",
-    "prettier": "^2.6.1"
+    "prettier": "^2.6.2"
   }
 }
