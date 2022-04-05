@@ -23,7 +23,7 @@ export default class Roles extends KelleeBotCommand {
                         {
                             name: "role",
                             description: "The role you want to add.",
-                            type: "MENTIONABLE",
+                            type: "ROLE",
                             required: true
                         },
                         {

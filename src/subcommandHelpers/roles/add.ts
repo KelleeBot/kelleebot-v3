@@ -3,14 +3,11 @@ import { CommandInteraction, MessageActionRow, MessageSelectMenu, MessageSelectO
 
 export const add = async (client: Client, interaction: CommandInteraction) => {
     const id = interaction.options.getString("messageid")!;
-    const role = interaction.options.getMentionable("role")! as Role;
+    const role = interaction.options.getRole("role")! as Role;
     const channel = interaction.options.getChannel("channel")! as TextChannel ?? interaction.channel as TextChannel;
     const emoji = interaction.options.getString("emoji")!;
 
     try {
-        if (!(role instanceof Role))
-            return await interaction.reply({ content: "Please ensure that a role is selected.", ephemeral: true });
-
         if (channel.type !== "GUILD_TEXT")
             return await interaction.reply({ content: "Please ensure that the channel selected is a text channel.", ephemeral: true });
 
