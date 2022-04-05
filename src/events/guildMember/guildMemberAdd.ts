@@ -25,7 +25,7 @@ export default async (client: Client, member: GuildMember) => {
                 { name: "**Account Created**", value: `<t:${createdTimestamp}:F> (<t:${createdTimestamp}:R>)`, inline: false },
                 { name: "**Joined**", value: `<t:${joinedTimestamp}:F> (<t:${joinedTimestamp}:R>)`, inline: false }
             )
-            .setFooter({ text: `ID: ${member.id}` })
+            .setFooter({ text: `Members: ${member.guild.memberCount} • ID: ${member.id}` })
             .setTimestamp();
 
         client.utils.sendMessageToBotLog(client, member.guild, msgEmbed);

@@ -20,7 +20,7 @@ export default async (client: Client, member: GuildMember) => {
             { name: "**Joined**", value: `<t:${joinedTimestamp}:F> (<t:${joinedTimestamp}:R>)`, inline: false },
             { name: "**Left**", value: `<t:${leftTimestamp}:F> (<t:${leftTimestamp}:R>)`, inline: false }
         )
-        .setFooter({ text: `ID: ${user.id}` })
+        .setFooter({ text: `Members: ${guild.memberCount} • ID: ${user.id}` })
         .setTimestamp();
 
     // const fetchedLog = await client.utils.fetchAuditLog(guild, "MEMBER_KICK");
