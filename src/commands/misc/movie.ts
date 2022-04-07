@@ -12,12 +12,14 @@ export default class Movie extends KelleeBotCommand {
             description: "See information about a movie.",
             clientPerms: ["SEND_MESSAGES", "EMBED_LINKS"],
             cooldown: 15,
-            options: [{
-                name: "movie",
-                description: "The movie to lookup",
-                type: "STRING",
-                required: true
-            }],
+            options: [
+                {
+                    name: "movie",
+                    description: "The movie to lookup",
+                    type: "STRING",
+                    required: true
+                }
+            ],
             execute: async ({ client, interaction }) => {
                 const movie = interaction.options.getString("movie")!;
                 try {
@@ -44,9 +46,7 @@ export default class Movie extends KelleeBotCommand {
 
 const showAllMovies = async (query: string, results: MovieResult[], interaction: CommandInteraction, client: Client) => {
     let movieList = "";
-    const selectMenu = new MessageSelectMenu()
-        .setCustomId("movie")
-        .setPlaceholder("Select a Movie");
+    const selectMenu = new MessageSelectMenu().setCustomId("movie").setPlaceholder("Select a Movie");
 
     for (let i = 0; i < results.length; i++) {
         let title = Util.escapeMarkdown(results[i].original_title!);
@@ -66,7 +66,7 @@ const showAllMovies = async (query: string, results: MovieResult[], interaction:
         .setFooter({ text: "Select the movie from the dropdown you want to see information for." });
 
     const row = new MessageActionRow().addComponents(selectMenu);
-    const msg = await interaction.reply({ embeds: [msgEmbed], components: [row], fetchReply: true }) as Message;
+    const msg = (await interaction.reply({ embeds: [msgEmbed], components: [row], fetchReply: true })) as Message;
 
     const filter = async (i: SelectMenuInteraction) => {
         await i.deferUpdate();
@@ -86,33 +86,21 @@ const showAllMovies = async (query: string, results: MovieResult[], interaction:
 
     collector.on("end", (_collected, reason) => {
         if (reason === "time") {
-            msgEmbed
-                .setTitle("Time Expired")
-                .setDescription("You did not choose a movie in time.")
-                .setFooter({ text: "" });
+            msgEmbed.setTitle("Time Expired").setDescription("You did not choose a movie in time.").setFooter({ text: "" });
 
             msg.edit({ embeds: [msgEmbed], components: [] });
         }
     });
-}
+};
 
 const showMovieInfo = async (client: Client, userID: Snowflake, movie: MovieResult) => {
-    const {
-        id,
-        original_title,
-        original_language,
-        title,
-        poster_path,
-        release_date,
-        vote_average,
-        overview
-    } = movie;
+    const { id, original_title, original_language, title, poster_path, release_date, vote_average, overview } = movie;
 
     const movieInfo = await client.movieDb.movieInfo({ id: `${id}` });
     const { budget, genres, revenue, runtime, homepage, production_companies } = movieInfo;
 
     const timestamp = DateTime.fromISO(new Date(`${release_date}`).toISOString()).toSeconds();
-    const releaseTimestamp = timestamp ? `<t:${timestamp}:F> (<t:${timestamp}:R>)` : '';
+    const releaseTimestamp = timestamp ? `<t:${timestamp}:F> (<t:${timestamp}:R>)` : "";
     const movieReleaseDate = release_date ? releaseTimestamp : "Unknown";
 
     const msgEmbed = (await client.utils.CustomEmbed({ userID }))
@@ -129,8 +117,12 @@ const showMovieInfo = async (client: Client, userID: Snowflake, movie: MovieResu
             { name: "**Revenue**", value: `$${client.utils.formatNumber(revenue!)}`, inline: true },
             { name: "**Runtime**", value: `${runtime} minutes`, inline: true },
             { name: "**Rating (out of 10)**", value: `${vote_average}`, inline: true },
-            { name: "**Produced By**", value: (production_companies && production_companies.length) ? production_companies.map(company => company.name).join(", ") : "-", inline: true },
-            { name: "**Genres**", value: (genres && genres.length) ? genres.map(genre => genre.name).join(", ") : "-", inline: true },
+            {
+                name: "**Produced By**",
+                value: production_companies && production_companies.length ? production_companies.map((company) => company.name).join(", ") : "-",
+                inline: true
+            },
+            { name: "**Genres**", value: genres && genres.length ? genres.map((genre) => genre.name).join(", ") : "-", inline: true }
         )
         .setFooter({
             text: "Powered by TMDB",

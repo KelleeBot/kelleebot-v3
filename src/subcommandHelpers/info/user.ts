@@ -30,7 +30,6 @@ const status = {
 } as { [key: string]: string };
 
 export const user = async (client: Client, interaction: CommandInteraction) => {
-
     const readCode = (dir: string) => {
         let files = readdirSync(dir);
         for (const file of files) {
@@ -38,10 +37,7 @@ export const user = async (client: Client, interaction: CommandInteraction) => {
             if (stat.isDirectory()) {
                 readCode(join(dir, file));
             } else {
-                if (
-                    (file.endsWith(".ts") || file.endsWith(".js")) &&
-                    !file.endsWith(".d.ts") && !file.includes("-ignore")
-                ) {
+                if ((file.endsWith(".ts") || file.endsWith(".js")) && !file.endsWith(".d.ts") && !file.includes("-ignore")) {
                     let buffer = readFileSync(join(dir, file)).toString();
                     let lines = buffer.split("\n");
                     linesOfCode += lines.length;
@@ -53,7 +49,7 @@ export const user = async (client: Client, interaction: CommandInteraction) => {
 
     if (linesOfCode == 0) readCode(join(process.cwd(), "dist"));
 
-    const member = interaction.options.getMember("user") as GuildMember ?? interaction.member as GuildMember;
+    const member = (interaction.options.getMember("user") as GuildMember) ?? (interaction.member as GuildMember);
     const { user, nickname } = member;
 
     const botCreator = client.users.cache.get(client.config.DEVS[0]);
@@ -72,7 +68,7 @@ export const user = async (client: Client, interaction: CommandInteraction) => {
         })
         .setThumbnail(member.displayAvatarURL({ dynamic: true }));
 
-    if (userBanner) msgEmbed.setImage(userBanner.toString())
+    if (userBanner) msgEmbed.setImage(userBanner.toString());
 
     if (user.id === client.user!.id) {
         const totalMembers = client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0);
@@ -130,7 +126,7 @@ export const user = async (client: Client, interaction: CommandInteraction) => {
             )
             .setFooter({ text: botFooter })
             .setTimestamp();
-        return interaction.reply({ embeds: [msgEmbed] })
+        return interaction.reply({ embeds: [msgEmbed] });
     }
 
     msgEmbed
@@ -194,23 +190,15 @@ export const user = async (client: Client, interaction: CommandInteraction) => {
         }
 
         if (infoPerms.length) {
-            msgEmbed.addField(
-                "**Key Permissions**",
-                infoPerms.sort().join(", "),
-                false
-            );
+            msgEmbed.addField("**Key Permissions**", infoPerms.sort().join(", "), false);
         }
     }
 
     if (extraPerms.length) {
-        msgEmbed.addField(
-            "**Acknowledgements**",
-            extraPerms.sort().join(", "),
-            false
-        );
+        msgEmbed.addField("**Acknowledgements**", extraPerms.sort().join(", "), false);
     }
     return interaction.reply({ embeds: [msgEmbed] });
-}
+};
 
 const getAllRoles = (member: GuildMember): string => {
     let roles = "";
@@ -226,9 +214,7 @@ const isServerAdmin = (member: GuildMember, guild: Guild): boolean => {
     if (!member || !guild) return false;
     return (
         member.id === guild.ownerId ||
-        (member.permissions &&
-            (member.permissions.has(Permissions.FLAGS.ADMINISTRATOR) ||
-                member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)))
+        (member.permissions && (member.permissions.has(Permissions.FLAGS.ADMINISTRATOR) || member.permissions.has(Permissions.FLAGS.MANAGE_GUILD)))
     );
 };
 

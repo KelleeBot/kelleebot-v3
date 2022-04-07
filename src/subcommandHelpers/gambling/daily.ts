@@ -1,15 +1,14 @@
 import dailyRewards from "../../schemas/dailyRewards";
 import { CommandInteraction } from "discord.js";
 import { Client } from "../../util/client";
-import { addPoints } from "../../util"
-import { ALREADY_CLAIMED, CLAIMED } from "../../../config/messages.json"
+import { addPoints } from "../../util";
+import { ALREADY_CLAIMED, CLAIMED } from "../../../config/messages.json";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import duration from "dayjs/plugin/duration";
 
 dayjs.extend(utc);
 dayjs.extend(duration);
-
 
 let claimedCache: any[] = [];
 
@@ -19,43 +18,27 @@ const clearCache = () => {
 };
 clearCache();
 
-
 export const daily = async (client: Client, interaction: CommandInteraction) => {
-    const { guild, user } = interaction
-    const guildInfo = await client.guildInfo.get(guild!.id)
+    const { guild, user } = interaction;
+    const guildInfo = await client.guildInfo.get(guild!.id);
     if (guildInfo.gambling) {
-        const { dailyReward } = guildInfo.gambling
+        const { dailyReward } = guildInfo.gambling;
 
-        const inCache = claimedCache.find(
-            (cache) => cache.userID == user.id && cache.guildID == guild!.id
-        );
-        const index = claimedCache.findIndex(
-            (cache) => cache.userID == user.id && cache.guildID == guild!.id
-        );
+        const inCache = claimedCache.find((cache) => cache.userID == user.id && cache.guildID == guild!.id);
+        const index = claimedCache.findIndex((cache) => cache.userID == user.id && cache.guildID == guild!.id);
 
         if (inCache) {
             if (getHours(claimedCache[index].updatedAt) == 24) {
                 claimedCache.splice(index, 1); // Remove from cache if time expired before the cache can be cleared
             } else {
-                client.utils.log(
-                    "WARNING",
-                    `${__filename}`,
-                    `Daily command - Returning from cache (${interaction.user.tag})`
-                );
+                client.utils.log("WARNING", `${__filename}`, `Daily command - Returning from cache (${interaction.user.tag})`);
                 const remaining = getTimeRemaining(claimedCache[index].updatedAt);
-                const alreadyClaimed = ALREADY_CLAIMED.replace(
-                    /{REMAINING}/g,
-                    remaining
-                );
+                const alreadyClaimed = ALREADY_CLAIMED.replace(/{REMAINING}/g, remaining);
                 return interaction.reply({ content: alreadyClaimed });
             }
         }
 
-        client.utils.log(
-            "WARNING",
-            `${__filename}`,
-            `Daily command - Fetching from Mongo (${interaction.user.tag})`
-        );
+        client.utils.log("WARNING", `${__filename}`, `Daily command - Fetching from Mongo (${interaction.user.tag})`);
         const obj = {
             guildID: guild!.id,
             userID: user.id
@@ -71,10 +54,7 @@ export const daily = async (client: Client, interaction: CommandInteraction) => 
                     userID: user.id,
                     updatedAt
                 });
-                const alreadyClaimed = ALREADY_CLAIMED.replace(
-                    /{REMAINING}/g,
-                    remaining
-                );
+                const alreadyClaimed = ALREADY_CLAIMED.replace(/{REMAINING}/g, remaining);
                 return interaction.reply({ content: alreadyClaimed });
             }
         }
@@ -90,8 +70,7 @@ export const daily = async (client: Client, interaction: CommandInteraction) => 
         await addPoints(guild!.id, user.id, dailyReward);
         return interaction.reply({ content: claimed });
     }
-
-}
+};
 
 const getTimeRemaining = (updatedAt: Date) => {
     const thenUTC = dayjs.utc(updatedAt);

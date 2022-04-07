@@ -1,4 +1,4 @@
-export type ChannelTypes = (
+export type ChannelTypes =
     | "DM"
     | "GROUP_DM"
     | "GUILD_TEXT"
@@ -10,5 +10,4 @@ export type ChannelTypes = (
     | "GUILD_PUBLIC_THREAD"
     | "GUILD_PRIVATE_THREAD"
     | "GUILD_STAGE_VOICE"
-    | "UNKNOWN"
-)
+    | "UNKNOWN";

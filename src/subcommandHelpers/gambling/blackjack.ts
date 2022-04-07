@@ -27,8 +27,7 @@ export const blackjack = async (client: Client, interaction: CommandInteraction)
 
         if (inProgress)
             return interaction.reply({
-                content:
-                    "A blackjack game is already in progress. Please wait for that one to complete first before starting another game.",
+                content: "A blackjack game is already in progress. Please wait for that one to complete first before starting another game.",
                 ephemeral: true
             });
 
@@ -49,8 +48,7 @@ export const blackjack = async (client: Client, interaction: CommandInteraction)
             return interaction.reply({ content: VALID_POINTS });
         }
 
-        if (+pointsToGamble < 1)
-            return interaction.reply({ content: ONE_POINT });
+        if (+pointsToGamble < 1) return interaction.reply({ content: ONE_POINT });
 
         if (+pointsToGamble > actualPoints) {
             const msg = NOT_ENOUGH.replace(/{POINTS}/g, client.utils.pluralize(actualPoints, "point", true));
@@ -81,7 +79,14 @@ const createDeck = () => {
     return deck;
 };
 
-const playGame = async (client: Client, interaction: CommandInteraction, pointsToGamble: number, guildID: Snowflake, userID: Snowflake, text: string) => {
+const playGame = async (
+    client: Client,
+    interaction: CommandInteraction,
+    pointsToGamble: number,
+    guildID: Snowflake,
+    userID: Snowflake,
+    text: string
+) => {
     deck = createDeck().shuffle();
 
     playerCards = [getNextCard()!, getNextCard()!]; // Start off with two cards
@@ -181,10 +186,7 @@ const showStatus = () => {
 const getWinMsg = (client: Client, pointsGambled: number, args: string) => {
     return playerWon
         ? `You won ${client.utils.pluralize(pointsGambled, "point", true)}!`
-        : `The dealer won and you lost ${args.toLowerCase() === "all"
-            ? "all your"
-            : ""
-        } ${client.utils.pluralize(pointsGambled, "point", true)}!`;
+        : `The dealer won and you lost ${args.toLowerCase() === "all" ? "all your" : ""} ${client.utils.pluralize(pointsGambled, "point", true)}!`;
 };
 
 const checkForEndOfGame = async (guildID: Snowflake, userID: Snowflake, pointsGambled: number) => {
@@ -210,8 +212,7 @@ const checkForEndOfGame = async (guildID: Snowflake, userID: Snowflake, pointsGa
 };
 
 const addRemovePoints = async (guildID: Snowflake, userID: Snowflake, pointsGambled: number) => {
-    if (gameOver)
-        await addPoints(guildID!, userID, playerWon ? pointsGambled : pointsGambled * -1);
+    if (gameOver) await addPoints(guildID!, userID, playerWon ? pointsGambled : pointsGambled * -1);
 };
 
 const createEmbed = (client: Client, points: number) => {
@@ -249,5 +250,4 @@ const editEmbed = (client: Client, oldEmbed: MessageEmbed, pointsGambled: number
                 inline: true
             }
         );
-
 };

@@ -9,8 +9,7 @@ export const gamble = async (client: Client, interaction: CommandInteraction) =>
         const { guild, user } = interaction;
 
         const actualPoints = await getPoints(guild!.id, user.id);
-        if (actualPoints === 0)
-            return interaction.reply({ content: NO_POINTS });
+        if (actualPoints === 0) return interaction.reply({ content: NO_POINTS });
 
         if (amount.toLowerCase() === "all") {
             // Gamble all lose
@@ -25,15 +24,12 @@ export const gamble = async (client: Client, interaction: CommandInteraction) =>
             }
         }
 
-        if (!client.utils.isValidNumber(amount))
-            return await interaction.reply({ content: VALID_POINTS });
+        if (!client.utils.isValidNumber(amount)) return await interaction.reply({ content: VALID_POINTS });
 
         const pointsToGamble = client.utils.removeCommas(amount);
-        if (isNaN(+pointsToGamble) || !Number.isInteger(+pointsToGamble))
-            return await interaction.reply({ content: VALID_POINTS });
+        if (isNaN(+pointsToGamble) || !Number.isInteger(+pointsToGamble)) return await interaction.reply({ content: VALID_POINTS });
 
-        if (+pointsToGamble < 1)
-            return await interaction.reply({ content: ONE_POINT });
+        if (+pointsToGamble < 1) return await interaction.reply({ content: ONE_POINT });
 
         if (+pointsToGamble > actualPoints) {
             const msg = NOT_ENOUGH.replace(/{POINTS}/g, client.utils.pluralize(actualPoints, "point", true));
@@ -43,19 +39,14 @@ export const gamble = async (client: Client, interaction: CommandInteraction) =>
         // Gamble loss
         if (client.utils.randomRange(0, 1) == 0) {
             const newPoints = await addPoints(guild!.id, user.id, +pointsToGamble * -1);
-            if (actualPoints === +pointsToGamble)
-                return await interaction.reply({ content: ALL_IN_LOSE });
+            if (actualPoints === +pointsToGamble) return await interaction.reply({ content: ALL_IN_LOSE });
 
             return interaction.reply({
                 content: `You gambled \`${client.utils.formatNumber(+pointsToGamble)}\` and lost ${client.utils.pluralize(
                     +pointsToGamble,
                     "point",
                     true
-                )}. You now have ${client.utils.pluralize(
-                    newPoints,
-                    "point",
-                    true
-                )}.`
+                )}. You now have ${client.utils.pluralize(newPoints, "point", true)}.`
             });
         } else {
             // Gamble win
@@ -70,15 +61,11 @@ export const gamble = async (client: Client, interaction: CommandInteraction) =>
                     +pointsToGamble,
                     "point",
                     true
-                )}. You now have ${client.utils.pluralize(
-                    newPoints,
-                    "point",
-                    true
-                )}.`
+                )}. You now have ${client.utils.pluralize(newPoints, "point", true)}.`
             });
         }
     } catch (e) {
         client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
         return interaction.reply({ content: "An error has occurred. Please try again.", ephemeral: true });
     }
-}; 
+};

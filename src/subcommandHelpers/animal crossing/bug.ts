@@ -7,7 +7,7 @@ export const bug = async (client: Client, interaction: CommandInteraction) => {
     await interaction.deferReply();
     try {
         const bug = interaction.options.getString("bug")!;
-        const data = await fetchBug(bug) as Bug;
+        const data = (await fetchBug(bug)) as Bug;
 
         const { url, name, image_url, sell_nook, sell_flick, location, north, south } = data;
 
@@ -36,18 +36,14 @@ export const bug = async (client: Client, interaction: CommandInteraction) => {
                     name: "**Months Available**",
                     value: `North:\n${north.availability_array.map(
                         (avail: { months: string }) => `${avail.months}\n`
-                    )}\nSouth:\n${south.availability_array.map(
-                        (avail: { months: string }) => `${avail.months}\n`
-                    )}`,
+                    )}\nSouth:\n${south.availability_array.map((avail: { months: string }) => `${avail.months}\n`)}`,
                     inline: true
                 },
                 {
                     name: "**Times Available**",
                     value: `North:\n${north.availability_array.map(
                         (avail: { time: string }) => `${avail.time}\n`
-                    )}\nSouth:\n${south.availability_array.map(
-                        (avail: { time: string }) => `${avail.time}\n`
-                    )}`,
+                    )}\nSouth:\n${south.availability_array.map((avail: { time: string }) => `${avail.time}\n`)}`,
                     inline: true
                 }
             )
@@ -62,17 +58,14 @@ export const bug = async (client: Client, interaction: CommandInteraction) => {
             content: "An error has occurred. Please try again."
         });
     }
-}
+};
 
 const fetchBug = async (name: string) => {
-    const resp = await axios.get(
-        `https://api.nookipedia.com/nh/bugs/${encodeURIComponent(name.toLowerCase())}`,
-        {
-            headers: {
-                "X-API-KEY": `${process.env.NOOK_API_KEY}`,
-                "Accept-Version": "2.0.0"
-            }
+    const resp = await axios.get(`https://api.nookipedia.com/nh/bugs/${encodeURIComponent(name.toLowerCase())}`, {
+        headers: {
+            "X-API-KEY": `${process.env.NOOK_API_KEY}`,
+            "Accept-Version": "2.0.0"
         }
-    );
+    });
     return resp.data;
 };

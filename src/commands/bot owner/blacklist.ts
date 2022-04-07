@@ -32,14 +32,16 @@ export default class Blacklist extends KelleeBotCommand {
                 const action = interaction.options.getString("action")!;
                 const user = interaction.options.getUser("user")!;
                 try {
-                    const userInfo = await client.profileInfo.get(user.id)
+                    const userInfo = await client.profileInfo.get(user.id);
                     switch (action) {
                         case "add":
                             if (user.bot) return interaction.reply({ content: "You cannot blacklist bots.", ephemeral: true });
 
-                            if (user.id === interaction.user.id) return interaction.reply({ content: "You cannot blacklist yourself.", ephemeral: true });
+                            if (user.id === interaction.user.id)
+                                return interaction.reply({ content: "You cannot blacklist yourself.", ephemeral: true });
 
-                            if (client.config.DEVS.includes(user.id)) return interaction.reply({ content: "You cannot blacklist the bot owner.", ephemeral: true });
+                            if (client.config.DEVS.includes(user.id))
+                                return interaction.reply({ content: "You cannot blacklist the bot owner.", ephemeral: true });
 
                             if (userInfo.isBlacklisted) return interaction.reply({ content: `Looks like **${user.tag}** is already blacklisted.` });
 
@@ -54,18 +56,21 @@ export default class Blacklist extends KelleeBotCommand {
                         case "remove":
                             if (!userInfo.isBlacklisted) return interaction.reply({ content: `**${user.tag}** is currently not blacklisted.` });
 
-                            userInfo.isBlacklisted = false
+                            userInfo.isBlacklisted = false;
                             await client.profileInfo.findByIdAndUpdate(
                                 user.id,
                                 { $set: { isBlacklisted: false } },
                                 { new: true, upsert: true, setDefaultsOnInsert: true }
                             );
-                            interaction.reply({ content: `**${user.tag}** has successfully been whitelisted.` })
+                            interaction.reply({ content: `**${user.tag}** has successfully been whitelisted.` });
                             break;
                     }
                 } catch (e) {
                     client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
-                    return interaction.reply({ content: `An error occurred and **${user.tag}** was not ${action === "add" ? "blacklisted" : "whitelisted"}.`, ephemeral: true });
+                    return interaction.reply({
+                        content: `An error occurred and **${user.tag}** was not ${action === "add" ? "blacklisted" : "whitelisted"}.`,
+                        ephemeral: true
+                    });
                 }
             }
         });

@@ -1,6 +1,6 @@
 import { ColorResolvable, GuildBan, MessageEmbed, User } from "discord.js";
 import { Client } from "../../util/client";
-import { GUILD_BAN_REMOVE } from "../../../config/embedColours.json"
+import { GUILD_BAN_REMOVE } from "../../../config/embedColours.json";
 
 export default async (client: Client, guildBan: GuildBan) => {
     const msgEmbed = new MessageEmbed()
@@ -17,7 +17,7 @@ export default async (client: Client, guildBan: GuildBan) => {
 
     const banLog = fetchedLogs.entries.first();
     if (!banLog) {
-        msgEmbed.setDescription(`**${guildBan.user.tag} has been unbanned from the server**`);;
+        msgEmbed.setDescription(`**${guildBan.user.tag} has been unbanned from the server**`);
         return client.utils.sendMessageToBotLog(client, guildBan.guild, msgEmbed);
     }
 

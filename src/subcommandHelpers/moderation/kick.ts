@@ -1,14 +1,23 @@
 import { Client } from "../../util/client";
 import memberInfo from "../../schemas/memberInfo";
-import { ButtonInteraction, ColorResolvable, CommandInteraction, GuildMember, Message, MessageActionRow, MessageButton, MessageEmbed, User } from "discord.js";
+import {
+    ButtonInteraction,
+    ColorResolvable,
+    CommandInteraction,
+    GuildMember,
+    Message,
+    MessageActionRow,
+    MessageButton,
+    MessageEmbed,
+    User
+} from "discord.js";
 import { GUILD_BAN_ADD, GUILD_MEMBER_EVENTS } from "../../../config/embedColours.json";
 
 export const kick = async (client: Client, interaction: CommandInteraction) => {
-    const member = interaction.options.getMember("member")! as GuildMember
+    const member = interaction.options.getMember("member")! as GuildMember;
     const reason = interaction.options.getString("reason")!;
 
-    if (member.id === interaction.user.id)
-        return interaction.reply({ content: "Now why would you want to do that?", ephemeral: true });
+    if (member.id === interaction.user.id) return interaction.reply({ content: "Now why would you want to do that?", ephemeral: true });
 
     if (!member.kickable || !member.manageable || !member.moderatable)
         return interaction.reply({ content: "I don't have permissions to kick that member.", ephemeral: true });
@@ -23,20 +32,12 @@ export const kick = async (client: Client, interaction: CommandInteraction) => {
             .setAuthor({ name: member.user.tag, iconURL: member.user.displayAvatarURL({ dynamic: true }) });
 
         const buttonRow = new MessageActionRow().addComponents(
-            new MessageButton()
-                .setCustomId("kick_yes")
-                .setLabel("Yes")
-                .setStyle("SUCCESS"),
-            new MessageButton()
-                .setCustomId("kick_no")
-                .setLabel("No")
-                .setStyle("DANGER")
+            new MessageButton().setCustomId("kick_yes").setLabel("Yes").setStyle("SUCCESS"),
+            new MessageButton().setCustomId("kick_no").setLabel("No").setStyle("DANGER")
         );
 
         if (!memberInfo) {
-            memberInfoEmbed.setDescription(
-                `• Warns: 0\n• Mutes: 0\n• Kicks: 0\n• Bans: 0\n• Soft Bans: 0\n• Unbans: 0\n`
-            );
+            memberInfoEmbed.setDescription(`• Warns: 0\n• Mutes: 0\n• Kicks: 0\n• Bans: 0\n• Soft Bans: 0\n• Unbans: 0\n`);
         } else {
             const { bans, kicks, warnings, softbans, unbans, mutes } = memberInfo;
             memberInfoEmbed.setDescription(
@@ -44,19 +45,16 @@ export const kick = async (client: Client, interaction: CommandInteraction) => {
             );
         }
 
-        const msg = await interaction.reply({
+        const msg = (await interaction.reply({
             content: `Are you sure you want to kick **${member.user.tag}** for ${reason}?`,
             embeds: [memberInfoEmbed],
             components: [buttonRow],
             fetchReply: true
-        }) as Message;
+        })) as Message;
 
         const filter = async (i: ButtonInteraction) => {
             await i.deferUpdate();
-            return (
-                (i.customId == "kick_yes" || i.customId == "kick_no") &&
-                i.user.id == interaction.user.id
-            );
+            return (i.customId == "kick_yes" || i.customId == "kick_no") && i.user.id == interaction.user.id;
         };
         const collector = msg.createMessageComponentCollector({ filter, componentType: "BUTTON", time: 1000 * 15 });
         collector.on("collect", async (i) => {
@@ -108,11 +106,7 @@ const kickMember = async (member: GuildMember, message: Message, author: User, c
         reason
     };
 
-    await memberInfo.findOneAndUpdate(
-        memberObj,
-        { ...memberObj, $push: { kicks: kick } },
-        { upsert: true }
-    );
+    await memberInfo.findOneAndUpdate(memberObj, { ...memberObj, $push: { kicks: kick } }, { upsert: true });
 
     await msg.edit({ content: `Successfully kicked **${kickedMember.user.tag}** from the server.`, embeds: [], components: [] });
     const msgEmbed = new MessageEmbed()
@@ -122,9 +116,7 @@ const kickMember = async (member: GuildMember, message: Message, author: User, c
             iconURL: author.displayAvatarURL({ dynamic: true })
         })
         .setThumbnail(kickedMember.user.displayAvatarURL({ dynamic: true }))
-        .setDescription(
-            `**Member:** ${kickedMember.user.tag}\n**Action:** Kick\n**Reason:** ${reason}`
-        )
+        .setDescription(`**Member:** ${kickedMember.user.tag}\n**Action:** Kick\n**Reason:** ${reason}`)
         .setTimestamp()
         .setFooter({ text: `ID: ${kickedMember.id}` });
 

@@ -4,8 +4,11 @@ import { Client } from "../../util/client";
 import memberInfo from "../../schemas/memberInfo";
 
 export const history = async (client: Client, interaction: CommandInteraction) => {
-    const user = interaction.options.getUser("user") ??
-        await client.users.fetch(interaction.options.getUser("user")!).catch(e => client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`));
+    const user =
+        interaction.options.getUser("user") ??
+        (await client.users
+            .fetch(interaction.options.getUser("user")!)
+            .catch((e) => client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`)));
 
     if (!user) return interaction.reply({ content: "A user was not found with that ID.", ephemeral: true });
 
@@ -23,7 +26,7 @@ export const history = async (client: Client, interaction: CommandInteraction) =
 
     const results = await memberInfo.findOne({ guildID: interaction.guildId, userID: user.id });
     if (!results) {
-        msgEmbed.setDescription("This user does not have any moderation history in this server.")
+        msgEmbed.setDescription("This user does not have any moderation history in this server.");
         return interaction.reply({ embeds: [msgEmbed] });
     }
 
@@ -35,31 +38,22 @@ export const history = async (client: Client, interaction: CommandInteraction) =
     }
 
     if (kicks.length) {
-        description +=
-            mutes.length || warnings.length
-                ? `\n**❯ Kicks [${kicks.length}]**`
-                : `**❯ Kicks [${kicks.length}]**`;
+        description += mutes.length || warnings.length ? `\n**❯ Kicks [${kicks.length}]**` : `**❯ Kicks [${kicks.length}]**`;
         description += loopThroughInfo({ kicks });
     }
 
     if (bans.length) {
-        description += kicks.length
-            ? `\n**❯ Bans [${bans.length}]**`
-            : `**❯ Bans [${bans.length}]**`;
+        description += kicks.length ? `\n**❯ Bans [${bans.length}]**` : `**❯ Bans [${bans.length}]**`;
         description += loopThroughInfo({ bans });
     }
 
     if (unbans.length) {
-        description += bans.length
-            ? `\n**❯ Unbans [${unbans.length}]**`
-            : `**❯ Unbans [${unbans.length}]**`;
+        description += bans.length ? `\n**❯ Unbans [${unbans.length}]**` : `**❯ Unbans [${unbans.length}]**`;
         description += loopThroughInfo({ unbans });
     }
 
     if (softbans.length) {
-        description += unbans.length
-            ? `\n**❯ Soft Bans [${softbans.length}]**`
-            : `**❯ Soft Bans [${softbans.length}]**`;
+        description += unbans.length ? `\n**❯ Soft Bans [${softbans.length}]**` : `**❯ Soft Bans [${softbans.length}]**`;
         description += loopThroughInfo({ softbans });
     }
 
@@ -89,8 +83,7 @@ export const history = async (client: Client, interaction: CommandInteraction) =
             })
             .setThumbnail(user.displayAvatarURL({ dynamic: true }))
             .setFooter({
-                text: `Requested by ${interaction.user.tag} | Page ${i + 1} of ${descArray.length
-                    }`,
+                text: `Requested by ${interaction.user.tag} | Page ${i + 1} of ${descArray.length}`,
                 iconURL: interaction.user.displayAvatarURL({ dynamic: true })
             })
             .setTimestamp()
@@ -98,7 +91,7 @@ export const history = async (client: Client, interaction: CommandInteraction) =
         embedArray.push(msgEmbed);
     }
     return client.utils.buttonPagination(interaction, embedArray, { time: 1000 * 60 * 10 });
-}
+};
 
 const loopThroughInfo = (infoType: any) => {
     let description = "";
@@ -129,9 +122,9 @@ const loopThroughInfo = (infoType: any) => {
         const { executor, timestamp, reason } = info;
         const when = Math.round(timestamp / 1000);
 
-        description += `${executedType}<@${executor}>\nWhen: <t:${when}:F>${reason ? `\nReason: ${reason}` : ""
-            }${infoType.mutes ? `\nDuration: ${ms(info.duration, { long: true })}` : ""
-            }\n`;
+        description += `${executedType}<@${executor}>\nWhen: <t:${when}:F>${reason ? `\nReason: ${reason}` : ""}${
+            infoType.mutes ? `\nDuration: ${ms(info.duration, { long: true })}` : ""
+        }\n`;
     }
     return description;
 };

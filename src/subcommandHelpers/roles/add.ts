@@ -4,7 +4,7 @@ import { CommandInteraction, MessageActionRow, MessageSelectMenu, MessageSelectO
 export const add = async (client: Client, interaction: CommandInteraction) => {
     const id = interaction.options.getString("messageid")!;
     const role = interaction.options.getRole("role")! as Role;
-    const channel = interaction.options.getChannel("channel")! as TextChannel ?? interaction.channel as TextChannel;
+    const channel = (interaction.options.getChannel("channel")! as TextChannel) ?? (interaction.channel as TextChannel);
     const emoji = interaction.options.getString("emoji")!;
 
     try {
@@ -12,8 +12,7 @@ export const add = async (client: Client, interaction: CommandInteraction) => {
             return await interaction.reply({ content: "Please ensure that the channel selected is a text channel.", ephemeral: true });
 
         const targetMessage = await channel.messages.fetch(id, { cache: true, force: true });
-        if (!targetMessage)
-            return await interaction.reply({ content: "I couldn't find that message", ephemeral: true });
+        if (!targetMessage) return await interaction.reply({ content: "I couldn't find that message", ephemeral: true });
 
         if (targetMessage.author.id !== client.user?.id)
             return await interaction.reply({ content: "Please provide a message ID for a message that was actually sent by me.", ephemeral: true });
@@ -24,9 +23,7 @@ export const add = async (client: Client, interaction: CommandInteraction) => {
         let row = targetMessage.components[0] as MessageActionRow;
         if (!row) row = new MessageActionRow();
 
-        const options: MessageSelectOptionData[] = [
-            emoji ? { label: role.name, value: role.id, emoji } : { label: role.name, value: role.id }
-        ];
+        const options: MessageSelectOptionData[] = [emoji ? { label: role.name, value: role.id, emoji } : { label: role.name, value: role.id }];
 
         let menu = row.components[0] as MessageSelectMenu;
         if (menu) {

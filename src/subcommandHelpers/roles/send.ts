@@ -3,7 +3,7 @@ import { CommandInteraction, TextChannel } from "discord.js";
 
 export const send = async (client: Client, interaction: CommandInteraction) => {
     const message = interaction.options.getString("message")!;
-    const channel = interaction.options.getChannel("channel") as TextChannel ?? interaction.channel as TextChannel
+    const channel = (interaction.options.getChannel("channel") as TextChannel) ?? (interaction.channel as TextChannel);
 
     try {
         if (channel.type !== "GUILD_TEXT")

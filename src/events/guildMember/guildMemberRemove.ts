@@ -43,4 +43,4 @@ export default async (client: Client, member: GuildMember) => {
     //     }`
     // );
     return client.utils.sendMessageToBotLog(client, guild, msgEmbed);
-}
+};

@@ -30,8 +30,7 @@ export default class Enlarge extends KelleeBotCommand {
                         });
 
                     const parsed = parse(emoji, { assetType: "png" });
-                    if (!parsed[0])
-                        return await interaction.reply({ content: "An invalid emoji was provided.", ephemeral: true });
+                    if (!parsed[0]) return await interaction.reply({ content: "An invalid emoji was provided.", ephemeral: true });
 
                     return await interaction.reply({ content: parsed[0].url });
                 } catch (e) {

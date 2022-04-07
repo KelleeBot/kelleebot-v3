@@ -64,8 +64,8 @@ export default class Music extends KelleeBotCommand {
                     execute: async ({ client, interaction }) => {
                         await stop(client, interaction);
                     }
-                },
+                }
             }
         });
     }
-};
+}

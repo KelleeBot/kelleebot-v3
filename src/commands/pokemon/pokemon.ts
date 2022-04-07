@@ -27,8 +27,8 @@ export default class Pokemon extends KelleeBotCommand {
                         await client.utils.getAutocomplete(client, interaction, client.pokemon);
                     },
                     execute: async ({ client, interaction }) => {
-                        await this.setCooldown(interaction)
-                        await pokeInfo(client, interaction)
+                        await this.setCooldown(interaction);
+                        await pokeInfo(client, interaction);
                     }
                 },
                 quiz: {
@@ -41,4 +41,4 @@ export default class Pokemon extends KelleeBotCommand {
             }
         });
     }
-};
+}

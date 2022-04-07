@@ -5,13 +5,7 @@ import { Client } from "../../util/client";
 import { setPoints } from "../../util";
 
 export default (client: Client) => {
-    new cron.CronJob(
-        "05 00 00 1 * *",
-        () => execute(client),
-        null,
-        true,
-        timeZone
-    );
+    new cron.CronJob("05 00 00 1 * *", () => execute(client), null, true, timeZone);
 };
 
 const execute = async (client: Client) => {
@@ -35,4 +29,4 @@ const execute = async (client: Client) => {
             client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
         }
     });
-}
+};

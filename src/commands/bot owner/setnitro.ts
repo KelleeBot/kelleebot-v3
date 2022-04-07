@@ -33,8 +33,7 @@ export default class Setnitro extends KelleeBotCommand {
                     const link = interaction.options.getString("link")!;
 
                     const guildInfo = await client.guildInfo.get(id);
-                    if (!guildInfo.gambling.gamblingChannel)
-                        return await interaction.reply({ content: NO_GAMBLING_CHANNEL_SET, ephemeral: true });
+                    if (!guildInfo.gambling.gamblingChannel) return await interaction.reply({ content: NO_GAMBLING_CHANNEL_SET, ephemeral: true });
 
                     if (!nitroRegExp.test(link))
                         return await interaction.reply({ content: "Invalid Nitro link. Please try again.", ephemeral: true });
@@ -53,4 +52,4 @@ export default class Setnitro extends KelleeBotCommand {
             }
         });
     }
-};
+}

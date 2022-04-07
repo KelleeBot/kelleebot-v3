@@ -23,7 +23,9 @@ export default class Food extends KelleeBotCommand {
                         .setURL(meals[0].strYoutube)
                         .setThumbnail(meals[0].strMealThumb)
                         .setDescription(
-                            `For information on how to cook this dish and what the ingredients are, please click [here](${meals[0].strSource} '${meals[0].strMeal}').${meals[0].strYoutube ? `\n\nYou can also check out this YouTube video: ${meals[0].strYoutube}.` : ''}`
+                            `For information on how to cook this dish and what the ingredients are, please click [here](${meals[0].strSource} '${
+                                meals[0].strMeal
+                            }').${meals[0].strYoutube ? `\n\nYou can also check out this YouTube video: ${meals[0].strYoutube}.` : ""}`
                         )
                         .addFields(
                             {

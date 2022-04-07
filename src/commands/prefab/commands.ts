@@ -10,7 +10,7 @@ export default class Commands extends KelleeBotCommand {
             canNotDisable: true,
             ignoreDisabledChannels: true,
             ownerOnly: true,
-            clientPerms: ['SEND_MESSAGES', 'EMBED_LINKS'],
+            clientPerms: ["SEND_MESSAGES", "EMBED_LINKS"],
             cooldown: 5,
             subcommands: {
                 list: {
@@ -20,13 +20,14 @@ export default class Commands extends KelleeBotCommand {
 
                         const guildInfo = await client.guildInfo.get(interaction.guildId!);
 
-                        const embed = (await client.utils.CustomEmbed({ userID: interaction.user.id }))
-                            .setTimestamp();
+                        const embed = (await client.utils.CustomEmbed({ userID: interaction.user.id })).setTimestamp();
 
                         if (!guildInfo?.disabledCommands?.length) {
                             embed.setDescription(`${interaction.user}, there are currently no disabled commands in this server.`);
                         } else {
-                            embed.setDescription(`${interaction.user}, these are the disabled commands:\n\`${guildInfo.disabledCommands.join('\`, \`')}\``);
+                            embed.setDescription(
+                                `${interaction.user}, these are the disabled commands:\n\`${guildInfo.disabledCommands.join("`, `")}\``
+                            );
                         }
 
                         return await interaction.reply({ embeds: [embed] });
@@ -47,16 +48,17 @@ export default class Commands extends KelleeBotCommand {
 
                         const guildInfo = await client.guildInfo.get(interaction.guildId!);
 
-                        const embed = (await client.utils.CustomEmbed({ userID: interaction.user.id }))
-                            .setTimestamp();
+                        const embed = (await client.utils.CustomEmbed({ userID: interaction.user.id })).setTimestamp();
 
                         const name = interaction.options.getString("command")!.toLowerCase();
 
                         const command = client.commands.get(name);
 
                         if (!command) embed.setDescription(`${interaction.user}, the command \`${name}\` does not exist.`);
-                        else if (command.canNotDisable) embed.setDescription(`${interaction.user}, the command \`${command.name}\` can not be disabled.`);
-                        else if (guildInfo?.disabledCommands?.includes(command.name)) embed.setDescription(`${interaction.user}, the command \`${command.name}\` is already disabled.`);
+                        else if (command.canNotDisable)
+                            embed.setDescription(`${interaction.user}, the command \`${command.name}\` can not be disabled.`);
+                        else if (guildInfo?.disabledCommands?.includes(command.name))
+                            embed.setDescription(`${interaction.user}, the command \`${command.name}\` is already disabled.`);
                         else {
                             await client.guildInfo.findByIdAndUpdate(
                                 interaction.guildId!,
@@ -84,16 +86,17 @@ export default class Commands extends KelleeBotCommand {
 
                         const guildInfo = await client.guildInfo.get(interaction.guildId!);
 
-                        const embed = (await client.utils.CustomEmbed({ userID: interaction.user.id }))
-                            .setTimestamp();
+                        const embed = (await client.utils.CustomEmbed({ userID: interaction.user.id })).setTimestamp();
 
                         const name = interaction.options.getString("command")!.toLowerCase();
 
                         const command = client.commands.get(name);
 
                         if (!command) embed.setDescription(`${interaction.user}, the command \`${name}\` does not exist.`);
-                        else if (command.canNotDisable) embed.setDescription(`${interaction.user}, the command \`${command.name}\` can not be enabled.`);
-                        else if (!guildInfo?.disabledCommands?.includes(command.name)) embed.setDescription(`${interaction.user}, the command \`${command.name}\` is already enabled.`);
+                        else if (command.canNotDisable)
+                            embed.setDescription(`${interaction.user}, the command \`${command.name}\` can not be enabled.`);
+                        else if (!guildInfo?.disabledCommands?.includes(command.name))
+                            embed.setDescription(`${interaction.user}, the command \`${command.name}\` is already enabled.`);
                         else {
                             await client.guildInfo.findByIdAndUpdate(
                                 interaction.guildId!,

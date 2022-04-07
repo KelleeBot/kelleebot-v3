@@ -1,6 +1,6 @@
 import { ColorResolvable, GuildChannel, MessageEmbed } from "discord.js";
 import { Client } from "../../util/client";
-import { CHANNEL_EVENTS } from "../../../config/embedColours.json"
+import { CHANNEL_EVENTS } from "../../../config/embedColours.json";
 
 export default async (client: Client, channel: GuildChannel) => {
     if (!channel.guild) return;

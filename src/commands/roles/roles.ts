@@ -29,7 +29,7 @@ export default class Roles extends KelleeBotCommand {
                         {
                             name: "channel",
                             description: "The channel that the message is in. Default is current channel if none specified.",
-                            type: "CHANNEL",
+                            type: "CHANNEL"
                         },
                         {
                             name: "emoji",
@@ -88,4 +88,4 @@ export default class Roles extends KelleeBotCommand {
             }
         });
     }
-};
+}

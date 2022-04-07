@@ -19,16 +19,10 @@ const schedule = {
     Friday: "OFF",
     Saturday: "OFF",
     Sunday: "OFF"
-} as { [key: string]: string }
+} as { [key: string]: string };
 
 export default (client: Client) => {
-    new cron.CronJob(
-        "00 00 00 * * *",
-        () => execute(client),
-        null,
-        true,
-        timeZone
-    );
+    new cron.CronJob("00 00 00 * * *", () => execute(client), null, true, timeZone);
 };
 
 const execute = async (client: Client) => {
@@ -39,10 +33,7 @@ const execute = async (client: Client) => {
 
         let text = `Below, you will find Kéllee's weekly streaming schedule. All times listed below are in ${timezoneFormat} and are subject to change without notice.\n\n`;
         for (const key in schedule) {
-            text +=
-                key.toLowerCase() === today.toLowerCase()
-                    ? `**${key}: ${schedule[key]}**\n`
-                    : `${key}: ${schedule[key]}\n`;
+            text += key.toLowerCase() === today.toLowerCase() ? `**${key}: ${schedule[key]}**\n` : `${key}: ${schedule[key]}\n`;
         }
         text += `\nThere could be occassional surprise streams too! Pay attention to the <#724484131643457650> channel for updates and don't forget to assign yourself the <@&732780296986034287> role in the <#732786545169399838> channel to get notified for whenever Kéllee goes live!`;
 

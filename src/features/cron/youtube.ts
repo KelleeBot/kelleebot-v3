@@ -5,13 +5,7 @@ import { Client } from "../../util/client";
 import youtubeNotifications from "../../schemas/youtubeNotifications";
 
 export default async (client: Client) => {
-    new cron.CronJob(
-        "00 */15 * * * *",
-        () => execute(client),
-        null,
-        true,
-        "America/Denver"
-    );
+    new cron.CronJob("00 */15 * * * *", () => execute(client), null, true, "America/Denver");
 };
 
 const execute = async (client: Client) => {
@@ -42,11 +36,7 @@ const execute = async (client: Client) => {
 
 const sendMessage = async (client: Client, item: youtube_v3.Schema$SearchResult, channel: TextChannel, guildID?: Snowflake) => {
     try {
-        await youtubeNotifications.findOneAndUpdate(
-            { videoID: item.id!.videoId, guildID },
-            { videoID: item.id!.videoId, guildID },
-            { upsert: true }
-        );
+        await youtubeNotifications.findOneAndUpdate({ videoID: item.id!.videoId, guildID }, { videoID: item.id!.videoId, guildID }, { upsert: true });
 
         const url = `https://www.youtube.com/watch?v=${item.id!.videoId}`;
         await channel.send({

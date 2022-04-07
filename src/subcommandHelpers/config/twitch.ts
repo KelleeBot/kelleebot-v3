@@ -5,16 +5,22 @@ export const twitch = async (client: Client, interaction: CommandInteraction) =>
     try {
         const twitch = interaction.options.getString("twitch")!;
         const message = interaction.options.getString("message")!;
-        const channel = interaction.options.getChannel("channel") as TextChannel ?? interaction.channel as TextChannel;
+        const channel = (interaction.options.getChannel("channel") as TextChannel) ?? (interaction.channel as TextChannel);
 
         if (channel.type !== "GUILD_TEXT")
             return await interaction.reply({ content: "Only text channels can be set as the Twitch notification channel.", ephemeral: true });
 
         if (channel.isThread())
-            return await interaction.reply({ content: "Thread channels are not allowed to be set as the Twitch notification channel.", ephemeral: true });
+            return await interaction.reply({
+                content: "Thread channels are not allowed to be set as the Twitch notification channel.",
+                ephemeral: true
+            });
 
         if (!(await doesChannelExist(client, twitch)))
-            return await interaction.reply({ content: `Looks like the channel **${twitch}** doesn't exist on Twitch. Please try another channel.`, ephemeral: true });
+            return await interaction.reply({
+                content: `Looks like the channel **${twitch}** doesn't exist on Twitch. Please try another channel.`,
+                ephemeral: true
+            });
 
         await client.guildInfo.findByIdAndUpdate(
             interaction.guildId!,

@@ -58,7 +58,7 @@ export const role = async (client: Client, interaction: CommandInteraction) => {
                 value: `${role.members.size}`,
                 inline: true
             }
-        )
+        );
 
     if (role.unicodeEmoji) msgEmbed.addField("**Emoji**", role.unicodeEmoji, true);
 
@@ -67,7 +67,7 @@ export const role = async (client: Client, interaction: CommandInteraction) => {
             name: "**Permissions**",
             value: `${role.permissions.toArray().map((str) => `\`${client.utils.titleCase(str.replace(/_/g, " ").toLowerCase())}\``)}`,
             inline: false
-        })
+        });
 
     return interaction.reply({ embeds: [msgEmbed] });
 };

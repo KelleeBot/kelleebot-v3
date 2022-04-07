@@ -30,35 +30,17 @@ export const villager = async (client: Client, interaction: CommandInteraction) 
 };
 
 const fetchVillagerName = async (name: string) => {
-    const resp = await axios.get(
-        `https://api.nookipedia.com/villagers?name=${encodeURIComponent(
-            name.toLowerCase()
-        )}&nhdetails=true`,
-        {
-            headers: {
-                "X-API-KEY": `${process.env.NOOK_API_KEY}`,
-                "Accept-Version": "2.0.0"
-            }
+    const resp = await axios.get(`https://api.nookipedia.com/villagers?name=${encodeURIComponent(name.toLowerCase())}&nhdetails=true`, {
+        headers: {
+            "X-API-KEY": `${process.env.NOOK_API_KEY}`,
+            "Accept-Version": "2.0.0"
         }
-    );
+    });
     return resp.data;
 };
 
 const createVillagerEmbed = (data: Villagers) => {
-    const {
-        title_color,
-        url,
-        name,
-        nh_details,
-        image_url,
-        species,
-        personality,
-        gender,
-        phrase,
-        birthday_month,
-        birthday_day,
-        sign
-    } = data;
+    const { title_color, url, name, nh_details, image_url, species, personality, gender, phrase, birthday_month, birthday_day, sign } = data;
     return new MessageEmbed()
         .setColor(title_color ? `#${title_color}` : "ORANGE")
         .setURL(url)
@@ -76,10 +58,7 @@ const createVillagerEmbed = (data: Villagers) => {
             { name: "**Catchphrase**", value: phrase, inline: true },
             {
                 name: "**Birthday**",
-                value:
-                    birthday_month === "" || birthday_day === ""
-                        ? "-"
-                        : `${birthday_month} ${birthday_day}`,
+                value: birthday_month === "" || birthday_day === "" ? "-" : `${birthday_month} ${birthday_day}`,
                 inline: true
             },
             { name: "**Sign**", value: sign, inline: true }

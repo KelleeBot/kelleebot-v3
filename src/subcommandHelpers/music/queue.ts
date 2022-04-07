@@ -28,7 +28,9 @@ export const queue = async (client: Client, interaction: CommandInteraction) => 
 
             let text = "";
             for (let i = 0; i < tracks.length; i++) {
-                text += `${i + 1}. [${Util.escapeMarkdown(tracks[i].title)}](${tracks[i].url}) (${tracks[i].duration}) - Requested by ${tracks[i].requestedBy}\n`;
+                text += `${i + 1}. [${Util.escapeMarkdown(tracks[i].title)}](${tracks[i].url}) (${tracks[i].duration}) - Requested by ${
+                    tracks[i].requestedBy
+                }\n`;
             }
             msgEmbed.setDescription(text).setFooter({
                 text: `Total Songs: ${tracks.length} | Total Duration: ${client.utils.msToTime(queue.totalTime)}`
@@ -45,13 +47,16 @@ export const queue = async (client: Client, interaction: CommandInteraction) => 
 
             let counter = (i + 1) * 10 - 10;
             for (let j = 0; j < tracksArray[i].length; j++) {
-                text += `${counter + 1}. [${Util.escapeMarkdown(tracksArray[i][j].title)}](${tracksArray[i][j].url}) (${tracksArray[i][j].duration
-                    }) - Requested by ${tracksArray[i][j].requestedBy}\n`;
+                text += `${counter + 1}. [${Util.escapeMarkdown(tracksArray[i][j].title)}](${tracksArray[i][j].url}) (${
+                    tracksArray[i][j].duration
+                }) - Requested by ${tracksArray[i][j].requestedBy}\n`;
                 counter++;
             }
 
             msgEmbed.setDescription(text).setFooter({
-                text: `Total Songs: ${tracks.length} | Total Duration: ${client.utils.msToTime(queue.totalTime)} | Page ${i + 1} of ${tracksArray.length}`
+                text: `Total Songs: ${tracks.length} | Total Duration: ${client.utils.msToTime(queue.totalTime)} | Page ${i + 1} of ${
+                    tracksArray.length
+                }`
             });
             embedArray.push(msgEmbed);
         }

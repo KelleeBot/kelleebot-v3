@@ -14,7 +14,7 @@ export default class Setuid extends KelleeBotCommand {
                     name: "uid",
                     description: "Your Genshin Impact UID.",
                     type: "STRING",
-                    required: true,
+                    required: true
                 }
             ],
             execute: async ({ client, interaction }) => {
@@ -34,4 +34,4 @@ export default class Setuid extends KelleeBotCommand {
             }
         });
     }
-};
+}

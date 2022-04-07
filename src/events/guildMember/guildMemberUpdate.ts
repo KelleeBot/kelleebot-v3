@@ -1,6 +1,6 @@
 import { ColorResolvable, Guild, GuildMember, MessageEmbed, Role, User } from "discord.js";
 import { Client } from "../../util/client";
-import { GUILD_MEMBER_EVENTS, GUILD_MEMBER_ROLES } from "./../../../config/embedColours.json"
+import { GUILD_MEMBER_EVENTS, GUILD_MEMBER_ROLES } from "./../../../config/embedColours.json";
 
 export default async (client: Client, oldMember: GuildMember, newMember: GuildMember) => {
     // Nickname changed
@@ -8,12 +8,9 @@ export default async (client: Client, oldMember: GuildMember, newMember: GuildMe
         const oldNick = oldMember.nickname ?? "None";
         const newNick = newMember.nickname ?? "None";
 
-        const msgEmbed =
-            createEmbed(client, GUILD_MEMBER_EVENTS as ColorResolvable, `**${newMember.user} nickname changed**`, { guild: newMember.guild })
-                .addFields(
-                    { name: "**Before**", value: oldNick, inline: true },
-                    { name: "**After**", value: newNick, inline: true }
-                );
+        const msgEmbed = createEmbed(client, GUILD_MEMBER_EVENTS as ColorResolvable, `**${newMember.user} nickname changed**`, {
+            guild: newMember.guild
+        }).addFields({ name: "**Before**", value: oldNick, inline: true }, { name: "**After**", value: newNick, inline: true });
 
         const fetchedLog = await client.utils.fetchAuditLog(newMember.guild!, "MEMBER_UPDATE");
         if (fetchedLog) {
@@ -31,8 +28,8 @@ export default async (client: Client, oldMember: GuildMember, newMember: GuildMe
 
     // Updated roles
     if (oldMember.roles.cache.size != newMember.roles.cache.size) {
-        const removedRoles = oldMember.roles.cache.filter(role => !newMember.roles.cache.has(role.id));
-        const addedRoles = newMember.roles.cache.filter(role => !oldMember.roles.cache.has(role.id));
+        const removedRoles = oldMember.roles.cache.filter((role) => !newMember.roles.cache.has(role.id));
+        const addedRoles = newMember.roles.cache.filter((role) => !oldMember.roles.cache.has(role.id));
 
         if (removedRoles.size > 0) {
             const roleID = removedRoles.map((r) => r.id);
@@ -53,7 +50,7 @@ export default async (client: Client, oldMember: GuildMember, newMember: GuildMe
 
 const roleUpdatedLog = async (client: Client, role: Role, user: User, type: "given" | "removed") => {
     let description = `**${user} was ${type}`;
-    if (type === "given") description += ` the `
+    if (type === "given") description += ` the `;
     else description += ` from the `;
 
     description += `\`${role.name}\` role`;
@@ -75,9 +72,9 @@ const roleUpdatedLog = async (client: Client, role: Role, user: User, type: "giv
 
     const msgEmbed = createEmbed(client, GUILD_MEMBER_ROLES as ColorResolvable, description, { user });
     return client.utils.sendMessageToBotLog(client, role.guild, msgEmbed);
-}
+};
 
-const createEmbed = (client: Client, color: ColorResolvable, description: string, options: { user?: User, guild?: Guild }) => {
+const createEmbed = (client: Client, color: ColorResolvable, description: string, options: { user?: User; guild?: Guild }) => {
     return new MessageEmbed()
         .setColor(color)
         .setAuthor({
@@ -87,4 +84,4 @@ const createEmbed = (client: Client, color: ColorResolvable, description: string
         .setDescription(description)
         .setFooter({ text: `ID: ${options.user ? options.user.id : options.guild?.id}` })
         .setTimestamp();
-}
+};

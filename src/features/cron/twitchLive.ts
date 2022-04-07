@@ -1,6 +1,6 @@
-import cron from "cron"
+import cron from "cron";
 import { MessageEmbed, TextChannel } from "discord.js";
-import { Client } from "../../util/client"
+import { Client } from "../../util/client";
 import { DateTime } from "luxon";
 
 export default (client: Client) => {
@@ -18,7 +18,7 @@ export default (client: Client) => {
 const execute = async (client: Client) => {
     try {
         client.guilds.cache.forEach(async (guild) => {
-            const guildInfo = await client.guildInfo.get(guild.id)
+            const guildInfo = await client.guildInfo.get(guild.id);
             if (guildInfo.streamerLive) {
                 const { channelID, twitchChannel, message } = guildInfo.streamerLive!;
                 if (!channelID || !twitchChannel || !message) return;
@@ -29,22 +29,19 @@ const execute = async (client: Client) => {
                 if (!stream) return;
 
                 let twitchLiveInfo = await client.utils.getTwitchLive(client, guild.id);
-                const currentStream = stream.data.filter(
-                    (val) =>
-                        val.user_name.toLowerCase().trim() ===
-                        twitchChannel.toLowerCase().trim()
-                );
+                const currentStream = stream.data.filter((val) => val.user_name.toLowerCase().trim() === twitchChannel.toLowerCase().trim());
 
                 if (!currentStream.length) {
-                    if (!twitchLiveInfo.liveChannels.length) return
+                    if (!twitchLiveInfo.liveChannels.length) return;
 
-                    const channel = guild.channels.cache.get(channelID) as TextChannel
+                    const channel = guild.channels.cache.get(channelID) as TextChannel;
                     if (channel) {
-                        const msg = await channel.messages.fetch(twitchLiveInfo.messageID)
-                            .catch(e => client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`))
+                        const msg = await channel.messages
+                            .fetch(twitchLiveInfo.messageID)
+                            .catch((e) => client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`));
 
                         if (msg) {
-                            const endedAt = DateTime.fromISO(new Date().toISOString())
+                            const endedAt = DateTime.fromISO(new Date().toISOString());
                             const embed = msg.embeds[0]
                                 .setDescription("Stream has now ended. Thanks for watching!")
                                 .addField("**Ended At**", getTimeString(endedAt));
@@ -54,11 +51,12 @@ const execute = async (client: Client) => {
                         }
                     }
 
-                    await client.twitchLiveInfo.findByIdAndUpdate(guild.id,
+                    await client.twitchLiveInfo.findByIdAndUpdate(
+                        guild.id,
                         { messageID: null, $pull: { liveChannels: twitchChannel.toLowerCase().trim() } },
                         { new: true, upsert: true, setDefaultsOnInsert: true }
-                    )
-                    return
+                    );
+                    return;
                 }
 
                 const {
@@ -73,16 +71,14 @@ const execute = async (client: Client) => {
                 } = currentStream[0];
 
                 if (type === "live") {
-                    if (twitchLiveInfo.liveChannels.includes(user_name.toLowerCase().trim())) return
+                    if (twitchLiveInfo.liveChannels.includes(user_name.toLowerCase().trim())) return;
 
-                    const userInfo = await getUser(client, user_id)
-                    const gameInfo = await getGameThumbnail(client, game_id)
+                    const userInfo = await getUser(client, user_id);
+                    const gameInfo = await getGameThumbnail(client, game_id);
 
                     const twitchURL = `https://www.twitch.tv/${user_name}`;
                     const userThumbnail = userInfo ? userInfo.profile_image_url : "";
-                    const gameThumbnail = gameInfo
-                        ? gameInfo.box_art_url.replace(/-{width}x{height}/g, "")
-                        : "";
+                    const gameThumbnail = gameInfo ? gameInfo.box_art_url.replace(/-{width}x{height}/g, "") : "";
                     const startedAt = DateTime.fromISO(started_at);
 
                     const embed = new MessageEmbed()
@@ -112,17 +108,18 @@ const execute = async (client: Client) => {
                     const msg = await channel.send({ content, embeds: [embed], allowedMentions: { parse: ["roles", "everyone"] } });
                     if (!msg) return;
 
-                    await client.twitchLiveInfo.findByIdAndUpdate(guild.id,
+                    await client.twitchLiveInfo.findByIdAndUpdate(
+                        guild.id,
                         { messageID: msg.id, $push: { liveChannels: user_name.toLowerCase().trim() } },
                         { new: true, upsert: true, setDefaultsOnInsert: true }
-                    )
+                    );
                 }
             }
-        })
+        });
     } catch (e) {
-        client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`)
+        client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
     }
-}
+};
 
 const getUser = async (client: Client, userID: string) => {
     const user = await client.twitchApi.getUsers(userID);
@@ -139,7 +136,5 @@ const getGameThumbnail = async (client: Client, gameID: string) => {
 };
 
 const getTimeString = (time: DateTime) => {
-    return `<t:${Math.floor(time.toSeconds())}:F> (<t:${Math.floor(
-        time.toSeconds()
-    )}:R>)`;
+    return `<t:${Math.floor(time.toSeconds())}:F> (<t:${Math.floor(time.toSeconds())}:R>)`;
 };

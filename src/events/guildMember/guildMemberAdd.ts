@@ -1,7 +1,7 @@
 import { ColorResolvable, Guild, GuildMember, MessageAttachment, MessageEmbed, TextChannel } from "discord.js";
 import Canvas from "canvas";
 import { Client } from "../../util/client";
-import { GUILD_MEMBER_ADD } from "./../../../config/embedColours.json"
+import { GUILD_MEMBER_ADD } from "./../../../config/embedColours.json";
 import gambling from "../../schemas/gambling";
 import { addPoints } from "../../util";
 
@@ -11,8 +11,7 @@ export default async (client: Client, member: GuildMember) => {
         const guildInfo = await client.guildInfo.get(member.guild.id);
 
         const { gamblingChannel, dailyReward } = guildInfo.gambling;
-        if (!result && !member.user.bot && gamblingChannel)
-            await addPoints(member.guild.id, member.id, dailyReward);
+        if (!result && !member.user.bot && gamblingChannel) await addPoints(member.guild.id, member.id, dailyReward);
 
         const createdTimestamp = Math.round(member.user.createdTimestamp / 1000);
         const joinedTimestamp = Math.round(member.joinedTimestamp! / 1000);
@@ -58,33 +57,17 @@ const createCanvas = async (guild: Guild, member: GuildMember) => {
     ctx.font = "24px sans-serif";
     ctx.strokeStyle = "black";
     ctx.lineWidth = 8;
-    ctx.strokeText(
-        `Welcome to the ${guild.name},`,
-        canvas.width / 2.5,
-        canvas.height / 3.5
-    );
+    ctx.strokeText(`Welcome to the ${guild.name},`, canvas.width / 2.5, canvas.height / 3.5);
     ctx.fillStyle = "#FFFFAF";
-    ctx.fillText(
-        `Welcome to the ${guild.name},`,
-        canvas.width / 2.5,
-        canvas.height / 3.5
-    );
+    ctx.fillText(`Welcome to the ${guild.name},`, canvas.width / 2.5, canvas.height / 3.5);
 
     // Add an exclamation point here and below
     ctx.font = applyText(canvas, `${member.displayName}!`);
     ctx.strokeStyle = "black";
     ctx.lineWidth = 8;
-    ctx.strokeText(
-        `${member.displayName}!`,
-        canvas.width / 2.5,
-        canvas.height / 1.8
-    );
+    ctx.strokeText(`${member.displayName}!`, canvas.width / 2.5, canvas.height / 1.8);
     ctx.fillStyle = "#FFFFAF";
-    ctx.fillText(
-        `${member.displayName}!`,
-        canvas.width / 2.5,
-        canvas.height / 1.8
-    );
+    ctx.fillText(`${member.displayName}!`, canvas.width / 2.5, canvas.height / 1.8);
 
     ctx.beginPath();
     ctx.arc(125, 125, 100, 0, Math.PI * 2, true);
@@ -92,9 +75,7 @@ const createCanvas = async (guild: Guild, member: GuildMember) => {
     ctx.clip();
 
     // Wait for Canvas to load the image
-    const avatar = await Canvas.loadImage(
-        member.user.displayAvatarURL({ format: "jpg" })
-    );
+    const avatar = await Canvas.loadImage(member.user.displayAvatarURL({ format: "jpg" }));
     // Draw a shape onto the main canvas
     ctx.drawImage(avatar, 25, 25, 200, 200);
 

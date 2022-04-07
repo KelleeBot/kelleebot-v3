@@ -23,11 +23,9 @@ export default class Setrafflepoints extends KelleeBotCommand {
                 try {
                     const guildInfo = await client.guildInfo.get(interaction.guildId!);
                     const amount = interaction.options.getInteger("amount")!;
-                    if (!guildInfo.gambling.gamblingChannel)
-                        return await interaction.reply({ content: NO_GAMBLING_CHANNEL_SET, ephemeral: true });
+                    if (!guildInfo.gambling.gamblingChannel) return await interaction.reply({ content: NO_GAMBLING_CHANNEL_SET, ephemeral: true });
 
-                    if (amount < 0)
-                        return await interaction.reply({ content: GREATER_THAN_ZERO, ephemeral: true });
+                    if (amount < 0) return await interaction.reply({ content: GREATER_THAN_ZERO, ephemeral: true });
 
                     await client.guildInfo.findByIdAndUpdate(
                         interaction.guildId!,

@@ -16,13 +16,7 @@ dayjs.extend(timezone);
 dayjs.extend(advanced);
 
 export default (client: Client) => {
-    new cron.CronJob(
-        "00 */5 * * * *",
-        () => execute(client),
-        null,
-        true,
-        timeZone
-    );
+    new cron.CronJob("00 */5 * * * *", () => execute(client), null, true, timeZone);
 };
 
 const execute = async (client: Client) => {
@@ -69,10 +63,8 @@ const fetchTopGamblers = async (client: Client, guild: Guild) => {
         const { userID, points = 0 } = results[count];
         text += `${count + 1}. <@${userID}> has ${client.utils.pluralize(points, "point", true)}.\n`;
     }
-    text += guild.gambling.monthlyPrize
-        ? `\nPoints will be reset back to 0 at 12AM ${timezoneFormat} on ${nextMonth} 1st.\n`
-        : "\n";
+    text += guild.gambling.monthlyPrize ? `\nPoints will be reset back to 0 at 12AM ${timezoneFormat} on ${nextMonth} 1st.\n` : "\n";
 
     text += `\nLeaderboard will update <t:${timestamp}:R>.\n`;
     return text;
-}
+};

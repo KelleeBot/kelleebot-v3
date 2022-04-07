@@ -25,7 +25,6 @@ export default class AnimalCrossing extends KelleeBotCommand {
                     isAutocomplete: true,
                     autocomplete: async ({ client, interaction }) => {
                         await client.utils.getAutocomplete(client, interaction, client.artworks);
-
                     },
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
@@ -267,4 +266,4 @@ export default class AnimalCrossing extends KelleeBotCommand {
             }
         });
     }
-};
+}

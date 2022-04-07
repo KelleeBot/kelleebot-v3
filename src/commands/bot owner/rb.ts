@@ -16,7 +16,7 @@ export default class Rb extends KelleeBotCommand {
                     name: "guildid",
                     description: "The guild to send the message to.",
                     type: "STRING",
-                    required: true,
+                    required: true
                 },
                 {
                     name: "channelid",
@@ -34,10 +34,7 @@ export default class Rb extends KelleeBotCommand {
                     //const channel = interaction.options.getChannel("channel")!; // ?? interaction.channel;
 
                     const button = new MessageActionRow().addComponents(
-                        new MessageButton()
-                            .setCustomId("roles")
-                            .setLabel("List current roles")
-                            .setStyle("PRIMARY")
+                        new MessageButton().setCustomId("roles").setLabel("List current roles").setStyle("PRIMARY")
                     );
 
                     const guild = await client.guilds.fetch(guildID);
@@ -46,7 +43,8 @@ export default class Rb extends KelleeBotCommand {
                     const channel = await guild.channels.fetch(channelID);
                     if (!channel) return await interaction.reply({ content: "A channel with that ID was not found.", ephemeral: true });
 
-                    if (channel.type !== "GUILD_TEXT") return await interaction.reply({ content: "Please ensure that the channel is a text channel.", ephemeral: true });
+                    if (channel.type !== "GUILD_TEXT")
+                        return await interaction.reply({ content: "Please ensure that the channel is a text channel.", ephemeral: true });
 
                     await interaction.reply({ content: `Role button message successully sent to ${channel}.`, ephemeral: true });
                     return await channel.send({ content: "Unsure which roles you currently already have? Click here:", components: [button] });

@@ -16,13 +16,7 @@ dayjs.extend(timezone);
 dayjs.extend(advanced);
 
 export default (client: Client) => {
-    new cron.CronJob(
-        "00 00 00 1 * *",
-        () => execute(client),
-        null,
-        true,
-        timeZone
-    );
+    new cron.CronJob("00 00 00 1 * *", () => execute(client), null, true, timeZone);
 };
 
 const execute = async (client: Client) => {
@@ -43,7 +37,8 @@ const execute = async (client: Client) => {
             const { userID, points } = winner;
             const month = dayjs().tz(timeZone).subtract(1, "months").format("MMMM");
 
-            if (guild.id === "707103910686621758") { // Lunar Circle
+            if (guild.id === "707103910686621758") {
+                // Lunar Circle
                 const masterGamblerRoleID = "795356217978388511";
                 await channel.send({
                     content: `Congrats to <@${userID}> for having the most points (${points.toLocaleString()}) for the month of ${month}! You have won a free month of ${monthlyPrize} and have earned the coveted <@&${masterGamblerRoleID}> role! Please check your DM for your gift!`,
@@ -52,7 +47,8 @@ const execute = async (client: Client) => {
 
                 await sendDM(client, guildInfo, userID, month, points);
                 await addRemoveRole(masterGamblerRoleID, guild, userID);
-            } else if (guild.id === "674506108764815376") { // Pirate Pandas
+            } else if (guild.id === "674506108764815376") {
+                // Pirate Pandas
                 const currentMonth = dayjs().format("MMMM");
 
                 await channel.send({
@@ -67,8 +63,10 @@ const execute = async (client: Client) => {
 };
 
 const fetchWinner = async (guildID: Snowflake) => {
-    const results = await gambling.find({ guildID, points: { $gt: 0 } })
-        .sort({ points: -1 }).limit(1);
+    const results = await gambling
+        .find({ guildID, points: { $gt: 0 } })
+        .sort({ points: -1 })
+        .limit(1);
     return results[0];
 };
 
@@ -93,7 +91,9 @@ const sendDM = async (client: Client, guildInfo: Guild, userID: Snowflake, month
         .setFooter({ text: "Please do no reply to this DM as this is not monitored." })
         .setTimestamp();
 
-    client.users.cache.get(userID)!.send({ embeds: [embed] })
+    client.users.cache
+        .get(userID)!
+        .send({ embeds: [embed] })
         .then(() => {
             client.utils.log("SUCCESS", `${__filename}`, `Message succesfully sent to ${client.users.cache.get(userID)!.tag}`);
         })
@@ -107,7 +107,8 @@ const addRemoveRole = async (masterGamblerRoleID: Snowflake, guild: Discord.Guil
     if (!role) return;
 
     //const currentMember = role.members.first(); // Get current member with Master Gambler role
-    const currentMember = (await guild.members.fetch()).filter(member => member.roles.cache.has(role.id))
+    const currentMember = (await guild.members.fetch())
+        .filter((member) => member.roles.cache.has(role.id))
         //.filter(member => member.id === userID)
         .first();
 

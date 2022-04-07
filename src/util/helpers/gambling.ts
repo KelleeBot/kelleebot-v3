@@ -1,7 +1,7 @@
 import { Snowflake } from "discord.js";
 import gambling from "../../schemas/gambling";
 
-const pointsCache = {} as { [key: string]: number }
+const pointsCache = {} as { [key: string]: number };
 
 export const addPoints = async (guildID: Snowflake, userID: Snowflake, points: number) => {
     const result = await gambling.findOneAndUpdate(
@@ -13,9 +13,9 @@ export const addPoints = async (guildID: Snowflake, userID: Snowflake, points: n
         },
         { new: true, upsert: true }
     );
-    pointsCache[`${guildID}-${userID}`] = result.points
+    pointsCache[`${guildID}-${userID}`] = result.points;
     return result.points;
-}
+};
 
 export const setPoints = async (guildID: Snowflake, userID: Snowflake, points: number) => {
     const result = await gambling.findOneAndUpdate(
@@ -29,7 +29,7 @@ export const setPoints = async (guildID: Snowflake, userID: Snowflake, points: n
     );
     pointsCache[`${guildID}-${userID}`] = result.points;
     return result.points;
-}
+};
 
 export const getPoints = async (guildID: Snowflake, userID: Snowflake) => {
     const cachedValue = pointsCache[`${guildID}-${userID}`];
@@ -49,4 +49,4 @@ export const getPoints = async (guildID: Snowflake, userID: Snowflake) => {
     }
     pointsCache[`${guildID}-${userID}`] = points;
     return points;
-}; 
+};

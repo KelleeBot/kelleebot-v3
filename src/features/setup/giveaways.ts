@@ -21,8 +21,14 @@ export default async (client: Client) => {
                 const { gambling } = guildInfo;
 
                 const newPoints = await addPoints(winner.guild.id, winner.id, gambling ? gambling.rafflePoints : defaultRafflePoints);
-                client.utils.log("SUCCESS", "INFO", `${gambling ? gambling.rafflePoints : defaultRafflePoints} points have been given to ${winner.user.tag} and they now have ${newPoints}.`);
+                client.utils.log(
+                    "SUCCESS",
+                    "INFO",
+                    `${gambling ? gambling.rafflePoints : defaultRafflePoints} points have been given to ${
+                        winner.user.tag
+                    } and they now have ${newPoints}.`
+                );
             }
         });
     });
-}
+};

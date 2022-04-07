@@ -5,13 +5,7 @@ import ms from "ms";
 import cron from "cron";
 
 export default (client: Client) => {
-    new cron.CronJob(
-        "00 00 9-22/4 * * *",
-        () => execute(client),
-        null,
-        true,
-        "America/Denver"
-    );
+    new cron.CronJob("00 00 9-22/4 * * *", () => execute(client), null, true, "America/Denver");
 };
 
 const execute = async (client: Client) => {
@@ -45,7 +39,8 @@ const execute = async (client: Client) => {
                 giveawayEnded: `${giveawayReactEmoji}${giveawayReactEmoji} **RAFFLE ENDED** ${giveawayReactEmoji}${giveawayReactEmoji}`,
                 drawing: "Raffle ends **{timestamp}**",
                 inviteToParticipate: `React with ${giveawayReactEmoji} to participate!`,
-                winMessage: "Congratulations, {winners}! You won **{this.prize}**! I have automatically added the points to your account. Happy gambling! 🥳🥳",
+                winMessage:
+                    "Congratulations, {winners}! You won **{this.prize}**! I have automatically added the points to your account. Happy gambling! 🥳🥳",
                 embedFooter: "Raffles",
                 noWinner: "Raffle cancelled, no valid participants.",
                 hostedBy: "Hosted by: {this.hostedBy}",

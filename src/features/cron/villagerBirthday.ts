@@ -8,7 +8,9 @@ import { Villagers } from "../../types/animalCrossing";
 export default (client: Client) => {
     new cron.CronJob(
         "00 00 08 * * *",
-        () => { execute(client) },
+        () => {
+            execute(client);
+        },
         null,
         true,
         "America/Denver"
@@ -23,7 +25,10 @@ const execute = async (client: Client) => {
     if (!channel) return;
 
     try {
-        const resp = await axios.get(`https://api.nookipedia.com/villagers?birthmonth=${encodeURIComponent(currentMonth)}&birthday=${encodeURIComponent(currentDay)}&nhdetails=true`,
+        const resp = await axios.get(
+            `https://api.nookipedia.com/villagers?birthmonth=${encodeURIComponent(currentMonth)}&birthday=${encodeURIComponent(
+                currentDay
+            )}&nhdetails=true`,
             {
                 headers: {
                     "X-API-KEY": `${process.env.NOOK_API_KEY}`,
@@ -57,9 +62,7 @@ const createEmbed = (data: Villagers) => {
         .setURL(data.url)
         .setAuthor({
             name: data.name,
-            iconURL: !data.nh_details
-                ? `${data.image_url}`
-                : `${data.nh_details.icon_url}`,
+            iconURL: !data.nh_details ? `${data.image_url}` : `${data.nh_details.icon_url}`,
             url: data.url
         })
         .setDescription(`More info about ${data.name} can be found [here](${data.url} "${data.name}").`)

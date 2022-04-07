@@ -30,4 +30,4 @@ export default async (client: Client, guild: Guild) => {
     } catch (e) {
         return client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
     }
-}
+};

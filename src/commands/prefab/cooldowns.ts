@@ -8,7 +8,7 @@ export default class Cooldowns extends KelleeBotCommand {
             description: "Check the all the custom cooldowns of a command and add new cooldowns",
             category: "Utility",
             ownerOnly: true,
-            clientPerms: ['SEND_MESSAGES', 'EMBED_LINKS'],
+            clientPerms: ["SEND_MESSAGES", "EMBED_LINKS"],
             cooldown: 5,
             subcommands: {
                 list: {
@@ -26,15 +26,15 @@ export default class Cooldowns extends KelleeBotCommand {
 
                         const guildInfo = await client.guildInfo.get(interaction.guildId!);
 
-                        const embed = (await client.utils.CustomEmbed({ userID: interaction.user.id }))
-                            .setTimestamp();
+                        const embed = (await client.utils.CustomEmbed({ userID: interaction.user.id })).setTimestamp();
 
                         const name = interaction.options.getString("command")!.toLowerCase();
                         const command = client.commands.get(name);
 
                         if (!command) embed.setDescription(`${interaction.user}, there is no command \`${name}\`.`);
                         else if (command.canNotSetCooldown) embed.setDescription(`${interaction.user}, you can not set a cooldown for this command.`);
-                        else if (!guildInfo?.commandCooldowns || !guildInfo?.commandCooldowns[command.name]) embed.setDescription(`${interaction.user}, there are no modified cooldowns on this command.`);
+                        else if (!guildInfo?.commandCooldowns || !guildInfo?.commandCooldowns[command.name])
+                            embed.setDescription(`${interaction.user}, there are no modified cooldowns on this command.`);
                         else {
                             let desc = "";
                             for (const [role, cooldown] of Object.entries(guildInfo.commandCooldowns[command.name])) {
@@ -71,8 +71,7 @@ export default class Cooldowns extends KelleeBotCommand {
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
 
-                        const embed = (await client.utils.CustomEmbed({ userID: interaction.user.id }))
-                            .setTimestamp();
+                        const embed = (await client.utils.CustomEmbed({ userID: interaction.user.id })).setTimestamp();
 
                         const name = interaction.options.getString("command")!.toLowerCase();
                         const role = interaction.options.getRole("role")!.id;
@@ -83,7 +82,8 @@ export default class Cooldowns extends KelleeBotCommand {
                         if (!command) embed.setDescription(`${interaction.user}, there is no command \`${name}\`.`);
                         else if (command.canNotSetCooldown) embed.setDescription(`${interaction.user}, you can not set a cooldown for this command.`);
                         else if (time > 86400000) embed.setDescription(`${interaction.user}, the cooldown can't be longer than 24h.`);
-                        else if ((command.cooldown ?? 0) === time) embed.setDescription(`${interaction.user}, that's already the default cooldown for this command.`);
+                        else if ((command.cooldown ?? 0) === time)
+                            embed.setDescription(`${interaction.user}, that's already the default cooldown for this command.`);
                         else {
                             if (time === 0) {
                                 await client.guildInfo.findByIdAndUpdate(
@@ -91,14 +91,20 @@ export default class Cooldowns extends KelleeBotCommand {
                                     { $unset: { [`commandCooldowns.${command.name}.${role}`]: 1 } },
                                     { new: true, upsert: true, setDefaultsOnInsert: true }
                                 );
-                                embed.setDescription(`${interaction.user}, the cooldown on the command ${command.name} for the role <@&${role}> has been removed.`);
+                                embed.setDescription(
+                                    `${interaction.user}, the cooldown on the command ${command.name} for the role <@&${role}> has been removed.`
+                                );
                             } else {
                                 await client.guildInfo.findByIdAndUpdate(
                                     interaction.guildId!,
                                     { $set: { [`commandCooldowns.${command.name}.${role}`]: time * 1000 } },
                                     { new: true, upsert: true, setDefaultsOnInsert: true }
                                 );
-                                embed.setDescription(`${interaction.user}, the cooldown on the command ${command.name} for the role <@&${role}> has been set to \`${client.utils.msToTime(time * 1000)}\`.`);
+                                embed.setDescription(
+                                    `${interaction.user}, the cooldown on the command ${
+                                        command.name
+                                    } for the role <@&${role}> has been set to \`${client.utils.msToTime(time * 1000)}\`.`
+                                );
                             }
                         }
                         return await interaction.reply({ embeds: [embed] });
@@ -117,8 +123,7 @@ export default class Cooldowns extends KelleeBotCommand {
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
 
-                        const embed = (await client.utils.CustomEmbed({ userID: interaction.user.id }))
-                            .setTimestamp();
+                        const embed = (await client.utils.CustomEmbed({ userID: interaction.user.id })).setTimestamp();
 
                         const name = interaction.options.getString("command")!.toLowerCase();
                         const command = client.commands.get(name);
@@ -131,7 +136,11 @@ export default class Cooldowns extends KelleeBotCommand {
                                 { $unset: { [`commandCooldowns.${command.name}`]: 1 } },
                                 { new: true, upsert: true, setDefaultsOnInsert: true }
                             );
-                            embed.setDescription(`${interaction.user}, the cooldown on the command ${command.name} has been set to the default (\`${command.cooldown ? client.utils.msToTime(command.cooldown) : 'No cooldown'}\`).`);
+                            embed.setDescription(
+                                `${interaction.user}, the cooldown on the command ${command.name} has been set to the default (\`${
+                                    command.cooldown ? client.utils.msToTime(command.cooldown) : "No cooldown"
+                                }\`).`
+                            );
                         }
                         return await interaction.reply({ embeds: [embed] });
                     }

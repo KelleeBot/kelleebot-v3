@@ -22,7 +22,9 @@ export const np = async (client: Client, interaction: CommandInteraction) => {
         const msgEmbed = new MessageEmbed()
             .setAuthor({ name: "Currently Playing", iconURL: client.utils.getGuildIcon(guild!)! })
             .setColor(MUSIC_COMMANDS as ColorResolvable)
-            .setDescription(`🎶 | **${current.title}** (\`${percent.progress}%\`)\n\n**Up Next: ** ${nextTrack ? `\`${nextTrack.title}\`` : "Nothing"}`)
+            .setDescription(
+                `🎶 | **${current.title}** (\`${percent.progress}%\`)\n\n**Up Next: ** ${nextTrack ? `\`${nextTrack.title}\`` : "Nothing"}`
+            )
             .setThumbnail(current.thumbnail)
             .addField("\u200b", progress)
             .setFooter({

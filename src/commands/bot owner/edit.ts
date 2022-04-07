@@ -52,8 +52,7 @@ export default class Edit extends KelleeBotCommand {
 
                     await messageToEdit.edit({ content: editedMsg, allowedMentions: { parse: [] } });
                     return interaction.reply({ content: "Message edited successfully.", ephemeral: true });
-                }
-                catch (e) {
+                } catch (e) {
                     client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
                     return interaction.reply({ content: "An error has occurred. Please try again.", ephemeral: true });
                 }

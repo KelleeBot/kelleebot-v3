@@ -24,8 +24,7 @@ export const lyrics = async (client: Client, interaction: CommandInteraction) =>
         const resp = await axios.get(`https://api.lxndr.dev/lyrics/?song=${encodeURIComponent(searchQuery)}&from=${client.user!.id}`);
         const { data } = resp;
 
-        if (!data || (data as { error: boolean }).error)
-            return msg.edit({ content: `No lyrics were found for "${searchQuery}".` });
+        if (!data || (data as { error: boolean }).error) return msg.edit({ content: `No lyrics were found for "${searchQuery}".` });
 
         const albumArt = data.album_art ?? "https://api.zhycorp.net/assets/images/icon.png";
         const songArtist = data.artist ?? "";

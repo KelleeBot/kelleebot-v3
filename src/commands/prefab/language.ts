@@ -7,7 +7,7 @@ export default class Language extends KelleeBotCommand {
             name: "language",
             description: "Set the language you want to get help on commands with.",
             category: "Utility",
-            clientPerms: ['SEND_MESSAGES', 'EMBED_LINKS'],
+            clientPerms: ["SEND_MESSAGES", "EMBED_LINKS"],
             options: [
                 {
                     name: "language",
@@ -22,13 +22,17 @@ export default class Language extends KelleeBotCommand {
 
                 const language = interaction.options.getString("language")?.toLowerCase();
 
-                const embed = (await client.utils.CustomEmbed({ userID: interaction.user.id }))
-                    .setTimestamp();
+                const embed = (await client.utils.CustomEmbed({ userID: interaction.user.id })).setTimestamp();
 
                 if (!language) {
-                    embed.setDescription(`${interaction.user}, your current set language is \`${userInfo.language}\`.\n\nThese are the supported languages: \`${Object.keys(client.languages).join('`, `')}\``);
+                    embed.setDescription(
+                        `${interaction.user}, your current set language is \`${
+                            userInfo.language
+                        }\`.\n\nThese are the supported languages: \`${Object.keys(client.languages).join("`, `")}\``
+                    );
                 } else {
-                    if (!Object.keys(client.languages).includes(language)) embed.setDescription(`${interaction.user}, the language \`${language}\` doesn't exist.`);
+                    if (!Object.keys(client.languages).includes(language))
+                        embed.setDescription(`${interaction.user}, the language \`${language}\` doesn't exist.`);
                     else {
                         embed.setDescription(`${interaction.user}, your language has been changed to \`${language}\``);
 

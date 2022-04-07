@@ -46,7 +46,7 @@ export default class Info extends KelleeBotCommand {
                         await this.setCooldown(interaction);
                         await user(client, interaction);
                     }
-                },
+                }
             }
         });
     }

@@ -1,4 +1,3 @@
-
 import { model, Schema } from "mongoose";
 
 const twitchIncidents = new Schema({

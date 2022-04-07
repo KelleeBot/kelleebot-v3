@@ -3,128 +3,128 @@ import { FilterQuery, Model, QueryOptions, UpdateQuery } from "mongoose";
 import { Client } from "../util/client";
 
 class Manager<K, V> {
-  _client: Client;
-  _model: Model<V>
-  _cache: Collection<K, V>;
+    _client: Client;
+    _model: Model<V>;
+    _cache: Collection<K, V>;
 
-  constructor(client: any, model: Model<V>) {
-    this._client = client;
-    this._model = model;
-    this._cache = new Collection();
-  }
-
-  async get(key: K, force?: boolean): Promise<V> {
-    let item = this._cache.get(key);
-
-    if (!item || force) {
-      item = await this._model.findOneAndUpdate({ _id: key }, {}, { new: true, upsert: true, setDefaultsOnInsert: true });
-      this._cache.set(key, item!);
+    constructor(client: any, model: Model<V>) {
+        this._client = client;
+        this._model = model;
+        this._cache = new Collection();
     }
 
-    return item!;
-  }
+    async get(key: K, force?: boolean): Promise<V> {
+        let item = this._cache.get(key);
 
-  getCache(key: K) {
-    return this._cache.get(key);
-  }
+        if (!item || force) {
+            item = await this._model.findOneAndUpdate({ _id: key }, {}, { new: true, upsert: true, setDefaultsOnInsert: true });
+            this._cache.set(key, item!);
+        }
 
-  async findById(key: K) {
-    return this.findOne({ _id: key });
-  }
+        return item!;
+    }
 
-  async findOne(filter: FilterQuery<V>) {
-    const item = await this._model.findOne(filter);
+    getCache(key: K) {
+        return this._cache.get(key);
+    }
 
-    if (!item) return;
+    async findById(key: K) {
+        return this.findOne({ _id: key });
+    }
 
-    this._cache.set(item._id, item);
+    async findOne(filter: FilterQuery<V>) {
+        const item = await this._model.findOne(filter);
 
-    return item;
-  }
+        if (!item) return;
 
-  async findMany(filter: FilterQuery<V>) {
-    const items = await this._model.find(filter);
+        this._cache.set(item._id, item);
 
-    for (const item of items) this._cache.set(item._id, item);
+        return item;
+    }
 
-    return items;
-  }
+    async findMany(filter: FilterQuery<V>) {
+        const items = await this._model.find(filter);
 
-  async findByIdAndUpdate(key: K, update: UpdateQuery<V>, options?: QueryOptions) {
-    return this.findOneAndUpdate({ _id: key }, update, options);
-  }
+        for (const item of items) this._cache.set(item._id, item);
 
-  async findOneAndUpdate(filter: FilterQuery<V>, update: UpdateQuery<V>, options?: QueryOptions) {
-    const item = await this._model.findOneAndUpdate(filter, update, options);
+        return items;
+    }
 
-    if (!item) return;
+    async findByIdAndUpdate(key: K, update: UpdateQuery<V>, options?: QueryOptions) {
+        return this.findOneAndUpdate({ _id: key }, update, options);
+    }
 
-    this._cache.set(item._id, item);
+    async findOneAndUpdate(filter: FilterQuery<V>, update: UpdateQuery<V>, options?: QueryOptions) {
+        const item = await this._model.findOneAndUpdate(filter, update, options);
 
-    return item;
-  }
+        if (!item) return;
 
-  async updateMany(filter: FilterQuery<V>, update: UpdateQuery<V>, options?: QueryOptions) {
-    const query = await this._model.updateMany(filter, update, options);
+        this._cache.set(item._id, item);
 
-    return query;
-  }
+        return item;
+    }
 
-  async findByIdAndDelete(key: K, options?: QueryOptions) {
-    return this.findOneAndDelete({ _id: key }, options);
-  }
+    async updateMany(filter: FilterQuery<V>, update: UpdateQuery<V>, options?: QueryOptions) {
+        const query = await this._model.updateMany(filter, update, options);
 
-  async findOneAndDelete(filter: FilterQuery<V>, options?: QueryOptions) {
-    const item = await this._model.findOneAndDelete(filter, options);
+        return query;
+    }
 
-    if (!item) return;
+    async findByIdAndDelete(key: K, options?: QueryOptions) {
+        return this.findOneAndDelete({ _id: key }, options);
+    }
 
-    this._cache.delete(item._id);
+    async findOneAndDelete(filter: FilterQuery<V>, options?: QueryOptions) {
+        const item = await this._model.findOneAndDelete(filter, options);
 
-    return item;
-  }
+        if (!item) return;
 
-  async deleteMany(filter: FilterQuery<V>, options?: QueryOptions) {
-    await this._model.deleteMany(filter, options);
-  }
+        this._cache.delete(item._id);
 
-  async insertOne(item: V) {
-    if (!item) return;
+        return item;
+    }
 
-    return (await this.insertMany([item]))![0];
-  }
+    async deleteMany(filter: FilterQuery<V>, options?: QueryOptions) {
+        await this._model.deleteMany(filter, options);
+    }
 
-  async insertMany(items: V[]) {
-    if (!items || !items.length) return;
+    async insertOne(item: V) {
+        if (!item) return;
 
-    const query = await this._model.insertMany(items);
+        return (await this.insertMany([item]))![0];
+    }
 
-    for (const item of query) this._cache.set(item._id, item);
+    async insertMany(items: V[]) {
+        if (!items || !items.length) return;
 
-    return query;
-  }
+        const query = await this._model.insertMany(items);
 
-  async exists(key: K) {
-    if (!key) return false;
+        for (const item of query) this._cache.set(item._id, item);
 
-    let item = this._cache.get(key);
+        return query;
+    }
 
-    if (!item) item = await this.findOne({ _id: key });
+    async exists(key: K) {
+        if (!key) return false;
 
-    return !!item;
-  }
+        let item = this._cache.get(key);
 
-  async countItems(filter: FilterQuery<V>) {
-    return await this._model.countDocuments(filter);
-  }
+        if (!item) item = await this.findOne({ _id: key });
 
-  get cache() {
-    return this._cache;
-  }
+        return !!item;
+    }
 
-  get model() {
-    return this._model;
-  }
+    async countItems(filter: FilterQuery<V>) {
+        return await this._model.countDocuments(filter);
+    }
+
+    get cache() {
+        return this._cache;
+    }
+
+    get model() {
+        return this._model;
+    }
 }
 
 export { Manager };

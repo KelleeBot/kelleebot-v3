@@ -1,7 +1,7 @@
 import { CommandInteraction } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
-import { COMPLIMENTS } from "../../../config/compliments.json"
+import { COMPLIMENTS } from "../../../config/compliments.json";
 
 export default class Ty extends KelleeBotCommand {
     constructor(client: Client) {
@@ -16,7 +16,8 @@ export default class Ty extends KelleeBotCommand {
                     name: "person",
                     description: "The person you want to thank.",
                     type: "USER"
-                }],
+                }
+            ],
             execute: async ({ client, interaction }) => {
                 try {
                     this.setCooldown(interaction);
@@ -30,4 +31,4 @@ export default class Ty extends KelleeBotCommand {
             }
         });
     }
-};
+}

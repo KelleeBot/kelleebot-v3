@@ -22,7 +22,7 @@ export default class Avatar extends KelleeBotCommand {
                 try {
                     const msgEmbed = new MessageEmbed();
 
-                    const member = interaction.options.getMember("user") ?? interaction.member
+                    const member = interaction.options.getMember("user") ?? interaction.member;
 
                     msgEmbed
                         .setColor((member! as GuildMember).displayHexColor)

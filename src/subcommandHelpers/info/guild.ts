@@ -10,8 +10,7 @@ export const guild = async (client: Client, interaction: CommandInteraction) => 
     const premiumTier = guild!.premiumTier === "NONE" ? "0" : guild!.premiumTier.replace("TIER_", "");
 
     const guildOwner = await guild!.fetchOwner();
-    const members = (await guild!.members.fetch())
-        .filter((member: GuildMember) => !member.user.bot).size;
+    const members = (await guild!.members.fetch()).filter((member: GuildMember) => !member.user.bot).size;
     const onlineMembers = (await guild!.members.fetch())
         .filter((member: GuildMember) => !member.user.bot)
         .filter((member: GuildMember) => member.presence !== null && member.presence!.status !== "offline").size;
@@ -53,8 +52,7 @@ export const guild = async (client: Client, interaction: CommandInteraction) => 
             },
             {
                 name: "**Members**",
-                value: `${members} Member${members !== 1 ? "s" : ""
-                    } (${onlineMembers} Online)`,
+                value: `${members} Member${members !== 1 ? "s" : ""} (${onlineMembers} Online)`,
                 inline: true
             },
             {
@@ -64,8 +62,7 @@ export const guild = async (client: Client, interaction: CommandInteraction) => 
             },
             {
                 name: "**Boosts**",
-                value: `${premiumSubscriptionCount} Boost${premiumSubscriptionCount !== 1 ? "s" : ""
-                    } (Tier ${premiumTier})`,
+                value: `${premiumSubscriptionCount} Boost${premiumSubscriptionCount !== 1 ? "s" : ""} (Tier ${premiumTier})`,
                 inline: true
             },
             {
@@ -111,4 +108,4 @@ export const guild = async (client: Client, interaction: CommandInteraction) => 
             }
         );
     return interaction.editReply({ embeds: [msgEmbed] });
-}
+};

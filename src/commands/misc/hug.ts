@@ -29,7 +29,7 @@ export default class Hug extends KelleeBotCommand {
                     if (interaction.user.id === client.user?.id)
                         return await interaction.reply({ content: "Please don't hug me. I don't like to be touched." });
 
-                    return await interaction.reply({ content: `**${interaction.user.tag}** hugs **${person}**. I love you ʕっ•ᴥ•ʔっ ${hugEmoji}` })
+                    return await interaction.reply({ content: `**${interaction.user.tag}** hugs **${person}**. I love you ʕっ•ᴥ•ʔっ ${hugEmoji}` });
                 } catch (e) {
                     client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
                     return await interaction.reply({ content: "An error has occurred. Please try again.", ephemeral: true });
@@ -37,4 +37,4 @@ export default class Hug extends KelleeBotCommand {
             }
         });
     }
-};
+}

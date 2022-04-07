@@ -24,4 +24,4 @@ export default async (client: Client, role: Role) => {
     const { executor } = roleCreationLog;
     msgEmbed.setDescription(`**Role Deleted:** \`${role.name}\`\n**Role Deleted By:** ${executor}`);
     return client.utils.sendMessageToBotLog(client, role.guild, msgEmbed);
-}
+};

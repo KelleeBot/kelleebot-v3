@@ -1,67 +1,66 @@
 export interface Guild {
-  _id: string;
-  /** This guilds prefix for the bot */
-  prefix: string;
+    _id: string;
+    /** This guilds prefix for the bot */
+    prefix: string;
 
-  /** The announcements channel for the guild, if set */
-  announcementsChannel: Snowflake;
+    /** The announcements channel for the guild, if set */
+    announcementsChannel: Snowflake;
 
-  /** The bot logging channel for the guild, if set */
-  botLoggingChannel: Snowflake;
+    /** The bot logging channel for the guild, if set */
+    botLoggingChannel: Snowflake;
 
-  /** The bot chatting channel for the guild, if set*/
-  botChatChannel: Snowflake;
+    /** The bot chatting channel for the guild, if set*/
+    botChatChannel: Snowflake;
 
-  /** The gambling data for the guild, if set */
-  gambling: {
-    gamblingChannel: Snowflake;
-    gamblingLeaderboardChannel: Snowflake;
-    monthlyPrize?: string;
-    dailyReward: number;
-    resetPointsMonthly: boolean;
-    raffleChannel: Snowflake;
-    rafflePoints: number;
-    nitroLink?: string;
-    jackpotAmount?: number;
-  };
+    /** The gambling data for the guild, if set */
+    gambling: {
+        gamblingChannel: Snowflake;
+        gamblingLeaderboardChannel: Snowflake;
+        monthlyPrize?: string;
+        dailyReward: number;
+        resetPointsMonthly: boolean;
+        raffleChannel: Snowflake;
+        rafflePoints: number;
+        nitroLink?: string;
+        jackpotAmount?: number;
+    };
 
-  /** The guild owner's genshin UID */
-  genshinUID?: string;
+    /** The guild owner's genshin UID */
+    genshinUID?: string;
 
-  /** The guild owner's friend code */
-  friendCode?: string;
+    /** The guild owner's friend code */
+    friendCode?: string;
 
-  /** The guild owner's dream address */
-  dreamAddress?: string;
+    /** The guild owner's dream address */
+    dreamAddress?: string;
 
-  /** The welcome channel and text */
-  welcome?: {
-    channelID: string;
-    text: string;
-  };
+    /** The welcome channel and text */
+    welcome?: {
+        channelID: string;
+        text: string;
+    };
 
-  /** The Twitch live notification channel */
-  streamerLive?: {
-    channelID: string;
-    twitchChannel: string;
-    message: string;
-  };
+    /** The Twitch live notification channel */
+    streamerLive?: {
+        channelID: string;
+        twitchChannel: string;
+        message: string;
+    };
 
-  /** Array with all disabled command names */
-  disabledCommands: string[];
+    /** Array with all disabled command names */
+    disabledCommands: string[];
 
-  /** Array with all channel ID's that are disabled */
-  disabledChannels: Snowflake[];
+    /** Array with all channel ID's that are disabled */
+    disabledChannels: Snowflake[];
 
-  /** Contains all the custom command permissions for a command */
-  commandPerms?: { [name: string]: PermissionString[] };
+    /** Contains all the custom command permissions for a command */
+    commandPerms?: { [name: string]: PermissionString[] };
 
-  /** Contains all custom role cooldowns for a command */
-  commandCooldowns?: {
-    [nameOfTheCommand: string]: { [id: string]: number };
-  };
+    /** Contains all custom role cooldowns for a command */
+    commandCooldowns?: {
+        [nameOfTheCommand: string]: { [id: string]: number };
+    };
 
-  /** Contains all custom command aliases */
-  commandAlias?: { [alias: string]: string };
-
+    /** Contains all custom command aliases */
+    commandAlias?: { [alias: string]: string };
 }

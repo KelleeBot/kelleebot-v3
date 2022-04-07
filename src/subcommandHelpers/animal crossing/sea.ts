@@ -7,7 +7,7 @@ export const sea = async (client: Client, interaction: CommandInteraction) => {
     await interaction.deferReply();
     try {
         const creature = interaction.options.getString("creature")!;
-        const data = await fetchCreature(creature) as Sea;
+        const data = (await fetchCreature(creature)) as Sea;
 
         const { url, name, image_url, sell_nook, shadow_size, shadow_movement, north, south } = data;
 
@@ -24,18 +24,14 @@ export const sea = async (client: Client, interaction: CommandInteraction) => {
                     name: "**Months Available**",
                     value: `North:\n${north.availability_array.map(
                         (avail: { months: string }) => `${avail.months}\n`
-                    )}\nSouth:\n${south.availability_array.map(
-                        (avail: { months: string }) => `${avail.months}\n`
-                    )}`,
+                    )}\nSouth:\n${south.availability_array.map((avail: { months: string }) => `${avail.months}\n`)}`,
                     inline: true
                 },
                 {
                     name: "**Times Available**",
                     value: `North:\n${north.availability_array.map(
                         (avail: { time: string }) => `${avail.time}\n`
-                    )}\nSouth:\n${south.availability_array.map(
-                        (avail: { time: string }) => `${avail.time}\n`
-                    )}`,
+                    )}\nSouth:\n${south.availability_array.map((avail: { time: string }) => `${avail.time}\n`)}`,
                     inline: true
                 }
             )
@@ -44,8 +40,7 @@ export const sea = async (client: Client, interaction: CommandInteraction) => {
                 iconURL: `https://nookipedia.com/wikilogo.png`
             });
         return interaction.editReply({ embeds: [msgEmbed] });
-    }
-    catch (e) {
+    } catch (e) {
         client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
         return interaction.editReply({
             content: "An error has occurred. Please try again."
@@ -54,14 +49,11 @@ export const sea = async (client: Client, interaction: CommandInteraction) => {
 };
 
 const fetchCreature = async (name: string) => {
-    const resp = await axios.get(
-        `https://api.nookipedia.com/nh/sea/${encodeURIComponent(name.toLowerCase())}`,
-        {
-            headers: {
-                "X-API-KEY": `${process.env.NOOK_API_KEY}`,
-                "Accept-Version": "2.0.0"
-            }
+    const resp = await axios.get(`https://api.nookipedia.com/nh/sea/${encodeURIComponent(name.toLowerCase())}`, {
+        headers: {
+            "X-API-KEY": `${process.env.NOOK_API_KEY}`,
+            "Accept-Version": "2.0.0"
         }
-    );
+    });
     return resp.data;
-}
+};

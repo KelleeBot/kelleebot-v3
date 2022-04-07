@@ -3,7 +3,6 @@ import { Client } from "../../util/client";
 import axios from "axios";
 import { MessageEmbed } from "discord.js";
 
-
 export const quiz = async (client: Client, interaction: CommandInteraction) => {
     try {
         const pokemon = client.utils.randomRange(1, 890);
@@ -30,9 +29,7 @@ export const quiz = async (client: Client, interaction: CommandInteraction) => {
             }
         }
 
-        const msgEmbed = (await client.utils.CustomEmbed({ userID: interaction.user.id }))
-            .setTitle("Who's that Pokemon?")
-            .setImage(question);
+        const msgEmbed = (await client.utils.CustomEmbed({ userID: interaction.user.id })).setTitle("Who's that Pokemon?").setImage(question);
 
         const row = new MessageActionRow().addComponents(
             new MessageSelectMenu().setCustomId("pokequiz").addOptions(

@@ -8,9 +8,7 @@ export const shiba = async (client: Client, interaction: CommandInteraction) => 
         const resp = await axios.get("http://shibe.online/api/shibes");
         const { data } = resp;
 
-        const msgEmbed = (
-            await client.utils.CustomEmbed({ userID: interaction.user.id })
-        )
+        const msgEmbed = (await client.utils.CustomEmbed({ userID: interaction.user.id }))
             .setAuthor({
                 name: "Woof!",
                 iconURL: "https://i.imgur.com/cVR3t51.png",

@@ -5,8 +5,7 @@ import { MessageReaction, PartialMessageReaction, PartialUser, User } from "disc
 
 export default (client: Client) => {
     const channelID = "732786545169399838"; // #rules-and-reactions channel
-    const getEmoji = (emojiName: string) =>
-        client.emojis.cache.find((emoji) => emoji.name == emojiName);
+    const getEmoji = (emojiName: string) => client.emojis.cache.find((emoji) => emoji.name == emojiName);
 
     const emojis = {
         "✨": {
@@ -15,38 +14,31 @@ export default (client: Client) => {
         },
         "🧐": {
             role: "Live",
-            description:
-                "**If you want to get notified for when Kéllee goes `Live`, react with**"
+            description: "**If you want to get notified for when Kéllee goes `Live`, react with**"
         },
         kellee1HeartEyes: {
             role: "ACNH",
-            description:
-                "**For access to the <#754196934985646171> channel, react with**"
+            description: "**For access to the <#754196934985646171> channel, react with**"
         },
         "🍚": {
             role: "POKE",
-            description:
-                "**For access to the <#754196970813390878> channel, react with**"
+            description: "**For access to the <#754196970813390878> channel, react with**"
         },
         "🇹": {
             role: "TET",
-            description:
-                "**For access to the <#754196992254804048> channel, react with**"
+            description: "**For access to the <#754196992254804048> channel, react with**"
         },
         "🍜": {
             role: "Anime",
-            description:
-                "**For access to the <#754487781220286474> channel, react with**"
+            description: "**For access to the <#754487781220286474> channel, react with**"
         },
         "⚔️": {
             role: "GI",
-            description:
-                "**For access to the <#775809627589312532> channel, react with**"
+            description: "**For access to the <#775809627589312532> channel, react with**"
         },
         "🎬": {
             role: "Movie Nights",
-            description:
-                "**If you want to get notified for `Movie Nights`, react with**"
+            description: "**If you want to get notified for `Movie Nights`, react with**"
         },
         kellee4Star: {
             role: "He/Him"
@@ -57,7 +49,7 @@ export default (client: Client) => {
         kellee2Star: {
             role: "They/Them"
         }
-    } as { [key: string]: { role: string, description?: string } }
+    } as { [key: string]: { role: string; description?: string } };
 
     const reactions = [];
     let emojiText = stripIndents`
@@ -96,10 +88,7 @@ export default (client: Client) => {
     //@ts-ignore
     firstMessage(client, channelID, emojiText, reactions);
 
-    const handleReaction = async (
-        reaction: MessageReaction | PartialMessageReaction,
-        user: User | PartialUser,
-        add: boolean) => {
+    const handleReaction = async (reaction: MessageReaction | PartialMessageReaction, user: User | PartialUser, add: boolean) => {
         if (user.bot) return;
 
         const guild = client.guilds.cache.get("707103910686621758");

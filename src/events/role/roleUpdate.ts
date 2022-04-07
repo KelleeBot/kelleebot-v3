@@ -37,4 +37,4 @@ export default async (client: Client, oldRole: Role, newRole: Role) => {
         return client.utils.sendMessageToBotLog(client, newRole.guild, msgEmbed);
     }
     return;
-}
+};
