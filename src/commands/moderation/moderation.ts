@@ -77,7 +77,7 @@ export default class Moderation extends KelleeBotCommand {
                         {
                             name: "channel",
                             description: "The channel to purge messages from.",
-                            type: "CHANNEL",
+                            type: "CHANNEL"
                         }
                     ],
                     execute: async ({ client, interaction }) => {
@@ -104,6 +104,11 @@ export default class Moderation extends KelleeBotCommand {
                             description: "Reason why member is being timed out.",
                             type: "STRING",
                             required: true
+                        },
+                        {
+                            name: "dm",
+                            description: "Whether or not to DM the member about them being timed out (default no).",
+                            type: "BOOLEAN"
                         }
                     ],
                     execute: async ({ client, interaction }) => {
@@ -133,4 +138,4 @@ export default class Moderation extends KelleeBotCommand {
             }
         });
     }
-};
+}
