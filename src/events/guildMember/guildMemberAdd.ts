@@ -1,4 +1,4 @@
-import { ColorResolvable, Guild, GuildMember, MessageAttachment, MessageEmbed, TextChannel } from "discord.js";
+import { ColorResolvable, Guild, GuildMember, MessageAttachment, TextChannel } from "discord.js";
 import Canvas from "canvas";
 import { Client } from "../../util/client";
 import { GUILD_MEMBER_ADD } from "./../../../config/embedColours.json";
@@ -16,7 +16,8 @@ export default async (client: Client, member: GuildMember) => {
         const createdTimestamp = Math.round(member.user.createdTimestamp / 1000);
         const joinedTimestamp = Math.round(member.joinedTimestamp! / 1000);
 
-        const msgEmbed = new MessageEmbed()
+        const msgEmbed = client.utils
+            .createEmbed()
             .setColor(GUILD_MEMBER_ADD as ColorResolvable)
             .setAuthor({ name: member.user.tag, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
             .setDescription(`**${member.user} has joined the server**`)

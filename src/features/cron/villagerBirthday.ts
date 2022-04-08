@@ -1,7 +1,7 @@
 import cron from "cron";
 import axios from "axios";
 import { DateTime } from "luxon";
-import { MessageEmbed, TextChannel } from "discord.js";
+import { TextChannel } from "discord.js";
 import { Client } from "../../util/client";
 import { Villagers } from "../../types/animalCrossing";
 
@@ -43,12 +43,12 @@ const execute = async (client: Client) => {
         if (data.length > 1) {
             const embedArray = [];
             for (let i = 0; i < data.length; i++) {
-                let msgEmbed = createEmbed(data[i]);
+                let msgEmbed = createEmbed(client, data[i]);
                 embedArray.push(msgEmbed);
             }
             channel.send({ content: text, embeds: embedArray });
         } else {
-            const msgEmbed = createEmbed(data[0]);
+            const msgEmbed = createEmbed(client, data[0]);
             channel.send({ content: text, embeds: [msgEmbed] });
         }
     } catch (e) {
@@ -56,8 +56,9 @@ const execute = async (client: Client) => {
     }
 };
 
-const createEmbed = (data: Villagers) => {
-    const msgEmbed = new MessageEmbed()
+const createEmbed = (client: Client, data: Villagers) => {
+    return client.utils
+        .createEmbed()
         .setColor(data.title_color ? `#${data.title_color}` : "ORANGE")
         .setURL(data.url)
         .setAuthor({
@@ -103,5 +104,4 @@ const createEmbed = (data: Villagers) => {
             text: "Powered by Nookipedia",
             iconURL: "https://nookipedia.com/wikilogo.png"
         });
-    return msgEmbed;
 };

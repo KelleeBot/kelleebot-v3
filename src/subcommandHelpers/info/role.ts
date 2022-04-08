@@ -1,4 +1,4 @@
-import { CommandInteraction, MessageEmbed, Role } from "discord.js";
+import { CommandInteraction, Role } from "discord.js";
 import { Client } from "../../util/client";
 
 export const role = async (client: Client, interaction: CommandInteraction) => {
@@ -7,7 +7,8 @@ export const role = async (client: Client, interaction: CommandInteraction) => {
     const roleCreatedTimestamp = Math.round(role.createdTimestamp / 1000);
     const colorURL = `https://www.color-hex.com/color/${role.hexColor.slice(1)}`;
 
-    const msgEmbed = new MessageEmbed()
+    const msgEmbed = client.utils
+        .createEmbed()
         .setColor(role.hexColor)
         .setAuthor({ name: role.name, iconURL: client.utils.getGuildIcon(role.guild!)! })
         .setThumbnail(client.utils.getGuildIcon(role.guild!)!)

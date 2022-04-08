@@ -1,16 +1,6 @@
 import { Client } from "../../util/client";
 import memberInfo from "../../schemas/memberInfo";
-import {
-    ButtonInteraction,
-    ColorResolvable,
-    CommandInteraction,
-    GuildMember,
-    Message,
-    MessageActionRow,
-    MessageButton,
-    MessageEmbed,
-    User
-} from "discord.js";
+import { ButtonInteraction, ColorResolvable, CommandInteraction, GuildMember, Message, User } from "discord.js";
 import { GUILD_BAN_ADD } from "../../../config/embedColours.json";
 
 export const ban = async (client: Client, interaction: CommandInteraction) => {
@@ -40,17 +30,20 @@ export const ban = async (client: Client, interaction: CommandInteraction) => {
     }
 
     const userInfo = await client.utils.fetchMemberInfo(interaction.guildId!, user.id);
-    const userInfoEmbed = new MessageEmbed()
+    const userInfoEmbed = client.utils
+        .createEmbed()
         .setAuthor({
             name: user.tag,
             iconURL: user.displayAvatarURL({ dynamic: true })
         })
         .setColor(GUILD_BAN_ADD as ColorResolvable);
 
-    const buttonRow = new MessageActionRow().addComponents(
-        new MessageButton().setCustomId("ban_yes").setLabel("Yes").setStyle("SUCCESS"),
-        new MessageButton().setCustomId("ban_no").setLabel("No").setStyle("DANGER")
-    );
+    const buttonRow = client.utils
+        .createActionRow()
+        .addComponents(
+            client.utils.createButton().setCustomId("ban_yes").setLabel("Yes").setStyle("SUCCESS"),
+            client.utils.createButton().setCustomId("ban_no").setLabel("No").setStyle("DANGER")
+        );
 
     if (!userInfo) {
         userInfoEmbed.setDescription(`• Warns: 0\n• Mutes: 0\n• Kicks: 0\n• Bans: 0\n• Soft Bans: 0\n• Unbans: 0\n`);
@@ -147,7 +140,8 @@ const banUser = async (user: User, message: Message, author: User, client: Clien
                 components: []
             });
 
-            const msgEmbed = new MessageEmbed()
+            const msgEmbed = client.utils
+                .createEmbed()
                 .setColor(GUILD_BAN_ADD as ColorResolvable)
                 .setAuthor({
                     name: author.tag,

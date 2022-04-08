@@ -6,7 +6,6 @@ import {
     Message,
     MessageEmbed,
     PermissionString,
-    User,
     MessageActionRow,
     MessageButton,
     TextBasedChannel
@@ -132,10 +131,7 @@ class KelleeBotUtils {
 
     async CustomEmbed({ userID }: { userID: string }) {
         const userInfo = await this.client.profileInfo.get(userID);
-
-        const embed = new MessageEmbed().setColor(this.client.colors[userInfo.embedColor]);
-
-        return embed;
+        return this.client.utils.createEmbed().setColor(this.client.colors[userInfo.embedColor]);
     }
 
     async getCooldown(command: KelleeBotCommand, interaction: CommandInteraction) {

@@ -1,5 +1,5 @@
 import { Client } from "../../util/client";
-import { MessageEmbed, TextChannel } from "discord.js";
+import { TextChannel } from "discord.js";
 import cron from "cron";
 import { timeZone } from "../../../config/config.json";
 import dayjs from "dayjs";
@@ -15,7 +15,7 @@ const schedule = {
     Monday: "OFF",
     Tuesday: "Taco Tuesday (Stream with <@274641094484951040>)! [7:00PM]",
     Wednesday: "OFF",
-    Thursday: "Teyvat Thursday! (Cozy Grove) [7:00PM]",
+    Thursday: "Teyvat Thursday! (Minecraft) [7:00PM]",
     Friday: "OFF",
     Saturday: "OFF",
     Sunday: "OFF"
@@ -37,7 +37,8 @@ const execute = async (client: Client) => {
         }
         text += `\nThere could be occassional surprise streams too! Pay attention to the <#724484131643457650> channel for updates and don't forget to assign yourself the <@&732780296986034287> role in the <#732786545169399838> channel to get notified for whenever Kéllee goes live!`;
 
-        const msgEmbed = new MessageEmbed()
+        const msgEmbed = client.utils
+            .createEmbed()
             .setTitle("Weekly Schedule")
             .setThumbnail("https://i.imgur.com/rJQgRC3.png")
             .setColor("#ecc5ff")

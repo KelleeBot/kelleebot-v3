@@ -1,9 +1,10 @@
-import { ColorResolvable, GuildBan, MessageEmbed, User } from "discord.js";
+import { ColorResolvable, GuildBan, User } from "discord.js";
 import { Client } from "../../util/client";
 import { GUILD_BAN_ADD } from "../../../config/embedColours.json";
 
 export default async (client: Client, guildBan: GuildBan) => {
-    const msgEmbed = new MessageEmbed()
+    const msgEmbed = client.utils
+        .createEmbed()
         .setColor(GUILD_BAN_ADD as ColorResolvable)
         .setAuthor({ name: guildBan.guild.name, iconURL: client.utils.getGuildIcon(guildBan.guild)! })
         .setFooter({ text: `ID: ${guildBan.user.id}` })

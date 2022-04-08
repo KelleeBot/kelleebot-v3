@@ -1,4 +1,4 @@
-import { ColorResolvable, MessageEmbed, TextChannel } from "discord.js";
+import { ColorResolvable, TextChannel } from "discord.js";
 import cron from "cron";
 import { Client } from "../../util/client";
 import { GAMBLING } from "../../../config/embedColours.json";
@@ -20,7 +20,8 @@ export default (client: Client) => {
 };
 
 const execute = async (client: Client) => {
-    const msgEmbed = new MessageEmbed()
+    const msgEmbed = client.utils
+        .createEmbed()
         .setColor(GAMBLING as ColorResolvable)
         .setTitle("Gambling Leaderboard")
         .setThumbnail("https://i.imgur.com/VwbWTOn.png")

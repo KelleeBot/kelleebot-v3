@@ -1,4 +1,4 @@
-import { Constants, MessageActionRow, MessageButton } from "discord.js";
+import { Constants } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 
@@ -33,9 +33,9 @@ export default class Rb extends KelleeBotCommand {
                     const channelID = interaction.options.getString("channelid")!;
                     //const channel = interaction.options.getChannel("channel")!; // ?? interaction.channel;
 
-                    const button = new MessageActionRow().addComponents(
-                        new MessageButton().setCustomId("roles").setLabel("List current roles").setStyle("PRIMARY")
-                    );
+                    const button = client.utils
+                        .createActionRow()
+                        .addComponents(client.utils.createButton().setCustomId("roles").setLabel("List current roles").setStyle("PRIMARY"));
 
                     const guild = await client.guilds.fetch(guildID);
                     if (!guild) return await interaction.reply({ content: "A guild with that ID was not found.", ephemeral: true });

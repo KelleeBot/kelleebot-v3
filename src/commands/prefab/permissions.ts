@@ -1,4 +1,4 @@
-import { Constants, MessageActionRow, MessageButton } from "discord.js";
+import { Constants } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 
@@ -92,9 +92,9 @@ export default class Permissions extends KelleeBotCommand {
                 const msg = await client.utils.fetchReply(interaction, {
                     embeds: [embed],
                     components: [
-                        new MessageActionRow().addComponents([
-                            new MessageButton().setCustomId("change").setLabel("Change permissions").setStyle("PRIMARY")
-                        ])
+                        client.utils
+                            .createActionRow()
+                            .addComponents([client.utils.createButton().setCustomId("change").setLabel("Change permissions").setStyle("PRIMARY")])
                     ]
                 });
 

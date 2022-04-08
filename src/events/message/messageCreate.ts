@@ -1,4 +1,4 @@
-import { ColorResolvable, Guild, Message, MessageEmbed, User } from "discord.js";
+import { ColorResolvable, Guild, Message, User } from "discord.js";
 //import { messageCreate } from "../../prefab/events";
 import { GUILD_BAN_ADD } from "../../../config/embedColours.json";
 import { Client } from "../../util/client";
@@ -59,7 +59,8 @@ const banUser = async (user: User, guild: Guild, client: Client) => {
 
     await memberInfo.findOneAndUpdate(memberObj, { ...memberObj, $push: { bans: ban } }, { upsert: true });
 
-    const msgEmbed = new MessageEmbed()
+    const msgEmbed = client.utils
+        .createEmbed()
         .setColor(GUILD_BAN_ADD as ColorResolvable)
         .setAuthor({
             name: `${client.user?.tag}`,

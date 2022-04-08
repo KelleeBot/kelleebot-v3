@@ -21,7 +21,7 @@ export const add = async (client: Client, interaction: CommandInteraction) => {
             return await interaction.reply({ content: "You can't add a role that is higher than mine.", ephemeral: true });
 
         let row = targetMessage.components[0] as MessageActionRow;
-        if (!row) row = new MessageActionRow();
+        if (!row) row = client.utils.createActionRow();
 
         const options: MessageSelectOptionData[] = [emoji ? { label: role.name, value: role.id, emoji } : { label: role.name, value: role.id }];
 
@@ -38,7 +38,8 @@ export const add = async (client: Client, interaction: CommandInteraction) => {
             menu.setMaxValues(menu.options.length);
         } else {
             row.addComponents(
-                new MessageSelectMenu()
+                client.utils
+                    .createSelectMenu()
                     .setCustomId("auto_roles")
                     .setMinValues(0)
                     .setMaxValues(1)

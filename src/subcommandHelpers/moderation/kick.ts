@@ -1,16 +1,6 @@
 import { Client } from "../../util/client";
 import memberInfo from "../../schemas/memberInfo";
-import {
-    ButtonInteraction,
-    ColorResolvable,
-    CommandInteraction,
-    GuildMember,
-    Message,
-    MessageActionRow,
-    MessageButton,
-    MessageEmbed,
-    User
-} from "discord.js";
+import { ButtonInteraction, ColorResolvable, CommandInteraction, GuildMember, Message, User } from "discord.js";
 import { GUILD_BAN_ADD, GUILD_MEMBER_EVENTS } from "../../../config/embedColours.json";
 
 export const kick = async (client: Client, interaction: CommandInteraction) => {
@@ -27,14 +17,17 @@ export const kick = async (client: Client, interaction: CommandInteraction) => {
 
     try {
         const memberInfo = await client.utils.fetchMemberInfo(interaction.guildId!, member.id);
-        const memberInfoEmbed = new MessageEmbed()
+        const memberInfoEmbed = client.utils
+            .createEmbed()
             .setColor(GUILD_BAN_ADD as ColorResolvable)
             .setAuthor({ name: member.user.tag, iconURL: member.user.displayAvatarURL({ dynamic: true }) });
 
-        const buttonRow = new MessageActionRow().addComponents(
-            new MessageButton().setCustomId("kick_yes").setLabel("Yes").setStyle("SUCCESS"),
-            new MessageButton().setCustomId("kick_no").setLabel("No").setStyle("DANGER")
-        );
+        const buttonRow = client.utils
+            .createActionRow()
+            .addComponents(
+                client.utils.createButton().setCustomId("kick_yes").setLabel("Yes").setStyle("SUCCESS"),
+                client.utils.createButton().setCustomId("kick_no").setLabel("No").setStyle("DANGER")
+            );
 
         if (!memberInfo) {
             memberInfoEmbed.setDescription(`• Warns: 0\n• Mutes: 0\n• Kicks: 0\n• Bans: 0\n• Soft Bans: 0\n• Unbans: 0\n`);
@@ -109,7 +102,8 @@ const kickMember = async (member: GuildMember, message: Message, author: User, c
     await memberInfo.findOneAndUpdate(memberObj, { ...memberObj, $push: { kicks: kick } }, { upsert: true });
 
     await msg.edit({ content: `Successfully kicked **${kickedMember.user.tag}** from the server.`, embeds: [], components: [] });
-    const msgEmbed = new MessageEmbed()
+    const msgEmbed = client.utils
+        .createEmbed()
         .setColor(GUILD_MEMBER_EVENTS as ColorResolvable)
         .setAuthor({
             name: author.tag,

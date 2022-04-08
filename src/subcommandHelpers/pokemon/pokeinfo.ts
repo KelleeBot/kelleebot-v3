@@ -1,7 +1,6 @@
 import { CommandInteraction } from "discord.js";
 import { Client } from "../../util/client";
 import axios from "axios";
-import { MessageEmbed } from "discord.js";
 import { PokemonInfo } from "../../types/pokemon";
 
 const embedColor: any = {
@@ -50,7 +49,8 @@ const createPokemonEmbed = (client: Client, data: PokemonInfo) => {
     const height = data.height * 10;
     const weight = data.weight / 10;
 
-    return new MessageEmbed()
+    return client.utils
+        .createEmbed()
         .setAuthor({
             name: `#${data.id} - ${client.utils.titleCase(data.name)}`,
             iconURL: "http://pngimg.com/uploads/pokemon_logo/pokemon_logo_PNG12.png"

@@ -1,6 +1,6 @@
 import { Client } from "../../util/client";
 import { MUSIC_COMMANDS } from "../../../config/embedColours.json";
-import { ColorResolvable, CommandInteraction, Message, MessageEmbed, Util } from "discord.js";
+import { ColorResolvable, CommandInteraction, Message, Util } from "discord.js";
 import axios from "axios";
 
 export const lyrics = async (client: Client, interaction: CommandInteraction) => {
@@ -33,7 +33,8 @@ export const lyrics = async (client: Client, interaction: CommandInteraction) =>
         const embedArray = [];
         const lyricsArray = Util.splitMessage(data.lyrics);
         if (lyricsArray.length == 1) {
-            const msgEmbed = new MessageEmbed()
+            const msgEmbed = client.utils
+                .createEmbed()
                 .setColor(MUSIC_COMMANDS as ColorResolvable)
                 .setTitle(`${songArtist ? `${songArtist} - ` : " "}${songName}`)
                 .setThumbnail(albumArt)
@@ -44,7 +45,8 @@ export const lyrics = async (client: Client, interaction: CommandInteraction) =>
 
         for (let i = 0; i < lyricsArray.length; i++) {
             let songLyrics = "";
-            const msgEmbed = new MessageEmbed()
+            const msgEmbed = client.utils
+                .createEmbed()
                 .setColor(MUSIC_COMMANDS as ColorResolvable)
                 .setTitle(`${songArtist ? `${songArtist} - ` : " "}${songName}`)
                 .setThumbnail(albumArt)
@@ -57,7 +59,7 @@ export const lyrics = async (client: Client, interaction: CommandInteraction) =>
             embedArray.push(msgEmbed);
         }
         msg.edit({ content: "Here's what I found." });
-        return client.utils.buttonPagination(interaction, embedArray, { time: 1000 * 60 * 10 });
+        return client.utils.paginate(interaction, embedArray, { time: 1000 * 60 * 10 });
     } catch (e) {
         client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
         return msg.edit({ content: "An error has occurred. Please try again." });

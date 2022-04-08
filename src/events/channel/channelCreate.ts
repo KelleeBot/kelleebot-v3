@@ -1,11 +1,12 @@
-import { ColorResolvable, GuildChannel, MessageEmbed } from "discord.js";
+import { ColorResolvable, GuildChannel } from "discord.js";
 import { Client } from "../../util/client";
 import { CHANNEL_EVENTS } from "../../../config/embedColours.json";
 
 export default async (client: Client, channel: GuildChannel) => {
     if (!channel.guild) return;
 
-    const msgEmbed = new MessageEmbed()
+    const msgEmbed = client.utils
+        .createEmbed()
         .setColor(CHANNEL_EVENTS as ColorResolvable)
         .setAuthor({ name: channel.guild.name, iconURL: client.utils.getGuildIcon(channel.guild)! })
         .setFooter({ text: `ID: ${channel.id}` })

@@ -1,6 +1,6 @@
 import { Client } from "../../util/client";
 import { MUSIC_COMMANDS } from "../../../config/embedColours.json";
-import { ColorResolvable, CommandInteraction, GuildMember, MessageEmbed, Util } from "discord.js";
+import { ColorResolvable, CommandInteraction, GuildMember, Util } from "discord.js";
 
 export const queue = async (client: Client, interaction: CommandInteraction) => {
     const { guild } = interaction;
@@ -17,7 +17,8 @@ export const queue = async (client: Client, interaction: CommandInteraction) => 
         const tracks = queue.tracks;
         let tracksArray = client.utils.chunkArray(tracks, 10);
         if (tracksArray.length == 1) {
-            const msgEmbed = new MessageEmbed()
+            const msgEmbed = client.utils
+                .createEmbed()
                 .setColor(MUSIC_COMMANDS as ColorResolvable)
                 .setAuthor({ name: "Music Queue", iconURL: client.utils.getGuildIcon(interaction.guild!)! });
 
@@ -41,7 +42,8 @@ export const queue = async (client: Client, interaction: CommandInteraction) => 
         const embedArray = [];
         for (let i = 0; i < tracksArray.length; i++) {
             let text = "";
-            const msgEmbed = new MessageEmbed()
+            const msgEmbed = client.utils
+                .createEmbed()
                 .setColor(MUSIC_COMMANDS as ColorResolvable)
                 .setAuthor({ name: "Music Queue", iconURL: client.utils.getGuildIcon(interaction.guild!)! });
 
@@ -60,7 +62,7 @@ export const queue = async (client: Client, interaction: CommandInteraction) => 
             });
             embedArray.push(msgEmbed);
         }
-        return client.utils.buttonPagination(interaction, embedArray, { time: 1000 * 60 });
+        return client.utils.paginate(interaction, embedArray, { time: 1000 * 60 });
     } catch (e) {
         client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
         return await interaction.reply({ content: "An error has occurred. Please try again.", ephemeral: true });

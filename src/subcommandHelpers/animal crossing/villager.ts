@@ -1,7 +1,6 @@
 import { CommandInteraction } from "discord.js";
 import { Client } from "../../util/client";
 import axios from "axios";
-import { MessageEmbed } from "discord.js";
 import { Villagers } from "../../types/animalCrossing";
 
 export const villager = async (client: Client, interaction: CommandInteraction) => {
@@ -11,13 +10,13 @@ export const villager = async (client: Client, interaction: CommandInteraction) 
         const data = await fetchVillagerName(villager);
 
         if (data.length == 1) {
-            const msgEmbed = createVillagerEmbed(data[0]);
+            const msgEmbed = createVillagerEmbed(client, data[0]);
             return interaction.editReply({ embeds: [msgEmbed] });
         }
 
         const embedArray = [];
         for (let i = 0; i < data.length; i++) {
-            const msgEmbed = createVillagerEmbed(data[i]);
+            const msgEmbed = createVillagerEmbed(client, data[i]);
             embedArray.push(msgEmbed);
         }
         return interaction.editReply({ embeds: embedArray });
@@ -39,9 +38,10 @@ const fetchVillagerName = async (name: string) => {
     return resp.data;
 };
 
-const createVillagerEmbed = (data: Villagers) => {
+const createVillagerEmbed = (client: Client, data: Villagers) => {
     const { title_color, url, name, nh_details, image_url, species, personality, gender, phrase, birthday_month, birthday_day, sign } = data;
-    return new MessageEmbed()
+    return client.utils
+        .createEmbed()
         .setColor(title_color ? `#${title_color}` : "ORANGE")
         .setURL(url)
         .setAuthor({

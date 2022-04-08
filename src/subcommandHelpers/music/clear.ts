@@ -1,6 +1,6 @@
 import { Client } from "../../util/client";
 import { MUSIC_COMMANDS } from "../../../config/embedColours.json";
-import { ColorResolvable, CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
+import { ColorResolvable, CommandInteraction, GuildMember } from "discord.js";
 
 export const clear = async (client: Client, interaction: CommandInteraction) => {
     const { guild } = interaction;
@@ -16,7 +16,8 @@ export const clear = async (client: Client, interaction: CommandInteraction) => 
 
         queue.clear();
 
-        const msgEmbed = new MessageEmbed()
+        const msgEmbed = client.utils
+            .createEmbed()
             .setAuthor({ name: "Queue Cleared", iconURL: client.utils.getGuildIcon(guild!)! })
             .setColor(MUSIC_COMMANDS as ColorResolvable)
             .setDescription("Music queue has been cleared.")

@@ -1,4 +1,4 @@
-import { ColorResolvable, CommandInteraction, GuildMember, GuildMemberRoleManager, Message, MessageEmbed } from "discord.js";
+import { ColorResolvable, CommandInteraction, GuildMember, GuildMemberRoleManager, Message } from "discord.js";
 import ms from "ms";
 import { Client } from "../../util/client";
 import memberInfo from "../../schemas/memberInfo";
@@ -84,7 +84,8 @@ export const timeout = async (client: Client, interaction: CommandInteraction) =
             }
         }
 
-        const msgEmbed = new MessageEmbed()
+        const msgEmbed = client.utils
+            .createEmbed()
             .setAuthor({
                 name: user.tag,
                 iconURL: user.displayAvatarURL({ dynamic: true })

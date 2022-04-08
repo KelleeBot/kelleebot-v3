@@ -1,4 +1,4 @@
-import { ButtonInteraction, CommandInteraction, Message, MessageActionRow, MessageButton, MessageEmbed, Snowflake } from "discord.js";
+import { ButtonInteraction, CommandInteraction, Message, MessageEmbed, Snowflake } from "discord.js";
 import { Client } from "../../util/client";
 import { addPoints, getPoints } from "../../util";
 import { Card } from "../../types/card";
@@ -95,10 +95,12 @@ const playGame = async (
     showStatus();
 
     const msgEmbed = createEmbed(client, pointsToGamble);
-    const buttons = new MessageActionRow().addComponents(
-        new MessageButton().setCustomId(hit).setLabel(hit).setStyle("SUCCESS"),
-        new MessageButton().setCustomId(stand).setLabel(stand).setStyle("DANGER")
-    );
+    const buttons = client.utils
+        .createActionRow()
+        .addComponents(
+            client.utils.createButton().setCustomId(hit).setLabel(hit).setStyle("SUCCESS"),
+            client.utils.createButton().setCustomId(stand).setLabel(stand).setStyle("DANGER")
+        );
 
     const msg = (await interaction.reply({ embeds: [msgEmbed], components: [buttons], fetchReply: true })) as Message;
     if (!msg) return await interaction.reply({ content: "An error has occurred. Pelase try again.", ephemeral: true });
@@ -216,7 +218,8 @@ const addRemovePoints = async (guildID: Snowflake, userID: Snowflake, pointsGamb
 };
 
 const createEmbed = (client: Client, points: number) => {
-    return new MessageEmbed()
+    return client.utils
+        .createEmbed()
         .setTitle(`Playing Blackjack for ${client.utils.pluralize(points, "Point", true)}`)
         .addFields(
             {
@@ -234,7 +237,8 @@ const createEmbed = (client: Client, points: number) => {
 };
 
 const editEmbed = (client: Client, oldEmbed: MessageEmbed, pointsGambled: number, args: string) => {
-    return new MessageEmbed()
+    return client.utils
+        .createEmbed()
         .setTitle(gameOver ? `Game Over` : `${oldEmbed.title}`)
         .setDescription(gameOver ? getWinMsg(client, pointsGambled, args) : "")
         .setFooter({ text: gameOver ? "" : `${oldEmbed.footer!.text}` })

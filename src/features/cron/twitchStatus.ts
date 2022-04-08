@@ -1,4 +1,4 @@
-import { ColorResolvable, MessageEmbed, Snowflake, WebhookClient } from "discord.js";
+import { ColorResolvable, Snowflake, WebhookClient } from "discord.js";
 import cron from "cron";
 import axios from "axios";
 import { DateTime } from "luxon";
@@ -35,7 +35,7 @@ const execute = async (client: Client) => {
     }
 };
 const updateIncident = async (client: Client, incident: StatusPageIncident, messageID?: Snowflake) => {
-    const embed = embedFromIncident(incident);
+    const embed = embedFromIncident(client, incident);
     try {
         const message = await (messageID ? webhook.editMessage(messageID, { embeds: [embed] }) : webhook.send({ embeds: [embed] }));
 
@@ -59,7 +59,7 @@ const updateIncident = async (client: Client, incident: StatusPageIncident, mess
     }
 };
 
-const embedFromIncident = (incident: StatusPageIncident) => {
+const embedFromIncident = (client: Client, incident: StatusPageIncident) => {
     const color =
         incident.status === "resolved" || incident.status === "postmortem"
             ? EMBED_COLOR_GREEN
@@ -73,7 +73,8 @@ const embedFromIncident = (incident: StatusPageIncident) => {
 
     const affectedNames = incident.components.map((c) => c.name);
 
-    const embed = new MessageEmbed()
+    const embed = client.utils
+        .createEmbed()
         .setColor(color as ColorResolvable)
         .setTimestamp(new Date(incident.started_at))
         .setURL(incident.shortlink)

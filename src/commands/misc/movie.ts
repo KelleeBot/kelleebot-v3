@@ -1,4 +1,4 @@
-import { Constants, CommandInteraction, Message, MessageActionRow, MessageSelectMenu, SelectMenuInteraction, Snowflake, Util } from "discord.js";
+import { Constants, CommandInteraction, Message, SelectMenuInteraction, Snowflake, Util } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 import { MovieResult } from "moviedb-promise/dist/request-types";
@@ -46,7 +46,7 @@ export default class Movie extends KelleeBotCommand {
 
 const showAllMovies = async (query: string, results: MovieResult[], interaction: CommandInteraction, client: Client) => {
     let movieList = "";
-    const selectMenu = new MessageSelectMenu().setCustomId("movie").setPlaceholder("Select a Movie");
+    const selectMenu = client.utils.createSelectMenu().setCustomId("movie").setPlaceholder("Select a Movie");
 
     for (let i = 0; i < results.length; i++) {
         let title = Util.escapeMarkdown(results[i].original_title!);
@@ -65,7 +65,7 @@ const showAllMovies = async (query: string, results: MovieResult[], interaction:
         .setDescription(movieList)
         .setFooter({ text: "Select the movie from the dropdown you want to see information for." });
 
-    const row = new MessageActionRow().addComponents(selectMenu);
+    const row = client.utils.createActionRow().addComponents(selectMenu);
     const msg = (await interaction.reply({ embeds: [msgEmbed], components: [row], fetchReply: true })) as Message;
 
     const filter = async (i: SelectMenuInteraction) => {
@@ -103,7 +103,7 @@ const showMovieInfo = async (client: Client, userID: Snowflake, movie: MovieResu
     const releaseTimestamp = timestamp ? `<t:${timestamp}:F> (<t:${timestamp}:R>)` : "";
     const movieReleaseDate = release_date ? releaseTimestamp : "Unknown";
 
-    const msgEmbed = (await client.utils.CustomEmbed({ userID }))
+    return (await client.utils.CustomEmbed({ userID }))
         .setAuthor({
             name: `${original_title} ${original_language !== "en" ? `(${title})` : ""}`,
             iconURL: "https://pbs.twimg.com/profile_images/1243623122089041920/gVZIvphd_400x400.jpg",
@@ -128,5 +128,4 @@ const showMovieInfo = async (client: Client, userID: Snowflake, movie: MovieResu
             text: "Powered by TMDB",
             iconURL: "https://pbs.twimg.com/profile_images/1243623122089041920/gVZIvphd_400x400.jpg"
         });
-    return msgEmbed;
 };

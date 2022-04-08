@@ -1,4 +1,4 @@
-import { Constants, CommandInteraction, Message, MessageActionRow, MessageSelectMenu, SelectMenuInteraction, Snowflake, Util } from "discord.js";
+import { Constants, CommandInteraction, Message, SelectMenuInteraction, Snowflake, Util } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 import { TvResult } from "moviedb-promise/dist/request-types";
@@ -47,7 +47,7 @@ export default class TV extends KelleeBotCommand {
 
 const showAllShows = async (query: string, results: TvResult[], interaction: CommandInteraction, client: Client) => {
     let tvList = "";
-    const selectMenu = new MessageSelectMenu().setCustomId("tv").setPlaceholder("Select a TV Show");
+    const selectMenu = client.utils.createSelectMenu().setCustomId("tv").setPlaceholder("Select a TV Show");
 
     for (let i = 0; i < results.length; i++) {
         let title = Util.escapeMarkdown(results[i].name!);
@@ -65,7 +65,7 @@ const showAllShows = async (query: string, results: TvResult[], interaction: Com
         .setDescription(tvList)
         .setFooter({ text: "Select the TV show from the dropdown you want to see information for." });
 
-    const row = new MessageActionRow().addComponents(selectMenu);
+    const row = client.utils.createActionRow().addComponents(selectMenu);
     const msg = (await interaction.reply({ embeds: [msgEmbed], components: [row], fetchReply: true })) as Message;
 
     const filter = async (i: SelectMenuInteraction) => {

@@ -1,4 +1,4 @@
-import Discord, { MessageEmbed, Snowflake, TextChannel } from "discord.js";
+import Discord, { Snowflake, TextChannel } from "discord.js";
 import cron from "cron";
 import gambling from "../../schemas/gambling";
 import { Client } from "../../util/client";
@@ -72,7 +72,8 @@ const fetchWinner = async (guildID: Snowflake) => {
 
 const sendDM = async (client: Client, guildInfo: Guild, userID: Snowflake, month: String, points: Number) => {
     const { nitroLink } = guildInfo.gambling;
-    const embed = new MessageEmbed()
+    const embed = client.utils
+        .createEmbed()
         .setColor("#7289da")
         .setTitle("Congratulations!")
         .setDescription(

@@ -1,14 +1,4 @@
-import {
-    ButtonInteraction,
-    ColorResolvable,
-    CommandInteraction,
-    Message,
-    MessageActionRow,
-    MessageButton,
-    MessageEmbed,
-    Snowflake,
-    User
-} from "discord.js";
+import { ButtonInteraction, ColorResolvable, CommandInteraction, Message, Snowflake, User } from "discord.js";
 import { Client } from "../../util/client";
 import { GUILD_BAN_REMOVE } from "../../../config/embedColours.json";
 import memberInfo from "../../schemas/memberInfo";
@@ -24,15 +14,20 @@ export const unban = async (client: Client, interaction: CommandInteraction) => 
     if (!bannedMember) return interaction.reply({ content: "This user is currently not banned from this server.", ephemeral: true });
 
     const memberInfo = await client.utils.fetchMemberInfo(interaction.guildId!, bannedMember.user.id);
-    const memberInfoEmbed = new MessageEmbed().setColor(GUILD_BAN_REMOVE as ColorResolvable).setAuthor({
-        name: bannedMember.user.tag,
-        iconURL: bannedMember.user.displayAvatarURL({ dynamic: true })
-    });
+    const memberInfoEmbed = client.utils
+        .createEmbed()
+        .setColor(GUILD_BAN_REMOVE as ColorResolvable)
+        .setAuthor({
+            name: bannedMember.user.tag,
+            iconURL: bannedMember.user.displayAvatarURL({ dynamic: true })
+        });
 
-    const buttonRow = new MessageActionRow().addComponents(
-        new MessageButton().setCustomId("unban_yes").setLabel("Yes").setStyle("SUCCESS"),
-        new MessageButton().setCustomId("unban_no").setLabel("No").setStyle("DANGER")
-    );
+    const buttonRow = client.utils
+        .createActionRow()
+        .addComponents(
+            client.utils.createButton().setCustomId("unban_yes").setLabel("Yes").setStyle("SUCCESS"),
+            client.utils.createButton().setCustomId("unban_no").setLabel("No").setStyle("DANGER")
+        );
 
     if (!memberInfo) {
         memberInfoEmbed.setDescription(`• Warns: 0\n• Mutes: 0\n• Kicks: 0\n• Bans: 0\n• Soft Bans: 0\n• Unbans: 0\n`);
@@ -108,7 +103,8 @@ const unbanUser = async (bannedUser: User, message: Message, author: User, clien
         components: []
     });
 
-    const msgEmbed = new MessageEmbed()
+    const msgEmbed = client.utils
+        .createEmbed()
         .setColor(GUILD_BAN_REMOVE as ColorResolvable)
         .setAuthor({
             name: author.tag,

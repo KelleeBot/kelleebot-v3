@@ -1,4 +1,4 @@
-import { CommandInteraction, GuildMember, Guild, MessageEmbed, Role, Permissions } from "discord.js";
+import { CommandInteraction, GuildMember, Guild, Role, Permissions } from "discord.js";
 import { Client } from "../../util/client";
 import { lstatSync, readdirSync, readFileSync } from "fs";
 import { join } from "path";
@@ -60,7 +60,8 @@ export const user = async (client: Client, interaction: CommandInteraction) => {
     const memberJoinedTimestamp = Math.round(member.joinedTimestamp! / 1000);
     const userBanner = (await user.fetch()).bannerURL({ dynamic: true, size: 512 });
 
-    const msgEmbed = new MessageEmbed()
+    const msgEmbed = client.utils
+        .createEmbed()
         .setColor(member.displayHexColor)
         .setAuthor({
             name: user.tag,
@@ -189,14 +190,16 @@ export const user = async (client: Client, interaction: CommandInteraction) => {
             }
         }
 
-        if (infoPerms.length) {
-            msgEmbed.addField("**Key Permissions**", infoPerms.sort().join(", "), false);
-        }
+        if (infoPerms.length)
+            msgEmbed.addField(
+                `**Key Permissions [${infoPerms.length}]**`,
+                `${infoPerms.sort().map((str) => `\`${client.utils.titleCase(str.replace(/_/g, " ").toLowerCase())}\``)}`,
+                false
+            );
     }
 
-    if (extraPerms.length) {
-        msgEmbed.addField("**Acknowledgements**", extraPerms.sort().join(", "), false);
-    }
+    if (extraPerms.length) msgEmbed.addField("**Acknowledgements**", extraPerms.sort().join(", "), false);
+
     return interaction.reply({ embeds: [msgEmbed] });
 };
 

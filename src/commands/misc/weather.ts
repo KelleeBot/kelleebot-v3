@@ -1,11 +1,10 @@
-import { Constants, CommandInteraction, Message, MessageActionRow, MessageSelectMenu, SelectMenuInteraction, Snowflake, Util } from "discord.js";
+import { Constants, CommandInteraction, Message, SelectMenuInteraction, Snowflake, Util } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 import weather from "weather-js";
 import { format, utcToZonedTime } from "date-fns-tz";
 import { find } from "geo-tz";
 import convert from "convert";
-import { DateTime } from "luxon";
 
 export default class Weather extends KelleeBotCommand {
     constructor(client: Client) {
@@ -57,7 +56,7 @@ export default class Weather extends KelleeBotCommand {
 
 const showAllLocations = async (client: Client, query: string, results: any[], interaction: CommandInteraction) => {
     let text = "";
-    const selectMenu = new MessageSelectMenu().setCustomId("weather").setPlaceholder("Select a Location");
+    const selectMenu = client.utils.createSelectMenu().setCustomId("weather").setPlaceholder("Select a Location");
 
     for (let i = 0; i < results.length; i++) {
         text += `${i + 1}. ${results[i].location.name}\n`;
@@ -74,7 +73,7 @@ const showAllLocations = async (client: Client, query: string, results: any[], i
         .setDescription(text)
         .setFooter({ text: "Select the location you want to see the weather results for." });
 
-    const row = new MessageActionRow().addComponents(selectMenu);
+    const row = client.utils.createActionRow().addComponents(selectMenu);
     const msg = (await interaction.reply({ embeds: [msgEmbed], components: [row], fetchReply: true })) as Message;
 
     const filter = async (i: SelectMenuInteraction) => {
@@ -113,7 +112,7 @@ const showWeatherResult = async (client: Client, userID: Snowflake, city: any) =
 
     const convertToFahrenheit = (temp: number) => convert(temp, "C").to("F").toFixed(1);
 
-    const msgEmbed = (await client.utils.CustomEmbed({ userID }))
+    return (await client.utils.CustomEmbed({ userID }))
         .setTitle(`Current weather for ${name}`)
         .setThumbnail(imageUrl)
         .addFields(
@@ -126,8 +125,6 @@ const showWeatherResult = async (client: Client, userID: Snowflake, city: any) =
             { name: "**Humidity**", value: `${humidity}%`, inline: true }
         )
         .setFooter({ text: `Forecast last updated at ${lastUpdatedAt} ${timezone}` });
-
-    return msgEmbed;
 };
 
 const getTimezone = (current: any, location: any, showTime?: boolean) => {

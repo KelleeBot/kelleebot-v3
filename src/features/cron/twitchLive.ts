@@ -1,5 +1,5 @@
 import cron from "cron";
-import { MessageEmbed, TextChannel } from "discord.js";
+import { TextChannel } from "discord.js";
 import { Client } from "../../util/client";
 import { DateTime } from "luxon";
 
@@ -81,7 +81,8 @@ const execute = async (client: Client) => {
                     const gameThumbnail = gameInfo ? gameInfo.box_art_url.replace(/-{width}x{height}/g, "") : "";
                     const startedAt = DateTime.fromISO(started_at);
 
-                    const embed = new MessageEmbed()
+                    const embed = client.utils
+                        .createEmbed()
                         .setAuthor({
                             name: `${user_name} is now live on Twitch!`,
                             iconURL: userThumbnail,

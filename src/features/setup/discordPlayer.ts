@@ -1,10 +1,10 @@
-import { ColorResolvable, MessageEmbed, Util } from "discord.js";
+import { ColorResolvable, Util } from "discord.js";
 import { Client } from "../../util/client";
 import { MUSIC_COMMANDS } from "../../../config/embedColours.json";
 import { Queue, Track } from "discord-player";
 
 export default async (client: Client) => {
-    const msgEmbed = new MessageEmbed().setColor(MUSIC_COMMANDS as ColorResolvable);
+    const msgEmbed = client.utils.createEmbed().setColor(MUSIC_COMMANDS as ColorResolvable);
     client.player
         .on("trackStart", (queue: Queue, track: Track) => {
             //@ts-ignore

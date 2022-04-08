@@ -3,11 +3,11 @@ import {
     CommandInteraction,
     Guild,
     GuildAuditLogsAction,
-    GuildMember,
     Message,
     MessageActionRow,
     MessageButton,
     MessageEmbed,
+    MessageSelectMenu,
     Permissions,
     Snowflake,
     TextChannel
@@ -16,8 +16,6 @@ import { ChannelTypes } from "../types/channelTypes";
 import { KelleeBotUtils } from "../prefab/utils";
 import memberInfo from "../schemas/memberInfo";
 import { Client } from "./client";
-
-const buttons = ["⬅️", "⛔", "➡️"];
 
 class Utils extends KelleeBotUtils {
     constructor(client: Client) {
@@ -64,74 +62,6 @@ class Utils extends KelleeBotUtils {
             : webhook.get(botWebhook.id);
     }
 
-    async buttonPagination(interaction: CommandInteraction, embeds: MessageEmbed[], options?: { time: number }) {
-        try {
-            let time = 30000; // 30 seconds
-            if (options) {
-                if (options.time) time = options.time;
-            }
-
-            const msgButtons: MessageButton[] = [];
-            for (let i = 0; i < buttons.length; i++) {
-                msgButtons.push(new MessageButton().setLabel(buttons[i]).setCustomId(buttons[i]).setStyle("PRIMARY"));
-            }
-
-            const row = new MessageActionRow().addComponents(msgButtons);
-            const pageMsg = (await interaction.channel?.send({ embeds: [embeds[0]], components: [row] })) as Message;
-
-            let pageIndex = 0;
-
-            const collector = pageMsg.createMessageComponentCollector({ componentType: "BUTTON", time });
-            collector.on("collect", async (i) => {
-                try {
-                    await i.deferUpdate();
-                    if ((i.member as GuildMember).id !== interaction.user.id)
-                        return i.reply({
-                            content: `This is locked to **${(interaction.member as GuildMember).user.tag}**.`,
-                            ephemeral: true
-                        });
-
-                    if (i.customId === "➡️") {
-                        if (pageIndex < embeds.length - 1) {
-                            pageIndex++;
-                            await pageMsg.edit({ embeds: [embeds[pageIndex]] });
-                        } else {
-                            pageIndex = 0;
-                            await pageMsg.edit({ embeds: [embeds[pageIndex]] });
-                        }
-                    } else if (i.customId === "⛔") {
-                        collector.stop();
-                    } else if (i.customId === "⬅️") {
-                        if (pageIndex > 0) {
-                            pageIndex--;
-                            await pageMsg.edit({ embeds: [embeds[pageIndex]] });
-                        } else {
-                            pageIndex = embeds.length - 1;
-                            await pageMsg.edit({ embeds: [embeds[pageIndex]] });
-                        }
-                    }
-                } catch (e) {
-                    return this.client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}.`);
-                }
-            });
-
-            collector.on("end", async () => {
-                try {
-                    msgButtons.forEach((button) => {
-                        button.setDisabled(true);
-                        return button;
-                    });
-
-                    await pageMsg.edit({ components: [new MessageActionRow().addComponents(msgButtons)] });
-                } catch (e) {
-                    this.client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
-                }
-            });
-        } catch (e) {
-            return this.client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
-        }
-    }
-
     async fetchAuditLog(guild: Guild, auditLogAction: GuildAuditLogsAction) {
         return guild.me?.permissions.has(Permissions.FLAGS.VIEW_AUDIT_LOG) ? await guild.fetchAuditLogs({ limit: 1, type: auditLogAction }) : false;
     }
@@ -148,6 +78,22 @@ class Utils extends KelleeBotUtils {
         } catch (e) {
             client.utils.log("ERROR", `${__filename}`, "An error has occurred: ${e}");
         }
+    }
+
+    createEmbed() {
+        return new MessageEmbed();
+    }
+
+    createButton() {
+        return new MessageButton();
+    }
+
+    createActionRow() {
+        return new MessageActionRow();
+    }
+
+    createSelectMenu() {
+        return new MessageSelectMenu();
     }
 
     getChannelDescription(channel: ChannelTypes) {

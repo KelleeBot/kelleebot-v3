@@ -90,7 +90,7 @@ export const history = async (client: Client, interaction: CommandInteraction) =
             .setDescription(desc);
         embedArray.push(msgEmbed);
     }
-    return client.utils.buttonPagination(interaction, embedArray, { time: 1000 * 60 * 10 });
+    return client.utils.paginate(interaction, embedArray, { time: 1000 * 60 * 10 });
 };
 
 const loopThroughInfo = (infoType: any) => {

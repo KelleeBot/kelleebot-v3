@@ -1,4 +1,4 @@
-import { ColorResolvable, CommandInteraction, MessageEmbed } from "discord.js";
+import { ColorResolvable, CommandInteraction } from "discord.js";
 import { Client } from "../../util/client";
 import { MESSAGE_EVENTS } from "../../../config/embedColours.json";
 
@@ -25,7 +25,8 @@ export const purge = async (client: Client, interaction: CommandInteraction) => 
             msgEmbed.setDescription(`Successfully purged ${client.utils.pluralize(messages.size, "message", true)} from ${channel}.`);
             await interaction.reply({ embeds: [msgEmbed], ephemeral: true });
 
-            const botEmbed = new MessageEmbed()
+            const botEmbed = client.utils
+                .createEmbed()
                 .setColor(MESSAGE_EVENTS as ColorResolvable)
                 .setAuthor({ name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
                 .setDescription(`${interaction.user} purged ${client.utils.pluralize(messages.size, "message", true)} from ${channel}.`)

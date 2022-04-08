@@ -1,4 +1,4 @@
-import { ColorResolvable, GuildMember, MessageEmbed } from "discord.js";
+import { ColorResolvable, GuildMember } from "discord.js";
 import { Client } from "../../util/client";
 import { GUILD_MEMBER_EVENTS } from "../../../config/embedColours.json";
 import gambling from "../../schemas/gambling";
@@ -12,7 +12,8 @@ export default async (client: Client, member: GuildMember) => {
     const joinedTimestamp = Math.round(member.joinedTimestamp! / 1000);
     const leftTimestamp = Math.round(Date.now() / 1000);
 
-    const msgEmbed = new MessageEmbed()
+    const msgEmbed = client.utils
+        .createEmbed()
         .setColor(GUILD_MEMBER_EVENTS as ColorResolvable)
         .setAuthor({ name: user.tag, iconURL: user.displayAvatarURL({ dynamic: true }) })
         .setDescription(`**${user} has left the server**`)

@@ -1,4 +1,4 @@
-import { ColorResolvable, Guild, GuildMember, MessageEmbed, Role, User } from "discord.js";
+import { ColorResolvable, Guild, GuildMember, Role, User } from "discord.js";
 import { Client } from "../../util/client";
 import { GUILD_MEMBER_EVENTS, GUILD_MEMBER_ROLES } from "./../../../config/embedColours.json";
 
@@ -75,7 +75,8 @@ const roleUpdatedLog = async (client: Client, role: Role, user: User, type: "giv
 };
 
 const createEmbed = (client: Client, color: ColorResolvable, description: string, options: { user?: User; guild?: Guild }) => {
-    return new MessageEmbed()
+    return client.utils
+        .createEmbed()
         .setColor(color)
         .setAuthor({
             name: options.user ? options.user.tag : `${options.guild?.name}`,
