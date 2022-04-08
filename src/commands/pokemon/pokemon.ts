@@ -1,3 +1,4 @@
+import { Constants } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 import { pokeInfo, quiz } from "../../subcommandHelpers/pokemon";
@@ -17,7 +18,7 @@ export default class Pokemon extends KelleeBotCommand {
                         {
                             name: "name",
                             description: "The Pokémon to lookup.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true,
                             autocomplete: true
                         }

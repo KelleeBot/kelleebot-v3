@@ -1,4 +1,4 @@
-import { CommandInteraction } from "discord.js";
+import { Constants } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 
@@ -14,7 +14,7 @@ export default class Color extends KelleeBotCommand {
                 {
                     name: "color",
                     description: "The new color you want to set your embed to.",
-                    type: "STRING",
+                    type: Constants.ApplicationCommandOptionTypes.STRING,
                     choices: Object.keys(client.colors).map((c) => {
                         return { name: c, value: c };
                     })

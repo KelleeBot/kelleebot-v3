@@ -1,3 +1,4 @@
+import { Constants } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 
@@ -12,7 +13,7 @@ export default class Language extends KelleeBotCommand {
                 {
                     name: "language",
                     description: "The language you want",
-                    type: "STRING"
+                    type: Constants.ApplicationCommandOptionTypes.STRING
                 }
             ],
             execute: async ({ client, interaction }) => {

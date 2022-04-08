@@ -1,4 +1,4 @@
-import { CommandInteraction } from "discord.js";
+import { Constants } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 import { NO_GAMBLING_CHANNEL_SET, GREATER_THAN_ZERO } from "../../../config/messages.json";
@@ -16,8 +16,9 @@ export default class Setdaily extends KelleeBotCommand {
                 {
                     name: "amount",
                     description: "The amount to set.",
-                    type: "INTEGER",
-                    required: true
+                    type: Constants.ApplicationCommandOptionTypes.INTEGER,
+                    required: true,
+                    minValue: 0
                 }
             ],
             execute: async ({ client, interaction }) => {
@@ -26,7 +27,7 @@ export default class Setdaily extends KelleeBotCommand {
                     const amount = interaction.options.getInteger("amount")!;
                     if (!guildInfo.gambling.gamblingChannel) return await interaction.reply({ content: NO_GAMBLING_CHANNEL_SET, ephemeral: true });
 
-                    if (amount < 0) return await interaction.reply({ content: GREATER_THAN_ZERO, ephemeral: true });
+                    // if (amount < 0) return await interaction.reply({ content: GREATER_THAN_ZERO, ephemeral: true });
 
                     await client.guildInfo.findByIdAndUpdate(
                         interaction.guildId!,

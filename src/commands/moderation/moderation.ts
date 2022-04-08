@@ -1,3 +1,4 @@
+import { Constants } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 import { ban, history, kick, purge, timeout, unban } from "../../subcommandHelpers/moderation";
@@ -17,13 +18,13 @@ export default class Moderation extends KelleeBotCommand {
                         {
                             name: "user",
                             description: "The user to ban.",
-                            type: "USER",
+                            type: Constants.ApplicationCommandOptionTypes.USER,
                             required: true
                         },
                         {
                             name: "reason",
                             description: "Reason why the user is being banned.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true
                         }
                     ],
@@ -37,7 +38,7 @@ export default class Moderation extends KelleeBotCommand {
                         {
                             name: "user",
                             description: "The user to see moderation history for.",
-                            type: "USER",
+                            type: Constants.ApplicationCommandOptionTypes.USER,
                             required: true
                         }
                     ],
@@ -51,13 +52,13 @@ export default class Moderation extends KelleeBotCommand {
                         {
                             name: "member",
                             description: "The member to kick.",
-                            type: "USER",
+                            type: Constants.ApplicationCommandOptionTypes.USER,
                             required: true
                         },
                         {
                             name: "reason",
                             description: "Reason why member is being kicked.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true
                         }
                     ],
@@ -71,13 +72,16 @@ export default class Moderation extends KelleeBotCommand {
                         {
                             name: "number",
                             description: "The number of messages to purge (between 1 - 100).",
-                            type: "INTEGER",
-                            required: true
+                            type: Constants.ApplicationCommandOptionTypes.INTEGER,
+                            required: true,
+                            minValue: 1,
+                            maxValue: 100
                         },
                         {
                             name: "channel",
                             description: "The channel to purge messages from.",
-                            type: "CHANNEL"
+                            type: Constants.ApplicationCommandOptionTypes.CHANNEL,
+                            channelTypes: ["GUILD_TEXT"]
                         }
                     ],
                     execute: async ({ client, interaction }) => {
@@ -90,25 +94,25 @@ export default class Moderation extends KelleeBotCommand {
                         {
                             name: "member",
                             description: "The member to timeout.",
-                            type: "USER",
+                            type: Constants.ApplicationCommandOptionTypes.USER,
                             required: true
                         },
                         {
                             name: "duration",
                             description: "How long to timeout the member for.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true
                         },
                         {
                             name: "reason",
                             description: "Reason why member is being timed out.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true
                         },
                         {
                             name: "dm",
                             description: "Whether or not to DM the member about them being timed out (default no).",
-                            type: "BOOLEAN"
+                            type: Constants.ApplicationCommandOptionTypes.BOOLEAN
                         }
                     ],
                     execute: async ({ client, interaction }) => {
@@ -121,13 +125,13 @@ export default class Moderation extends KelleeBotCommand {
                         {
                             name: "id",
                             description: "The ID of the user you want to unban.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true
                         },
                         {
                             name: "reason",
                             description: "The reason why this user is being unbanned.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true
                         }
                     ],

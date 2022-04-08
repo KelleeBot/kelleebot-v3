@@ -1,4 +1,4 @@
-import { CommandInteraction, MessageAttachment } from "discord.js";
+import { Constants, CommandInteraction, MessageAttachment } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 import { inspect } from "util";
@@ -16,13 +16,13 @@ export default class Eval extends KelleeBotCommand {
                 {
                     name: "code",
                     description: "Code to evaluate",
-                    type: "STRING",
+                    type: Constants.ApplicationCommandOptionTypes.STRING,
                     required: true
                 },
                 {
                     name: "show",
                     description: "Whether to send the reply as ephemeral or not.",
-                    type: "BOOLEAN"
+                    type: Constants.ApplicationCommandOptionTypes.BOOLEAN
                 }
             ],
             hideCommand: true,

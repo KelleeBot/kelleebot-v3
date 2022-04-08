@@ -1,4 +1,4 @@
-import { Snowflake } from "discord.js";
+import { Constants, Snowflake } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 import axios from "axios";
@@ -15,7 +15,7 @@ export default class Country extends KelleeBotCommand {
                 {
                     name: "country",
                     description: "The country to lookup.",
-                    type: "STRING",
+                    type: Constants.ApplicationCommandOptionTypes.STRING,
                     required: true,
                     autocomplete: true
                 }

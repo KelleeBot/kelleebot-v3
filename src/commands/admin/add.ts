@@ -1,4 +1,4 @@
-import { CommandInteraction, GuildMember } from "discord.js";
+import { Constants, GuildMember } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 import { addPoints } from "../../util";
@@ -16,20 +16,21 @@ export default class Add extends KelleeBotCommand {
                 {
                     name: "points",
                     description: "The amount of points to give.",
-                    type: "INTEGER",
-                    required: true
+                    type: Constants.ApplicationCommandOptionTypes.NUMBER,
+                    required: true,
+                    minValue: 1
                 },
                 {
                     name: "user",
                     description: "The user to give points to. Defaults 'all' if no user specified.",
-                    type: "USER"
+                    type: Constants.ApplicationCommandOptionTypes.USER
                 }
             ],
             execute: async ({ client, interaction }) => {
                 const points = interaction.options.getInteger("points")!;
                 const member = interaction.options.getMember("user") ?? "all";
 
-                if (points <= 0) return await interaction.reply({ content: GREATER_THAN_ZERO });
+                // if (points <= 0) return await interaction.reply({ content: GREATER_THAN_ZERO });
 
                 try {
                     if (member === "all") {

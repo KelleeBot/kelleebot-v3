@@ -1,4 +1,4 @@
-import { CommandInteraction, Message, MessageActionRow, MessageSelectMenu, SelectMenuInteraction, Snowflake, Util } from "discord.js";
+import { Constants, CommandInteraction, Message, MessageActionRow, MessageSelectMenu, SelectMenuInteraction, Snowflake, Util } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 import { TvResult } from "moviedb-promise/dist/request-types";
@@ -17,7 +17,7 @@ export default class TV extends KelleeBotCommand {
                 {
                     name: "show",
                     description: "The TV show to lookup",
-                    type: "STRING",
+                    type: Constants.ApplicationCommandOptionTypes.STRING,
                     required: true
                 }
             ],

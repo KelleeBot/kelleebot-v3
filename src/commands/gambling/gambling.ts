@@ -1,3 +1,4 @@
+import { Constants } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 import { blackjack, daily, gamble, points, scratch, slots } from "../../subcommandHelpers/gambling";
@@ -17,7 +18,7 @@ export default class Gambling extends KelleeBotCommand {
                         {
                             name: "amount",
                             description: "The amount of points (or all) to gamble.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true
                         }
                     ],
@@ -37,7 +38,7 @@ export default class Gambling extends KelleeBotCommand {
                         {
                             name: "amount",
                             description: "The amount of points (or all) to gamble.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true
                         }
                     ],
@@ -51,7 +52,7 @@ export default class Gambling extends KelleeBotCommand {
                         {
                             name: "user",
                             description: "The user to check.",
-                            type: "USER"
+                            type: Constants.ApplicationCommandOptionTypes.USER
                         }
                     ],
                     execute: async ({ client, interaction }) => {
@@ -65,7 +66,7 @@ export default class Gambling extends KelleeBotCommand {
                         {
                             name: "amount",
                             description: "The amount of points (or all) to play scratch tickets with.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true
                         }
                     ],
@@ -80,7 +81,7 @@ export default class Gambling extends KelleeBotCommand {
                         {
                             name: "amount",
                             description: "The amount of points (or all) to gamble.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true
                         }
                     ],

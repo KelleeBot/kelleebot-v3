@@ -1,3 +1,4 @@
+import { Constants } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 import { clear, lyrics, np, play, queue, stop } from "../../subcommandHelpers/music";
@@ -23,7 +24,7 @@ export default class Music extends KelleeBotCommand {
                         {
                             name: "query",
                             description: "The song to search for.",
-                            type: "STRING"
+                            type: Constants.ApplicationCommandOptionTypes.STRING
                         }
                     ],
                     execute: async ({ client, interaction }) => {
@@ -44,7 +45,7 @@ export default class Music extends KelleeBotCommand {
                         {
                             name: "query",
                             description: "The song you want to play.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true
                         }
                     ],

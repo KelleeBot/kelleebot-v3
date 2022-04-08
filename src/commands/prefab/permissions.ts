@@ -1,4 +1,4 @@
-import { MessageActionRow, MessageButton } from "discord.js";
+import { Constants, MessageActionRow, MessageButton } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 
@@ -55,7 +55,7 @@ export default class Permissions extends KelleeBotCommand {
                 {
                     name: "command",
                     description: "The command you want to change permissions for",
-                    type: "STRING",
+                    type: Constants.ApplicationCommandOptionTypes.STRING,
                     required: true
                 }
             ],

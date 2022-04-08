@@ -1,3 +1,4 @@
+import { Constants } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 import { deleteGiveaway, end, reroll, start } from "../../subcommandHelpers/giveaways";
@@ -17,7 +18,7 @@ export default class Giveaways extends KelleeBotCommand {
                         {
                             name: "id",
                             description: "The giveaway (message) ID to delete.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true
                         }
                     ],
@@ -31,7 +32,7 @@ export default class Giveaways extends KelleeBotCommand {
                         {
                             name: "id",
                             description: "The giveaway (message) ID to end.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true
                         }
                     ],
@@ -45,7 +46,7 @@ export default class Giveaways extends KelleeBotCommand {
                         {
                             name: "id",
                             description: "The giveaway (message) ID to reroll.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true
                         }
                     ],
@@ -59,25 +60,26 @@ export default class Giveaways extends KelleeBotCommand {
                         {
                             name: "duration",
                             description: "The giveaway duration.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true
                         },
                         {
                             name: "winners",
                             description: "The number of winners.",
-                            type: "INTEGER",
-                            required: true
+                            type: Constants.ApplicationCommandOptionTypes.INTEGER,
+                            required: true,
+                            minValue: 1
                         },
                         {
                             name: "prize",
                             description: "The giveaway prize.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true
                         },
                         {
                             name: "channel",
                             description: "The channel where the giveaway will be held.",
-                            type: "CHANNEL"
+                            type: Constants.ApplicationCommandOptionTypes.CHANNEL
                         }
                     ],
                     execute: async ({ client, interaction }) => {

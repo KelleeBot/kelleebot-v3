@@ -1,3 +1,4 @@
+import { Constants } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 import { add, remove, send } from "../../subcommandHelpers/roles";
@@ -17,24 +18,25 @@ export default class Roles extends KelleeBotCommand {
                         {
                             name: "messageid",
                             description: "The ID of the message to edit.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true
                         },
                         {
                             name: "role",
                             description: "The role you want to add.",
-                            type: "ROLE",
+                            type: Constants.ApplicationCommandOptionTypes.ROLE,
                             required: true
                         },
                         {
                             name: "channel",
                             description: "The channel that the message is in. Default is current channel if none specified.",
-                            type: "CHANNEL"
+                            type: Constants.ApplicationCommandOptionTypes.CHANNEL,
+                            channelTypes: ["GUILD_TEXT"]
                         },
                         {
                             name: "emoji",
                             description: "The emoji you want to associate with the role.",
-                            type: "STRING"
+                            type: Constants.ApplicationCommandOptionTypes.STRING
                         }
                     ],
                     execute: async ({ client, interaction }) => {
@@ -47,19 +49,21 @@ export default class Roles extends KelleeBotCommand {
                         {
                             name: "messageid",
                             description: "The ID of the message to edit.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true
                         },
                         {
                             name: "position",
                             description: "The position in the dropdown that the role you want to remove is in.",
-                            type: "INTEGER",
-                            required: true
+                            type: Constants.ApplicationCommandOptionTypes.INTEGER,
+                            required: true,
+                            minValue: 1
                         },
                         {
                             name: "channel",
                             description: "The channel that the message is in. Default is current channel if none specified.",
-                            type: "CHANNEL"
+                            type: Constants.ApplicationCommandOptionTypes.CHANNEL,
+                            channelTypes: ["GUILD_TEXT"]
                         }
                     ],
                     execute: async ({ client, interaction }) => {
@@ -72,13 +76,14 @@ export default class Roles extends KelleeBotCommand {
                         {
                             name: "message",
                             description: "The message to send.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true
                         },
                         {
                             name: "channel",
                             description: "The channel to send the message to. Default is current channel if none specified.",
-                            type: "CHANNEL"
+                            type: Constants.ApplicationCommandOptionTypes.CHANNEL,
+                            channelTypes: ["GUILD_TEXT"]
                         }
                     ],
                     execute: async ({ client, interaction }) => {

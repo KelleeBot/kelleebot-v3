@@ -1,4 +1,4 @@
-import { Snowflake } from "discord.js";
+import { Constants, Snowflake } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 
@@ -15,19 +15,19 @@ export default class Edit extends KelleeBotCommand {
                 {
                     name: "id",
                     description: "The ID of the message you want to edit.",
-                    type: "STRING",
+                    type: Constants.ApplicationCommandOptionTypes.STRING,
                     required: true
                 },
                 {
                     name: "content",
                     description: "The content of the message you'd like to edit it to.",
-                    type: "STRING",
+                    type: Constants.ApplicationCommandOptionTypes.STRING,
                     required: true
                 },
                 {
                     name: "channel",
                     description: "The channel the message you want to edit is in.",
-                    type: "CHANNEL",
+                    type: Constants.ApplicationCommandOptionTypes.CHANNEL,
                     channelTypes: ["GUILD_TEXT"]
                 }
             ],

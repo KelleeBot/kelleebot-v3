@@ -1,3 +1,4 @@
+import { Constants } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 
@@ -14,7 +15,7 @@ export default class Blacklist extends KelleeBotCommand {
                 {
                     name: "action",
                     description: "Add or remove blacklist.",
-                    type: "STRING",
+                    type: Constants.ApplicationCommandOptionTypes.STRING,
                     choices: [
                         { name: "add", value: "add" },
                         { name: "remove", value: "remove" }
@@ -24,7 +25,7 @@ export default class Blacklist extends KelleeBotCommand {
                 {
                     name: "user",
                     description: "The user to blacklist or whitelist.",
-                    type: "USER",
+                    type: Constants.ApplicationCommandOptionTypes.USER,
                     required: true
                 }
             ],

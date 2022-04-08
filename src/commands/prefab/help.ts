@@ -1,4 +1,4 @@
-import { CommandInteraction } from "discord.js";
+import { Constants, CommandInteraction } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 
@@ -13,7 +13,7 @@ export default class Help extends KelleeBotCommand {
                 {
                     name: "name",
                     description: "A category or command name",
-                    type: "STRING"
+                    type: Constants.ApplicationCommandOptionTypes.STRING
                 }
             ],
             guildOnly: false,

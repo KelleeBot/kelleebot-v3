@@ -1,3 +1,4 @@
+import { Constants } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 
@@ -39,7 +40,7 @@ export default class Commands extends KelleeBotCommand {
                         {
                             name: "command",
                             description: "The command you want to disable.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true
                         }
                     ],
@@ -77,7 +78,7 @@ export default class Commands extends KelleeBotCommand {
                         {
                             name: "command",
                             description: "The command you want to enable.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true
                         }
                     ],

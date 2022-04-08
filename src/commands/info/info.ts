@@ -1,3 +1,4 @@
+import { Constants } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 import { role, guild, user } from "../../subcommandHelpers/info";
@@ -17,7 +18,7 @@ export default class Info extends KelleeBotCommand {
                         {
                             name: "role",
                             description: "The role to see information about.",
-                            type: "ROLE",
+                            type: Constants.ApplicationCommandOptionTypes.ROLE,
                             required: true
                         }
                     ],
@@ -39,7 +40,7 @@ export default class Info extends KelleeBotCommand {
                         {
                             name: "user",
                             description: "The other user to see information about.",
-                            type: "USER"
+                            type: Constants.ApplicationCommandOptionTypes.USER
                         }
                     ],
                     execute: async ({ client, interaction }) => {

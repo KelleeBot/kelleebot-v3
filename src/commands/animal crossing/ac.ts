@@ -1,5 +1,6 @@
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
+import { Constants } from "discord.js";
 import { artwork, bug, clothing, diy, fish, furniture, interior, items, photo, sea, tool, villager } from "../../subcommandHelpers/animal crossing";
 
 export default class AnimalCrossing extends KelleeBotCommand {
@@ -17,7 +18,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                         {
                             name: "artwork",
                             description: "The name of the artwork you wish to retrieve information about.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true,
                             autocomplete: true
                         }
@@ -37,7 +38,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                         {
                             name: "bug",
                             description: "The name of the bug you wish to retrieve information about.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true,
                             autocomplete: true
                         }
@@ -57,7 +58,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                         {
                             name: "clothing",
                             description: "The name of the clothing you wish to retrieve information about.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true,
                             autocomplete: true
                         }
@@ -77,7 +78,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                         {
                             name: "diy",
                             description: "The name of the item you wish to retrieve recipe information about.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true,
                             autocomplete: true
                         }
@@ -109,7 +110,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                         {
                             name: "fish",
                             description: "The name of the fish you wish to retrieve information about.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true,
                             autocomplete: true
                         }
@@ -129,7 +130,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                         {
                             name: "furniture",
                             description: "The name of the furniture you wish to retrieve information about.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true,
                             autocomplete: true
                         }
@@ -149,7 +150,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                         {
                             name: "interior",
                             description: "The name of the interior item you wish to retrieve information about.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true,
                             autocomplete: true
                         }
@@ -169,7 +170,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                         {
                             name: "item",
                             description: "The name of the item you wish to retrieve information about.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true,
                             autocomplete: true
                         }
@@ -189,7 +190,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                         {
                             name: "photo",
                             description: "The name of the photo or poster you wish to retrieve information about.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true,
                             autocomplete: true
                         }
@@ -209,7 +210,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                         {
                             name: "creature",
                             description: "The name of the sea creature you wish to retrieve information about.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true,
                             autocomplete: true
                         }
@@ -229,7 +230,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                         {
                             name: "tool",
                             description: "The name of the tool item you wish to retrieve information about.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true,
                             autocomplete: true
                         }
@@ -249,7 +250,7 @@ export default class AnimalCrossing extends KelleeBotCommand {
                         {
                             name: "name",
                             description: "The name of the villager you wish to retrieve information about.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true,
                             autocomplete: true
                         }

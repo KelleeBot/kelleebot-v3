@@ -1,4 +1,4 @@
-import { MessageActionRow, MessageButton, TextChannel } from "discord.js";
+import { Constants, MessageActionRow, MessageButton } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 
@@ -15,13 +15,13 @@ export default class Rb extends KelleeBotCommand {
                 {
                     name: "guildid",
                     description: "The guild to send the message to.",
-                    type: "STRING",
+                    type: Constants.ApplicationCommandOptionTypes.STRING,
                     required: true
                 },
                 {
                     name: "channelid",
                     description: "The channel to send the message to.",
-                    type: "STRING",
+                    type: Constants.ApplicationCommandOptionTypes.STRING,
                     // type: "CHANNEL",
                     // channelTypes: ["GUILD_TEXT"],
                     required: true

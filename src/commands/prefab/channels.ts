@@ -1,3 +1,4 @@
+import { Constants } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 
@@ -37,8 +38,9 @@ export default class Channels extends KelleeBotCommand {
                         {
                             name: "channel",
                             description: "The channel you want to disable",
-                            type: "CHANNEL",
-                            required: true
+                            type: Constants.ApplicationCommandOptionTypes.CHANNEL,
+                            required: true,
+                            channelTypes: ["GUILD_TEXT"]
                         }
                     ],
                     execute: async ({ client, interaction }) => {
@@ -70,7 +72,7 @@ export default class Channels extends KelleeBotCommand {
                         {
                             name: "channel",
                             description: "The channel you want to enable",
-                            type: "CHANNEL",
+                            type: Constants.ApplicationCommandOptionTypes.CHANNEL,
                             required: true
                         }
                     ],

@@ -1,4 +1,4 @@
-import { CommandInteraction, MessageActionRow, MessageButton, Permissions } from "discord.js";
+import { MessageActionRow, MessageButton, Permissions } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 

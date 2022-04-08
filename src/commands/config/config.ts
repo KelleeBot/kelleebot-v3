@@ -1,3 +1,4 @@
+import { Constants } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 import { setlog, twitch } from "../../subcommandHelpers/config";
@@ -17,7 +18,7 @@ export default class Config extends KelleeBotCommand {
                         {
                             name: "channel",
                             description: "The channel to set.",
-                            type: "CHANNEL",
+                            type: Constants.ApplicationCommandOptionTypes.CHANNEL,
                             required: true
                         }
                     ],
@@ -31,19 +32,20 @@ export default class Config extends KelleeBotCommand {
                         {
                             name: "twitch",
                             description: "The Twitch channel you'd like to subscribe to.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true
                         },
                         {
                             name: "message",
                             description: "The message you'd like to include with the live notification.",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true
                         },
                         {
                             name: "channel",
                             description: "The discord channel where the message will be sent. Default is current channel if none specified.",
-                            type: "CHANNEL"
+                            type: Constants.ApplicationCommandOptionTypes.CHANNEL,
+                            channelTypes: ["GUILD_TEXT"]
                         }
                     ],
                     execute: async ({ client, interaction }) => {

@@ -1,4 +1,4 @@
-import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
+import { Constants, GuildMember, MessageEmbed } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 
@@ -14,17 +14,15 @@ export default class Avatar extends KelleeBotCommand {
                 {
                     name: "user",
                     description: "The user to see avatar for.",
-                    type: "USER"
+                    type: Constants.ApplicationCommandOptionTypes.USER
                 }
             ],
             execute: async ({ interaction }) => {
                 this.setCooldown(interaction);
                 try {
-                    const msgEmbed = new MessageEmbed();
-
                     const member = interaction.options.getMember("user") ?? interaction.member;
 
-                    msgEmbed
+                    const msgEmbed = new MessageEmbed()
                         .setColor((member! as GuildMember).displayHexColor)
                         .setAuthor({
                             name: `${(member! as GuildMember).user.username}'s Avatar`,

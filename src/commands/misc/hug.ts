@@ -1,4 +1,4 @@
-import { CommandInteraction } from "discord.js";
+import { Constants } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 
@@ -14,7 +14,7 @@ export default class Hug extends KelleeBotCommand {
                 {
                     name: "person",
                     description: "The person you want to hug.",
-                    type: "USER"
+                    type: Constants.ApplicationCommandOptionTypes.USER
                 }
             ],
             execute: async ({ client, interaction }) => {

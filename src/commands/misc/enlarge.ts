@@ -1,4 +1,4 @@
-import { Util } from "discord.js";
+import { Constants, Util } from "discord.js";
 import { Client } from "../../util/client";
 import { parse } from "twemoji-parser";
 import { KelleeBotCommand } from "../../util/command";
@@ -15,7 +15,7 @@ export default class Enlarge extends KelleeBotCommand {
                 {
                     name: "emoji",
                     description: "The emoji to enlarge",
-                    type: "STRING",
+                    type: Constants.ApplicationCommandOptionTypes.STRING,
                     required: true
                 }
             ],

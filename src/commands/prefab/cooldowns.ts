@@ -1,3 +1,4 @@
+import { Constants } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 
@@ -17,7 +18,7 @@ export default class Cooldowns extends KelleeBotCommand {
                         {
                             name: "command",
                             description: "The command to check",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true
                         }
                     ],
@@ -52,20 +53,22 @@ export default class Cooldowns extends KelleeBotCommand {
                         {
                             name: "command",
                             description: "The command to add the cooldown to",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true
                         },
                         {
                             name: "role",
                             description: "The role this cooldown should apply to",
-                            type: "ROLE",
+                            type: Constants.ApplicationCommandOptionTypes.ROLE,
                             required: true
                         },
                         {
                             name: "cooldown",
                             description: "The cooldown (in seconds)",
-                            type: "NUMBER",
-                            required: true
+                            type: Constants.ApplicationCommandOptionTypes.NUMBER,
+                            required: true,
+                            minValue: 0,
+                            maxValue: 86400000
                         }
                     ],
                     execute: async ({ client, interaction }) => {
@@ -116,7 +119,7 @@ export default class Cooldowns extends KelleeBotCommand {
                         {
                             name: "command",
                             description: "The command to clear",
-                            type: "STRING",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
                             required: true
                         }
                     ],

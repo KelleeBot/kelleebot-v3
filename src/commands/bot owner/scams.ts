@@ -1,4 +1,4 @@
-import { MessageAttachment } from "discord.js";
+import { Constants, MessageAttachment } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 
@@ -15,7 +15,7 @@ export default class Scams extends KelleeBotCommand {
                 {
                     name: "action",
                     description: "Add/remove scam link.",
-                    type: "STRING",
+                    type: Constants.ApplicationCommandOptionTypes.STRING,
                     required: true,
                     choices: [
                         { name: "Add", value: "add" },
@@ -25,7 +25,7 @@ export default class Scams extends KelleeBotCommand {
                 {
                     name: "link",
                     description: "The scam link to add/remove.",
-                    type: "STRING"
+                    type: Constants.ApplicationCommandOptionTypes.STRING
                 }
             ],
             execute: async ({ client, interaction }) => {
