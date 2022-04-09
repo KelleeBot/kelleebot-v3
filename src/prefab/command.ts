@@ -39,7 +39,7 @@ class Command {
     groups: { [x: string]: SubcommandGroup } | null;
     subcommands: { [x: string]: Subcommand } | null;
     isAutocomplete: boolean;
-    autocomplete?({ client, interaction }: { client: Client; interaction: AutocompleteInteraction }): any;
+    autocomplete?: AutocompleteFunction;
     execute?: ExecuteFunction;
 
     constructor(client: Client, options: CommandOptions) {
