@@ -1,7 +1,7 @@
 import { Constants } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
-import { ban, history, kick, purge, timeout, unban } from "../../subcommandHelpers/moderation";
+import { ban, history, kick, purge, softban, timeout, unban } from "../../subcommandHelpers/moderation";
 
 export default class Moderation extends KelleeBotCommand {
     constructor(client: Client) {
@@ -86,6 +86,26 @@ export default class Moderation extends KelleeBotCommand {
                     ],
                     execute: async ({ client, interaction }) => {
                         await purge(client, interaction);
+                    }
+                },
+                softban: {
+                    description: "Softban a user.",
+                    options: [
+                        {
+                            name: "user",
+                            description: "The user to softban.",
+                            type: Constants.ApplicationCommandOptionTypes.USER,
+                            required: true
+                        },
+                        {
+                            name: "reason",
+                            description: "Reason why the user is being softbanned.",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
+                            required: true
+                        }
+                    ],
+                    execute: async ({ client, interaction }) => {
+                        await softban(client, interaction);
                     }
                 },
                 timeout: {
