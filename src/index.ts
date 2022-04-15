@@ -21,10 +21,7 @@ const client = new Client({
 
 (async () => {
     await client.login(process.env.DISCORD_TOKEN);
-
-    await client.loadACData();
-    await client.loadCountryData();
-    await client.loadPokemonData();
+    await client.loadAutocompleteOptions();
 })();
 
 process.on("unhandledRejection", (error) => {

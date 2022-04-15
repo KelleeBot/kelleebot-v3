@@ -88,31 +88,43 @@ class Client extends KelleeBotClient {
         this.pokemon = new Array();
     }
 
-    async loadACData() {
-        this.artworks = await fetchACData("https://api.nookipedia.com/nh/art");
-        this.bugs = await fetchACData("https://api.nookipedia.com/nh/bugs");
-        this.clothings = await fetchACData("https://api.nookipedia.com/nh/clothing");
-        this.diys = await fetchACData("https://api.nookipedia.com/nh/recipes");
-        this.fishes = await fetchACData("https://api.nookipedia.com/nh/fish");
-        this.furnitures = await fetchACData("https://api.nookipedia.com/nh/furniture");
-        this.interiors = await fetchACData("https://api.nookipedia.com/nh/interior");
-        this.item = await fetchACData("https://api.nookipedia.com/nh/items");
-        this.photos = await fetchACData("https://api.nookipedia.com/nh/photos");
-        this.sea = await fetchACData("https://api.nookipedia.com/nh/sea");
-        this.tools = await fetchACData("https://api.nookipedia.com/nh/tools");
-        this.villager = await fetchACData("https://api.nookipedia.com/villagers");
-    }
-
-    async loadCountryData() {
-        this.country = await fetchAllCountries();
-    }
-
-    async loadPokemonData() {
-        this.pokemon = await fetchAllPokemon();
+    async loadAutocompleteOptions() {
+        try {
+            this.utils.log("WARNING", `${__filename}`, "Loading autocomplete options...");
+            await loadACData(this);
+            await loadCountryData(this);
+            await loadPokemonData(this);
+            this.utils.log("SUCCESS", `${__filename}`, "Loaded all autocomplete options!");
+        } catch (e: any) {
+            this.utils.log("ERROR", `${__filename}`, `Error loading autocomplete options: ${e.message}`);
+        }
     }
 }
 
 export { Client };
+
+const loadACData = async (client: Client) => {
+    client.artworks = await fetchACData("https://api.nookipedia.com/nh/art");
+    client.bugs = await fetchACData("https://api.nookipedia.com/nh/bugs");
+    client.clothings = await fetchACData("https://api.nookipedia.com/nh/clothing");
+    client.diys = await fetchACData("https://api.nookipedia.com/nh/recipes");
+    client.fishes = await fetchACData("https://api.nookipedia.com/nh/fish");
+    client.furnitures = await fetchACData("https://api.nookipedia.com/nh/furniture");
+    client.interiors = await fetchACData("https://api.nookipedia.com/nh/interior");
+    client.item = await fetchACData("https://api.nookipedia.com/nh/items");
+    client.photos = await fetchACData("https://api.nookipedia.com/nh/photos");
+    client.sea = await fetchACData("https://api.nookipedia.com/nh/sea");
+    client.tools = await fetchACData("https://api.nookipedia.com/nh/tools");
+    client.villager = await fetchACData("https://api.nookipedia.com/villagers");
+};
+
+const loadCountryData = async (client: Client) => {
+    client.country = await fetchAllCountries();
+};
+
+const loadPokemonData = async (client: Client) => {
+    client.pokemon = await fetchAllPokemon();
+};
 
 const fetchACData = async (url: string) => {
     const resp = await axios.get(url, {
