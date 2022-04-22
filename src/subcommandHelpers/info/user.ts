@@ -185,17 +185,10 @@ export const user = async (client: Client, interaction: CommandInteraction) => {
         const memberPerms = member!.permissions.toArray();
         const infoPerms = [];
         for (let index in memberPerms) {
-            if (keyPerms[memberPerms[index]]) {
-                infoPerms.push(keyPerms[memberPerms[index]]);
-            }
+            if (keyPerms[memberPerms[index]]) infoPerms.push(keyPerms[memberPerms[index]]);
         }
 
-        if (infoPerms.length)
-            msgEmbed.addField(
-                `**Key Permissions [${infoPerms.length}]**`,
-                `${infoPerms.sort().map((str) => `\`${client.utils.titleCase(str.replace(/_/g, " ").toLowerCase())}\``)}`,
-                false
-            );
+        if (infoPerms.length) msgEmbed.addField(`**Key Permissions [${infoPerms.length}]**`, `\`${infoPerms.sort().join("`, `")}\``, false);
     }
 
     if (extraPerms.length) msgEmbed.addField("**Acknowledgements**", extraPerms.sort().join(", "), false);
