@@ -159,7 +159,15 @@ export const user = async (client: Client, interaction: CommandInteraction) => {
             },
             {
                 name: `**Roles [${member!.roles.cache.size - 1}]**`,
-                value: !getAllRoles(member!) ? "None" : getAllRoles(member!),
+                value:
+                    member!.roles.cache.size - 1 > 0
+                        ? trimRoles(
+                              member.roles.cache
+                                  .sort((a, b) => b.position - a.position)
+                                  .filter((r) => r.id != interaction.guildId)
+                                  .map((r) => `${r}`)
+                          ).join(", ")
+                        : "None",
                 inline: false
             }
         )
@@ -196,14 +204,13 @@ export const user = async (client: Client, interaction: CommandInteraction) => {
     return interaction.reply({ embeds: [msgEmbed] });
 };
 
-const getAllRoles = (member: GuildMember): string => {
-    let roles = "";
-    member.roles.cache.forEach((role: Role) => {
-        if (role.name !== "@everyone") {
-            roles += `<@&${role.id}>, `;
-        }
-    });
-    return roles.substring(0, roles.length - 2); // Remove trailing comma and space at the end
+const trimRoles = (arr: string[], maxLength = 10) => {
+    if (arr.length > maxLength) {
+        const length = arr.length - maxLength;
+        arr = arr.shuffle().slice(0, maxLength);
+        arr.push(`and ${length} more role${length > 1 ? "s" : ""}...`);
+    }
+    return arr;
 };
 
 const isServerAdmin = (member: GuildMember, guild: Guild): boolean => {
