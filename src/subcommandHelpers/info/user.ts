@@ -161,12 +161,7 @@ export const user = async (client: Client, interaction: CommandInteraction) => {
                 name: `**Roles [${member!.roles.cache.size - 1}]**`,
                 value:
                     member!.roles.cache.size - 1 > 0
-                        ? trimRoles(
-                              member.roles.cache
-                                  .sort((a, b) => b.position - a.position)
-                                  .filter((r) => r.id != interaction.guildId)
-                                  .map((r) => `${r}`)
-                          ).join(", ")
+                        ? trimRoles(member.roles.cache.filter((r) => r.id != interaction.guildId).map((r) => `${r}`)).join(", ")
                         : "None",
                 inline: false
             }
