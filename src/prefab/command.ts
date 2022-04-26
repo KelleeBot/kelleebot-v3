@@ -56,10 +56,10 @@ class Command {
         else if (this.subcommands && Object.keys(this.subcommands)) this.options = getSubcommandOptions(this.subcommands);
 
         this.category = options.category ?? "No category";
-        this.defaultPermission = options.defaultPermission ?? true;
         this.permissions = options.permissions ?? [];
         this.development = options.development ?? false;
         this.devOnly = options.devOnly ?? false;
+        this.defaultPermission = this.devOnly ? false : (options.defaultPermission ?? true);
         this.hideCommand = options.hideCommand ?? false;
         this.ownerOnly = options.ownerOnly ?? false;
         this.guildOnly = options.guildOnly ?? true;
