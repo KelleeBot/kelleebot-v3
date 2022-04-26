@@ -43,7 +43,10 @@ export default async (client: Client, interaction: Interaction) => {
         } else if (interaction.isButton()) {
             const { customId, member } = interaction;
             if (customId === "roles" && member instanceof GuildMember) {
-                const roles = member.roles.cache.filter((r) => r.name !== "@everyone").map((r) => `• ${r.name}`);
+                const roles = member.roles.cache
+                    .sort((a, b) => b.position - a.position)
+                    .filter((r) => r.name !== "@everyone")
+                    .map((r) => `• ${r.name}`);
                 return interaction.reply({
                     content: `Here are all your roles for **${member.guild.name}**:\n${roles.join("\n")}`,
                     ephemeral: true
