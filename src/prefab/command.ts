@@ -72,7 +72,7 @@ class Command {
         this.canNotSetCooldown = options.canNotSetCooldown ?? false;
         this.ignoreDisabledChannels = options.ignoreDisabledChannels ?? false;
         this.isAutocomplete = options.isAutocomplete ?? false;
-        this.autocomplete = options.autocomplete;
+        this.autocomplete = this.isAutocomplete ? options.autocomplete : undefined;
     }
 
     async setCooldown(interaction: CommandInteraction) {
