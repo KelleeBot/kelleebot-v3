@@ -1,6 +1,6 @@
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
-import { bunny, cat, dog, fox, koala, panda, raccoon, shiba } from "../../subcommandHelpers/animals";
+import * as animals from "../../subcommandHelpers/animals";
 
 export default class Animals extends KelleeBotCommand {
     constructor(client: Client) {
@@ -15,56 +15,63 @@ export default class Animals extends KelleeBotCommand {
                     description: `${client.user?.username} shows you a random picture/gif of a bunny.`,
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
-                        await bunny(client, interaction);
+                        await animals.bunny(client, interaction);
                     }
                 },
                 cat: {
                     description: `${client.user?.username} shows you a random picture of a cat and provides you with a random cat fact.`,
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
-                        await cat(client, interaction);
+                        await animals.cat(client, interaction);
                     }
                 },
                 dog: {
                     description: `${client.user?.username} shows you a random picture of a dog and provides you with a random dog fact.`,
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
-                        await dog(client, interaction);
+                        await animals.dog(client, interaction);
+                    }
+                },
+                duck: {
+                    description: `${client.user?.username} shows you a random picture of a duck.`,
+                    execute: async ({ client, interaction }) => {
+                        await this.setCooldown(interaction);
+                        await animals.duck(client, interaction);
                     }
                 },
                 fox: {
                     description: `${client.user?.username} shows you a random picture of a fox and provides you with a random fox fact.`,
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
-                        await fox(client, interaction);
+                        await animals.fox(client, interaction);
                     }
                 },
                 koala: {
                     description: `${client.user?.username} shows you a random picture of a koala and provides you with a random koala fact.`,
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
-                        await koala(client, interaction);
+                        await animals.koala(client, interaction);
                     }
                 },
                 panda: {
                     description: `${client.user?.username} shows you a random picture of a panda and provides you with a random panda fact.`,
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
-                        await panda(client, interaction);
+                        await animals.panda(client, interaction);
                     }
                 },
                 raccoon: {
                     description: `${client.user?.username} shows you a random picture of a raccoon and provides you with a random raccoon fact.`,
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
-                        await raccoon(client, interaction);
+                        await animals.raccoon(client, interaction);
                     }
                 },
                 shiba: {
                     description: `${client.user?.username} shows you a random picture of a shiba.`,
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
-                        await shiba(client, interaction);
+                        await animals.shiba(client, interaction);
                     }
                 }
             }
