@@ -24,7 +24,7 @@ export const panda = async (client: Client, interaction: CommandInteraction) => 
     } catch (e) {
         client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
         return interaction.editReply({
-            content: "Oops! Looks like an error occurred. No cat pics as of right now :("
+            content: "Oops! Looks like an error occurred. No panda pics as of right now :("
         });
     }
 };
