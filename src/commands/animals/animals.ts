@@ -1,6 +1,6 @@
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
-import { bunny, cat, dog, fox, koala, panda, shiba } from "../../subcommandHelpers/animals";
+import { bunny, cat, dog, fox, koala, panda, raccoon, shiba } from "../../subcommandHelpers/animals";
 
 export default class Animals extends KelleeBotCommand {
     constructor(client: Client) {
@@ -51,6 +51,13 @@ export default class Animals extends KelleeBotCommand {
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
                         await panda(client, interaction);
+                    }
+                },
+                raccoon: {
+                    description: `${client.user?.username} shows you a random picture of a raccoon and provides you with a random raccoon fact.`,
+                    execute: async ({ client, interaction }) => {
+                        await this.setCooldown(interaction);
+                        await raccoon(client, interaction);
                     }
                 },
                 shiba: {

@@ -4,4 +4,5 @@ export * from "./dog";
 export * from "./fox";
 export * from "./koala";
 export * from "./panda";
+export * from "./raccoon";
 export * from "./shiba";
