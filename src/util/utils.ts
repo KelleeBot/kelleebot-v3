@@ -8,6 +8,7 @@ import {
     MessageButton,
     MessageEmbed,
     MessageSelectMenu,
+    Modal,
     Permissions,
     Snowflake,
     TextChannel
@@ -80,6 +81,13 @@ class Utils extends KelleeBotUtils {
         }
     }
 
+    async doesTwitchChannelExist(client: Client, channel: string) {
+        const exists = await client.twitchApi.getUsers(channel);
+        if (!exists) return false;
+        if (!exists.data.length) return false;
+        return true;
+    }
+
     createEmbed() {
         return new MessageEmbed();
     }
@@ -94,6 +102,10 @@ class Utils extends KelleeBotUtils {
 
     createSelectMenu() {
         return new MessageSelectMenu();
+    }
+
+    createModal() {
+        return new Modal();
     }
 
     getChannelDescription(channel: ChannelTypes) {
