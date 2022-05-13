@@ -84,6 +84,7 @@ class Utils extends KelleeBotUtils {
     async doesTwitchChannelExist(client: Client, channel: string) {
         const exists = await client.twitchApi.getUsers(channel);
         if (!exists) return false;
+        if (!exists.data) return false;
         if (!exists.data.length) return false;
         return true;
     }
