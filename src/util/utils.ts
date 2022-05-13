@@ -123,8 +123,8 @@ class Utils extends KelleeBotUtils {
                 ? `\`${this.formatNumber(amount)}\` ${string}s`
                 : `${this.formatNumber(amount)} ${string}s`
             : format
-            ? `\`${this.formatNumber(amount)}\` ${string}`
-            : `${this.formatNumber(amount)} ${string}`;
+                ? `\`${this.formatNumber(amount)}\` ${string}`
+                : `${this.formatNumber(amount)} ${string}`;
     }
 
     titleCase(string: string) {
