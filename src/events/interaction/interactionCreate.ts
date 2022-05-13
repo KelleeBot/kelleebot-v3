@@ -70,6 +70,38 @@ export default async (client: Client, interaction: Interaction) => {
             if (sub && sub.isAutocomplete && sub.autocomplete) {
                 await sub.autocomplete({ client, interaction });
             }
+        } else if (interaction.isModalSubmit()) {
+            if (interaction.customId === "twitch") {
+                const twitchChannel = interaction.fields.getTextInputValue("twitchChannelInput");
+                const liveMessage = interaction.fields.getTextInputValue("liveMessageInput");
+
+                if (!["GUILD_NEWS", "GUILD_TEXT"].includes(interaction.channel?.type!))
+                    return await interaction.reply({ content: "Only text/announcements channels can be set as the Twitch notification channel. Please run this command again in one of those channel types.", ephemeral: true });
+
+                if (interaction.channel!.isThread())
+                    return await interaction.reply({
+                        content: "Thread channels can not be used as the Twitch notification channel.",
+                        ephemeral: true
+                    });
+
+                if (!(await client.utils.doesTwitchChannelExist(client, twitchChannel)))
+                    return await interaction.reply({
+                        content: `Looks like the channel **${twitchChannel}** doesn't exist on Twitch. Please try another channel.`,
+                        ephemeral: true
+                    });
+
+                await client.guildInfo.findByIdAndUpdate(
+                    interaction.guildId!,
+                    {
+                        "streamerLive.channelID": interaction.channelId,
+                        "streamerLive.twitchChannel": twitchChannel,
+                        "streamerLive.message": liveMessage
+                    },
+                    { new: true, upsert: true, setDefaultsOnInsert: true }
+                );
+
+                return await interaction.reply({ content: "Twitch live notification successfully set!", ephemeral: true });
+            }
         } else if (interaction.isCommand()) {
             if (userInfo.isBlacklisted)
                 return interaction.reply({
