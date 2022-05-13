@@ -1,47 +1,38 @@
 import { Client } from "../../util/client";
-import { CommandInteraction, TextChannel } from "discord.js";
+import { CommandInteraction, TextInputComponent } from "discord.js";
+import { TextInputStyles } from "discord.js/typings/enums";
 
 export const twitch = async (client: Client, interaction: CommandInteraction) => {
     try {
-        const twitch = interaction.options.getString("twitch")!;
-        const message = interaction.options.getString("message")!;
-        const channel = (interaction.options.getChannel("channel") as TextChannel) ?? (interaction.channel as TextChannel);
+        const guildInfo = await client.guildInfo.get(interaction.guildId!);
 
-        if (channel.type !== "GUILD_TEXT")
-            return await interaction.reply({ content: "Only text channels can be set as the Twitch notification channel.", ephemeral: true });
+        const modal = client.utils.createModal().setCustomId("twitch").setTitle("Twitch Notification")
+        const twitchChannel = new TextInputComponent()
+            .setCustomId("twitchChannelInput")
+            .setLabel("Twitch Channel")
+            .setStyle(TextInputStyles.SHORT);
 
-        if (channel.isThread())
-            return await interaction.reply({
-                content: "Thread channels are not allowed to be set as the Twitch notification channel.",
-                ephemeral: true
-            });
+        if (guildInfo.streamerLive && JSON.stringify(guildInfo.streamerLive) !== "{}") twitchChannel.setValue(guildInfo.streamerLive.twitchChannel);
+        else twitchChannel.setValue("Twitch Channel")
 
-        if (!(await doesChannelExist(client, twitch)))
-            return await interaction.reply({
-                content: `Looks like the channel **${twitch}** doesn't exist on Twitch. Please try another channel.`,
-                ephemeral: true
-            });
+        const goLiveMessage = new TextInputComponent()
+            .setCustomId("liveMessageInput")
+            .setLabel("Go Live Message")
+            .setStyle(TextInputStyles.PARAGRAPH);
 
-        await client.guildInfo.findByIdAndUpdate(
-            interaction.guildId!,
-            {
-                "streamerLive.channelID": channel?.id,
-                "streamerLive.twitchChannel": twitch,
-                "streamerLive.message": message
-            },
-            { new: true, upsert: true, setDefaultsOnInsert: true }
-        );
+        if (guildInfo.streamerLive && JSON.stringify(guildInfo.streamerLive) !== "{}") goLiveMessage.setValue(guildInfo.streamerLive.message);
+        else goLiveMessage.setValue("Some placeholders:\n{GUILD_NAME} - Server Name\n{STREAMER} - Streamer\n{STREAM_TITLE} - Stream Title\n{GAME} - Game");
 
-        return await interaction.reply({ content: `You have successfully set \`${twitch}\` as the Twitch go live notification.`, ephemeral: true });
+        //@ts-ignore
+        const firstRow = client.utils.createActionRow().addComponents([twitchChannel]);
+        //@ts-ignore
+        const secondRow = client.utils.createActionRow().addComponents([goLiveMessage]);
+
+        //@ts-ignore
+        modal.addComponents([firstRow, secondRow]);
+        await interaction.showModal(modal);
     } catch (e) {
         client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
         return await interaction.reply({ content: "An error has occurred. Please try again.", ephemeral: true });
     }
-};
-
-const doesChannelExist = async (client: Client, channel: string) => {
-    const exists = await client.twitchApi.getUsers(channel);
-    if (!exists) return false;
-    if (!exists.data.length) return false;
-    return true;
 };
