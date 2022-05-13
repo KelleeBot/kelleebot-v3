@@ -58,27 +58,7 @@ export default class Config extends KelleeBotCommand {
                     }
                 },
                 twitch: {
-                    description: "Sets the channel for where Twitch live notifications will be sent.",
-                    options: [
-                        {
-                            name: "twitch",
-                            description: "The Twitch channel you'd like to subscribe to.",
-                            type: Constants.ApplicationCommandOptionTypes.STRING,
-                            required: true
-                        },
-                        {
-                            name: "message",
-                            description: "The message you'd like to include with the live notification.",
-                            type: Constants.ApplicationCommandOptionTypes.STRING,
-                            required: true
-                        },
-                        {
-                            name: "channel",
-                            description: "The discord channel where the message will be sent. Default is current channel if none specified.",
-                            type: Constants.ApplicationCommandOptionTypes.CHANNEL,
-                            channelTypes: ["GUILD_TEXT"]
-                        }
-                    ],
+                    description: "Set live notification for Twitch stream.",
                     execute: async ({ client, interaction }) => {
                         await twitch(client, interaction);
                     }
