@@ -1,4 +1,4 @@
-import { Collection, GuildMember, Interaction, MessageSelectMenu } from "discord.js";
+import { Collection, GuildMember, Interaction, MessageSelectMenu, TextChannel } from "discord.js";
 //import { interactionCreate } from "../../prefab/events";
 import { Client } from "../../util/client";
 import { NO_GAMBLING_CHANNEL_SET } from "../../../config/messages.json";
@@ -101,6 +101,20 @@ export default async (client: Client, interaction: Interaction) => {
                 );
 
                 return await interaction.reply({ content: "Twitch live notification successfully set!", ephemeral: true });
+            }
+
+            if (interaction.customId === "edit") {
+                const messageID = interaction.fields.getTextInputValue("messageIDInput");
+                const newMessage = interaction.fields.getTextInputValue("newMessageInput");
+
+                const channel = interaction.channel as TextChannel;
+                const messageToEdit = await channel.messages.fetch(messageID);
+                if (!messageToEdit) return await interaction.reply({ content: "That message no longer exists or the message doesn't exist in this channel.", ephemeral: true });
+
+                if (messageToEdit.author.id !== client.user!.id) return interaction.reply({ content: "That message was not sent by me.", ephemeral: true });
+
+                await messageToEdit.edit({ content: newMessage, allowedMentions: { parse: [] } });
+                return await interaction.reply({ content: "Message successfully edited!", ephemeral: true });
             }
         } else if (interaction.isCommand()) {
             if (userInfo.isBlacklisted)
