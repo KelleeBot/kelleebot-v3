@@ -6,9 +6,7 @@ import { DateTime } from "luxon";
 export default (client: Client) => {
     new cron.CronJob(
         "*/30 * * * * *",
-        () => {
-            execute(client);
-        },
+        () => execute(client),
         null,
         true,
         "America/Edmonton"
@@ -20,12 +18,10 @@ const execute = async (client: Client) => {
         client.guilds.cache.forEach(async (guild) => {
             const guildInfo = await client.guildInfo.get(guild.id);
             if (guildInfo.streamerLive) {
-                const { channelID, twitchChannel, message } = guildInfo.streamerLive!;
+                const { channelID, twitchChannel, message } = guildInfo.streamerLive;
                 if (!channelID || !twitchChannel || !message) return;
 
-                const stream = await client.twitchApi.getStreams({
-                    channel: twitchChannel
-                });
+                const stream = await client.twitchApi.getStreams({ channel: twitchChannel });
                 if (!stream) return;
 
                 let twitchLiveInfo = await client.utils.getTwitchLive(client, guild.id);
@@ -35,25 +31,20 @@ const execute = async (client: Client) => {
                     if (!twitchLiveInfo.liveChannels.length) return;
 
                     const channel = guild.channels.cache.get(channelID) as TextChannel;
-                    if (channel) {
-                        const msg = await channel.messages
-                            .fetch(twitchLiveInfo.messageID)
-                            .catch((e) => client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`));
+                    if (!channel) return;
 
-                        if (msg) {
-                            const endedAt = DateTime.fromISO(new Date().toISOString());
-                            const embed = msg.embeds[0]
-                                .setDescription("Stream has now ended. Thanks for watching!")
-                                .addField("**Ended At**", getTimeString(endedAt));
-                            msg.edit({
-                                embeds: [embed]
-                            });
-                        }
-                    }
+                    const msg = await channel.messages.fetch(twitchLiveInfo.messageID);
+                    if (!msg) return;
+
+                    const endedAt = DateTime.fromISO(new Date().toISOString());
+                    const embed = msg.embeds[0]
+                        .setDescription("Stream has now ended. Thanks for watching!")
+                        .addField("**Ended At**", getTimeString(endedAt));
+                    await msg.edit({ embeds: [embed] });
 
                     await client.twitchLiveInfo.findByIdAndUpdate(
                         guild.id,
-                        { messageID: null, $pull: { liveChannels: twitchChannel.toLowerCase().trim() } },
+                        { $unset: { messageID: 1 }, $pull: { liveChannels: twitchChannel.toLowerCase().trim() } },
                         { new: true, upsert: true, setDefaultsOnInsert: true }
                     );
                     return;
@@ -91,7 +82,7 @@ const execute = async (client: Client) => {
                         .setColor("#9146FF")
                         .setTitle(title)
                         .setURL(twitchURL)
-                        .addField("**Game**", game_name ? game_name : "None")
+                        .addField("**Game**", game_name ?? "None")
                         .addField("**Started At**", getTimeString(startedAt))
                         .setThumbnail(gameThumbnail)
                         .setImage(currentStream[0].getThumbnailUrl())
@@ -111,7 +102,7 @@ const execute = async (client: Client) => {
 
                     await client.twitchLiveInfo.findByIdAndUpdate(
                         guild.id,
-                        { messageID: msg.id, $push: { liveChannels: user_name.toLowerCase().trim() } },
+                        { $set: { messageID: msg.id }, $push: { liveChannels: user_name.toLowerCase().trim() } },
                         { new: true, upsert: true, setDefaultsOnInsert: true }
                     );
                 }
@@ -124,18 +115,14 @@ const execute = async (client: Client) => {
 
 const getUser = async (client: Client, userID: string) => {
     const user = await client.twitchApi.getUsers(userID);
-    if (!user) return;
-    if (!user.data.length) return;
+    if (!user || !user.data || user.data.length) return;
     return user.data[0];
 };
 
 const getGameThumbnail = async (client: Client, gameID: string) => {
     const game = await client.twitchApi.getGames(gameID);
-    if (!game) return;
-    if (!game.data.length) return;
+    if (!game || !game.data || !game.data.length) return;
     return game.data[0];
 };
 
-const getTimeString = (time: DateTime) => {
-    return `<t:${Math.floor(time.toSeconds())}:F> (<t:${Math.floor(time.toSeconds())}:R>)`;
-};
+const getTimeString = (time: DateTime) => `<t:${Math.floor(time.toSeconds())}:F> (<t:${Math.floor(time.toSeconds())}:R>)`;
