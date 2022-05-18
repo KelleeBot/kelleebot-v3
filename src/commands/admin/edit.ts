@@ -1,4 +1,4 @@
-import { TextInputComponent } from "discord.js";
+import { MessageActionRow, ModalActionRowComponent, TextInputComponent } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 import { TextInputStyles } from "discord.js/typings/enums";
@@ -28,13 +28,10 @@ export default class Edit extends KelleeBotCommand {
                         .setPlaceholder("The content of the message you'd like to edit it to.")
                         .setRequired(true);
 
-                    //@ts-ignore
-                    const firstRow = client.utils.createActionRow().addComponents([messageID]);
-                    //@ts-ignore
-                    const secondRow = client.utils.createActionRow().addComponents([newMessage]);
+                    const firstRow = new MessageActionRow<ModalActionRowComponent>().addComponents(messageID);
+                    const secondRow = new MessageActionRow<ModalActionRowComponent>().addComponents(newMessage);
 
-                    //@ts-ignore
-                    modal.addComponents([firstRow, secondRow]);
+                    modal.addComponents(firstRow, secondRow);
                     await interaction.showModal(modal);
                 } catch (e) {
                     client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
