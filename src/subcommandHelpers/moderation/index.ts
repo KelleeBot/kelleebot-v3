@@ -5,3 +5,4 @@ export * from "./purge";
 export * from "./softban";
 export * from "./timeout";
 export * from "./unban";
+export * from "./warn";

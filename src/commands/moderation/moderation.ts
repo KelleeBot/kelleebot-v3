@@ -1,7 +1,7 @@
 import { Constants } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
-import { ban, history, kick, purge, softban, timeout, unban } from "../../subcommandHelpers/moderation";
+import * as moderation from "../../subcommandHelpers/moderation";
 
 export default class Moderation extends KelleeBotCommand {
     constructor(client: Client) {
@@ -9,7 +9,7 @@ export default class Moderation extends KelleeBotCommand {
             name: "moderation",
             category: "Moderation",
             description: "Commands used for moderation purposes.",
-            perms: ["BAN_MEMBERS", "KICK_MEMBERS", "MODERATE_MEMBERS", "MANAGE_MESSAGES"],
+            perms: ["KICK_MEMBERS", "MODERATE_MEMBERS", "MANAGE_MESSAGES"],
             clientPerms: ["SEND_MESSAGES", "EMBED_LINKS", "BAN_MEMBERS", "KICK_MEMBERS", "MODERATE_MEMBERS"],
             subcommands: {
                 ban: {
@@ -29,7 +29,7 @@ export default class Moderation extends KelleeBotCommand {
                         }
                     ],
                     execute: async ({ client, interaction }) => {
-                        await ban(client, interaction);
+                        await moderation.ban(client, interaction);
                     }
                 },
                 history: {
@@ -43,7 +43,7 @@ export default class Moderation extends KelleeBotCommand {
                         }
                     ],
                     execute: async ({ client, interaction }) => {
-                        await history(client, interaction);
+                        await moderation.history(client, interaction);
                     }
                 },
                 kick: {
@@ -63,7 +63,7 @@ export default class Moderation extends KelleeBotCommand {
                         }
                     ],
                     execute: async ({ client, interaction }) => {
-                        await kick(client, interaction);
+                        await moderation.kick(client, interaction);
                     }
                 },
                 purge: {
@@ -85,7 +85,7 @@ export default class Moderation extends KelleeBotCommand {
                         }
                     ],
                     execute: async ({ client, interaction }) => {
-                        await purge(client, interaction);
+                        await moderation.purge(client, interaction);
                     }
                 },
                 softban: {
@@ -105,7 +105,7 @@ export default class Moderation extends KelleeBotCommand {
                         }
                     ],
                     execute: async ({ client, interaction }) => {
-                        await softban(client, interaction);
+                        await moderation.softban(client, interaction);
                     }
                 },
                 timeout: {
@@ -136,7 +136,7 @@ export default class Moderation extends KelleeBotCommand {
                         }
                     ],
                     execute: async ({ client, interaction }) => {
-                        await timeout(client, interaction);
+                        await moderation.timeout(client, interaction);
                     }
                 },
                 unban: {
@@ -156,7 +156,32 @@ export default class Moderation extends KelleeBotCommand {
                         }
                     ],
                     execute: async ({ client, interaction }) => {
-                        await unban(client, interaction);
+                        await moderation.unban(client, interaction);
+                    }
+                },
+                warn: {
+                    description: "Warn a member.",
+                    options: [
+                        {
+                            name: "member",
+                            description: "The member to warn.",
+                            type: Constants.ApplicationCommandOptionTypes.USER,
+                            required: true
+                        },
+                        {
+                            name: "reason",
+                            description: "Reason why member is being warned.",
+                            type: Constants.ApplicationCommandOptionTypes.STRING,
+                            required: true
+                        },
+                        {
+                            name: "dm",
+                            description: "Whether or not to DM the member about them being warned (default no).",
+                            type: Constants.ApplicationCommandOptionTypes.BOOLEAN
+                        }
+                    ],
+                    execute: async ({ client, interaction }) => {
+                        await moderation.warn(client, interaction);
                     }
                 }
             }
