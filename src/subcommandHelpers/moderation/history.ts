@@ -63,10 +63,7 @@ export const history = async (client: Client, interaction: CommandInteraction) =
     }
 
     const embedArray = [];
-    const descArray = Util.splitMessage(description, {
-        maxLength: 800,
-        char: "\n\n"
-    });
+    const descArray = client.utils.splitMessage(description, { maxLength: 800, char: "\n\n" });
 
     if (descArray.length == 1) {
         msgEmbed.setDescription(description);
@@ -122,9 +119,8 @@ const loopThroughInfo = (infoType: any) => {
         const { executor, timestamp, reason } = info;
         const when = Math.round(timestamp / 1000);
 
-        description += `${executedType}<@${executor}>\nWhen: <t:${when}:F>${reason ? `\nReason: ${reason}` : ""}${
-            infoType.mutes ? `\nDuration: ${ms(info.duration, { long: true })}` : ""
-        }\n`;
+        description += `${executedType}<@${executor}>\nWhen: <t:${when}:F>${reason ? `\nReason: ${reason}` : ""}${infoType.mutes ? `\nDuration: ${ms(info.duration, { long: true })}` : ""
+            }\n`;
     }
     return description;
 };

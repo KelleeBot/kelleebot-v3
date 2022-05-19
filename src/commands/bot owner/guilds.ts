@@ -25,16 +25,12 @@ export default class Guilds extends KelleeBotCommand {
                     const timestamp = Math.round(guild.joinedTimestamp / 1000);
                     const guildOwner = (await guild.fetchOwner()).user;
 
-                    description += `**❯ ${guild.name}**\n• ID: \`${guild.id}\`\n• Owner: ${guildOwner.tag} (\`${
-                        guildOwner.id
-                    }\`)\n• Members: \`${guild.memberCount.toLocaleString()}\`\n• Joined: <t:${timestamp}> (<t:${timestamp}:R>)\n\n`;
+                    description += `**❯ ${guild.name}**\n• ID: \`${guild.id}\`\n• Owner: ${guildOwner.tag} (\`${guildOwner.id
+                        }\`)\n• Members: \`${guild.memberCount.toLocaleString()}\`\n• Joined: <t:${timestamp}> (<t:${timestamp}:R>)\n\n`;
                 }
 
                 const embedArray = [];
-                const descArray = Util.splitMessage(description, {
-                    maxLength: 800,
-                    char: "\n\n"
-                });
+                const descArray = client.utils.splitMessage(description, { maxLength: 800, char: "\n\n" });
 
                 if (descArray.length == 1) {
                     msgEmbed.setDescription(

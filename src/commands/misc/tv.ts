@@ -54,7 +54,7 @@ const showAllShows = async (query: string, results: TvResult[], interaction: Com
         let firstAirDate = results[i].first_air_date ? results[i].first_air_date!.substring(0, 4) : "";
         tvList += `${i + 1}. ${title} ${firstAirDate !== "" ? `(${firstAirDate})` : ""}\n`;
         selectMenu.addOptions({
-            label: Util.splitMessage(title, { maxLength: 100, char: " " })[0],
+            label: client.utils.splitMessage(title, { maxLength: 100, char: " " })[0],
             description: results[i].original_language !== "en" && results[i].original_name ? results[i].original_name : "",
             value: i.toString()
         });
