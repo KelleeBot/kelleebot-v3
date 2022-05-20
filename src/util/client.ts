@@ -61,6 +61,7 @@ class Client extends KelleeBotClient {
                 botsCanWin: false,
                 exemptPermissions: ["ADMINISTRATOR"],
                 embedColor: "#FF0000",
+                embedColorEnd: "#36393f",
                 reaction: giveawayReactEmoji
             }
         });
