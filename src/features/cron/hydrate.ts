@@ -18,7 +18,7 @@ export default (client: Client) => {
 const execute = async (client: Client) => {
     try {
         const guildID = "844747196745383956";
-        const channelID = "845444566823731220";
+        const channelID = "977014276243988520";
         const hydrateRoleID = "976900199324729374";
 
         const guild = client.guilds.cache.get(guildID);
