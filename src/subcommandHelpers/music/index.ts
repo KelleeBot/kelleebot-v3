@@ -5,6 +5,7 @@ export * from "./play";
 export * from "./queue";
 export * from "./remove";
 export * from "./resume";
+export * from "./shuffle";
 export * from "./skip";
 export * from "./stop";
 export * from "./volume";

@@ -72,6 +72,12 @@ export default class Music extends KelleeBotCommand {
                         await music.resume(client, interaction);
                     }
                 },
+                shuffle: {
+                    description: "Shuffles the music queue.",
+                    execute: async ({ client, interaction }) => {
+                        await music.shuffle(client, interaction);
+                    }
+                },
                 skip: {
                     description: "Skips the current song.",
                     execute: async ({ client, interaction }) => {
