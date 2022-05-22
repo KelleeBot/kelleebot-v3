@@ -48,31 +48,28 @@ class KelleeBotUtils {
 
         let pageIndex = 0;
         const time = options?.time ?? 30000;
+        try {
+            const collector = msg.createMessageComponentCollector({ componentType: "BUTTON", filter: (b) => b.user.id === interaction.user.id, idle: time });
 
-        while (true) {
-            try {
-                const collector = msg.createMessageComponentCollector({ componentType: "BUTTON", filter: (b) => b.user.id === interaction.user.id, idle: time });
-
-                collector.on("collect", async (button) => {
-                    if (button.customId === "rr") {
-                        pageIndex = embeds.length - 1;
-                    } else if (button.customId === "r") {
-                        if (pageIndex < embeds.length - 1) pageIndex++;
-                        else pageIndex = 0;
-                    } else if (button.customId === "stop") {
-                        await button.update({ components: [] });
-                        collector.stop();
-                    } else if (button.customId === "ll") {
-                        pageIndex = 0;
-                    } else if (button.customId === "l") {
-                        if (pageIndex > 0) pageIndex--;
-                        else pageIndex = embeds.length - 1;
-                    }
-                    await button.update({ embeds: [embeds[pageIndex]] });
-                });
-            } catch (e: any) {
-                this.log("ERROR", `${__filename}`, `An error has occurred: ${e.message}`);
-            }
+            collector.on("collect", async (button) => {
+                if (button.customId === "rr") {
+                    pageIndex = embeds.length - 1;
+                } else if (button.customId === "r") {
+                    if (pageIndex < embeds.length - 1) pageIndex++;
+                    else pageIndex = 0;
+                } else if (button.customId === "stop") {
+                    collector.stop();
+                    return await button.update({ components: [] });
+                } else if (button.customId === "ll") {
+                    pageIndex = 0;
+                } else if (button.customId === "l") {
+                    if (pageIndex > 0) pageIndex--;
+                    else pageIndex = embeds.length - 1;
+                }
+                await button.update({ embeds: [embeds[pageIndex]] });
+            });
+        } catch (e: any) {
+            this.log("ERROR", `${__filename}`, `An error has occurred: ${e.message}`);
         }
     }
 
