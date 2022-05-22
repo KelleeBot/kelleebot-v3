@@ -20,7 +20,7 @@ export const resume = async (client: Client, interaction: CommandInteraction) =>
             .createEmbed()
             .setColor(MUSIC_COMMANDS as ColorResolvable)
             .setAuthor({ name: "Music Paused", iconURL: client.utils.getGuildIcon(interaction.guild!)! })
-            .setDescription(paused ? `✅ | Resumed playing **${queue.current}**` : "❌ | Something went wrong.");
+            .setDescription(paused ? `▶️ | Resumed playing **${queue.current}**` : "❌ | Something went wrong.");
         return await interaction.reply({ embeds: [msgEmbed] });
     } catch (e: any) {
         client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);

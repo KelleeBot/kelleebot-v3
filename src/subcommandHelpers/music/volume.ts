@@ -21,7 +21,7 @@ export const volume = async (client: Client, interaction: CommandInteraction) =>
             .createEmbed()
             .setColor(MUSIC_COMMANDS as ColorResolvable)
             .setAuthor({ name: "Music Volume", iconURL: client.utils.getGuildIcon(interaction.guild!)! })
-            .setDescription(success ? `✅ | Music volume set to **${vol}**!` : "❌ | Something went wrong.");
+            .setDescription(success ? `🔊 | Music volume set to **${vol}**!` : "❌ | Something went wrong.");
         return await interaction.reply({ embeds: [msgEmbed] });
     } catch (e: any) {
         client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);

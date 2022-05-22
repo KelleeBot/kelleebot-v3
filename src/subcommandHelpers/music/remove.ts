@@ -32,9 +32,7 @@ export const remove = async (client: Client, interaction: CommandInteraction) =>
         }
 
         const removedTrack = queue.remove(tracks[trackToRemove - 1]);
-        msgEmbed.setDescription(`${removedTrack.title
-            } has been removed from the queue.\n\nThere's now \`${tracks.length - 1
-            }\` song${tracks.length !== 1 ? "s" : ""} in the queue.`)
+        msgEmbed.setDescription(`**${removedTrack.title}** has been removed from the queue.\n\nThere's now ${client.utils.pluralize(tracks.length, "song", true)} in the queue.`)
         return await interaction.reply({ embeds: [msgEmbed] });
     } catch (e: any) {
         client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e.message}`);
