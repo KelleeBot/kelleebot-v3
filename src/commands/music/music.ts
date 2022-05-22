@@ -51,6 +51,21 @@ export default class Music extends KelleeBotCommand {
                         await music.queue(client, interaction);
                     }
                 },
+                remove: {
+                    description: "Removes a song from the queue.",
+                    options: [
+                        {
+                            name: "track",
+                            description: "The track number you want to remove.",
+                            type: Constants.ApplicationCommandOptionTypes.INTEGER,
+                            required: true,
+                            minValue: 1
+                        }
+                    ],
+                    execute: async ({ client, interaction }) => {
+                        await music.remove(client, interaction);
+                    }
+                },
                 resume: {
                     description: "Resumes the music.",
                     execute: async ({ client, interaction }) => {
