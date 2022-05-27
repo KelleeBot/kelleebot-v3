@@ -1,4 +1,4 @@
-import { Constants, CommandInteraction, Message, SelectMenuInteraction, Snowflake, Util } from "discord.js";
+import { Constants, CommandInteraction, SelectMenuInteraction, Snowflake, Util } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 import { MovieResult } from "moviedb-promise/dist/request-types";
@@ -66,7 +66,7 @@ const showAllMovies = async (query: string, results: MovieResult[], interaction:
         .setFooter({ text: "Select the movie from the dropdown you want to see information for." });
 
     const row = client.utils.createActionRow().addComponents(selectMenu);
-    const msg = (await interaction.reply({ embeds: [msgEmbed], components: [row], fetchReply: true })) as Message;
+    const msg = await client.utils.fetchReply(interaction, { embeds: [msgEmbed], components: [row] });
 
     const filter = async (i: SelectMenuInteraction) => {
         await i.deferUpdate();
@@ -80,15 +80,14 @@ const showAllMovies = async (query: string, results: MovieResult[], interaction:
 
             collector.stop();
             const movieEmbed = await showMovieInfo(client, i.user.id, movie);
-            msg.edit({ embeds: [movieEmbed], components: [] });
+            await i.editReply({ embeds: [movieEmbed], components: [] });
         }
     });
 
-    collector.on("end", (_collected, reason) => {
+    collector.on("end", async (_collected, reason) => {
         if (reason === "time") {
             msgEmbed.setTitle("Time Expired").setDescription("You did not choose a movie in time.").setFooter({ text: "" });
-
-            msg.edit({ embeds: [msgEmbed], components: [] });
+            await msg.edit({ embeds: [msgEmbed], components: [] });
         }
     });
 };

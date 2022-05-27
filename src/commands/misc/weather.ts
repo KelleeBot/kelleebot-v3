@@ -1,4 +1,4 @@
-import { Constants, CommandInteraction, Message, SelectMenuInteraction, Snowflake, Util } from "discord.js";
+import { Constants, CommandInteraction, SelectMenuInteraction, Snowflake, Util } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 import weather from "weather-js";
@@ -74,7 +74,7 @@ const showAllLocations = async (client: Client, query: string, results: any[], i
         .setFooter({ text: "Select the location you want to see the weather results for." });
 
     const row = client.utils.createActionRow().addComponents(selectMenu);
-    const msg = (await interaction.reply({ embeds: [msgEmbed], components: [row], fetchReply: true })) as Message;
+    const msg = await client.utils.fetchReply(interaction, { embeds: [msgEmbed], components: [row] });
 
     const filter = async (i: SelectMenuInteraction) => {
         await i.deferUpdate();
@@ -88,15 +88,14 @@ const showAllLocations = async (client: Client, query: string, results: any[], i
 
             collector.stop();
             const weatherEmbed = await showWeatherResult(client, i.user.id, location);
-            msg.edit({ embeds: [weatherEmbed], components: [] });
+            await i.editReply({ embeds: [weatherEmbed], components: [] });
         }
     });
 
-    collector.on("end", (_collected, reason) => {
+    collector.on("end", async (_collected, reason) => {
         if (reason === "time") {
             msgEmbed.setTitle("Time Expired").setDescription("You did not choose a location in time.").setFooter({ text: "" });
-
-            msg.edit({ embeds: [msgEmbed], components: [] });
+            await msg.edit({ embeds: [msgEmbed], components: [] });
         }
     });
 };
