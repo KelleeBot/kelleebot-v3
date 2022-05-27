@@ -1,4 +1,4 @@
-import { ButtonInteraction, ColorResolvable, CommandInteraction, GuildMember, Message, MessageButton } from "discord.js";
+import { ButtonInteraction, ColorResolvable, CommandInteraction, GuildMember, MessageButton } from "discord.js";
 import { Client } from "../../util/client";
 import { addPoints, getPoints } from "../../util";
 import { GAMBLING } from "../../../config/embedColours.json";
@@ -96,11 +96,7 @@ export const scratch = async (client: Client, interaction: CommandInteraction) =
                 ].join("\n")
             );
 
-        const msg = (await interaction.reply({
-            embeds: [embed],
-            components: grid.map((row) => client.utils.createActionRow().addComponents(row)),
-            fetchReply: true
-        })) as Message;
+        const msg = await client.utils.fetchReply(interaction, { embeds: [embed], components: grid.map((row) => client.utils.createActionRow().addComponents(row)) });
         if (!msg) return interaction.reply({ content: "An error has occurred. Please try again.", ephemeral: true });
 
         const collector = msg.createMessageComponentCollector({ componentType: "BUTTON", time: 1000 * 20 });

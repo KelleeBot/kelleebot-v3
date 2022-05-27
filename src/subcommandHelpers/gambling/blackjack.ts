@@ -1,4 +1,4 @@
-import { ButtonInteraction, CommandInteraction, Message, MessageEmbed, Snowflake } from "discord.js";
+import { ButtonInteraction, CommandInteraction, MessageEmbed, Snowflake } from "discord.js";
 import { Client } from "../../util/client";
 import { addPoints, getPoints } from "../../util";
 import { Card } from "../../types/card";
@@ -102,7 +102,7 @@ const playGame = async (
             client.utils.createButton().setCustomId(stand).setLabel(stand).setStyle("DANGER")
         );
 
-    const msg = (await interaction.reply({ embeds: [msgEmbed], components: [buttons], fetchReply: true })) as Message;
+    const msg = await client.utils.fetchReply(interaction, { embeds: [msgEmbed], components: [buttons] });
     if (!msg) return await interaction.reply({ content: "An error has occurred. Pelase try again.", ephemeral: true });
 
     const filter = async (i: ButtonInteraction) => {
@@ -111,24 +111,24 @@ const playGame = async (
     };
 
     const collector = msg.createMessageComponentCollector({ filter, componentType: "BUTTON", time: 1000 * 20 });
-    collector.on("collect", async (i) => {
-        if (i.customId == hit) {
+    collector.on("collect", async (button) => {
+        if (button.customId == hit) {
             playerCards.push(getNextCard()!);
             await checkForEndOfGame(guildID, userID, pointsToGamble);
             showStatus();
-            await msg.edit({ embeds: [editEmbed(client, msgEmbed, pointsToGamble, text)], components: [buttons] });
+            await button.editReply({ embeds: [editEmbed(client, msgEmbed, pointsToGamble, text)], components: [buttons] });
 
             if (gameOver) {
                 inProgress = false;
                 collector.stop();
-                msg.edit({ components: [] });
+                await button.editReply({ components: [] });
             }
         } else {
             gameOver = true;
             inProgress = false;
             await checkForEndOfGame(guildID, userID, pointsToGamble);
             showStatus();
-            await msg.edit({ embeds: [editEmbed(client, msgEmbed, pointsToGamble, text)], components: [] });
+            await button.editReply({ embeds: [editEmbed(client, msgEmbed, pointsToGamble, text)], components: [] });
             collector.stop();
         }
     });
@@ -162,9 +162,7 @@ const getScore = (cardArray: Card[]) => {
     return score;
 };
 
-const getCardString = (card: Card) => {
-    return `\`${card.value} ${card.suit}\``;
-};
+const getCardString = (card: Card) => `\`${card.value} ${card.suit}\``;
 
 const updateScores = () => {
     playerPoints = getScore(playerCards);
