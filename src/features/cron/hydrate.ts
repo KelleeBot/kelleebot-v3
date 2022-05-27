@@ -8,7 +8,9 @@ const hydrate = [
     "Don't forget to {0}!",
     "It's time to {0}!",
     "Remember to {0}!",
-    "Stay moist and {0}!"
+    "Stay moist and {0}!",
+    "{0} yourself now!",
+    "Time to drink some water and {0}!"
 ];
 
 export default (client: Client) => {
@@ -17,14 +19,10 @@ export default (client: Client) => {
 
 const execute = async (client: Client) => {
     try {
-        const guildID = "844747196745383956";
         const channelID = "977014276243988520";
         const hydrateRoleID = "976900199324729374";
 
-        const guild = client.guilds.cache.get(guildID);
-        if (!guild) return;
-
-        const channel = guild.channels.cache.get(channelID) as TextChannel;
+        const channel = client.channels.cache.get(channelID) as TextChannel;
         if (!channel) return;
 
         const hydrateMessage = hydrate.random().format(`<@&${hydrateRoleID}>`);
