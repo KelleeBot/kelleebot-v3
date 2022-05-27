@@ -1,4 +1,4 @@
-import { Channel, CommandInteraction, GuildMember } from "discord.js";
+import { CommandInteraction } from "discord.js";
 import { Client } from "../../util/client";
 import * as locale from "../../../config/locale.json";
 
@@ -9,22 +9,20 @@ export const guild = async (client: Client, interaction: CommandInteraction) => 
     const { name, premiumSubscriptionCount, partnered } = guild!;
     const premiumTier = guild!.premiumTier === "NONE" ? "0" : guild!.premiumTier.replace("TIER_", "");
 
-    const guildOwner = await guild!.fetchOwner();
-    const members = (await guild!.members.fetch()).filter((member: GuildMember) => !member.user.bot).size;
-    const onlineMembers = (await guild!.members.fetch())
-        .filter((member: GuildMember) => !member.user.bot)
-        .filter((member: GuildMember) => member.presence !== null && member.presence!.status !== "offline").size;
-    const bots = (await guild!.members.fetch()).filter((member: GuildMember) => member.user.bot).size;
-    const onlineBots = (await guild!.members.fetch())
-        .filter((member: GuildMember) => member.user.bot)
-        .filter((member: GuildMember) => member.presence !== null && member.presence!.status !== "offline").size;
+    const members = await guild!.members.fetch();
 
-    const categories = guild!.channels.cache.filter((c: Channel) => c.type === "GUILD_CATEGORY").size;
-    const textChannels = guild!.channels.cache.filter((c: Channel) => c.type === "GUILD_TEXT").size;
-    const voiceChannels = guild!.channels.cache.filter((c: Channel) => c.type === "GUILD_VOICE").size;
+    const guildOwner = await guild!.fetchOwner();
+    const totalMembers = members.filter((member) => !member.user.bot).size;
+    const onlineMembers = members.filter((member) => !member.user.bot).filter((member) => member.presence !== null && member.presence.status !== "offline").size;
+    const bots = members.filter((member) => member.user.bot).size;
+    const onlineBots = members.filter((member) => member.user.bot).filter((member) => member.presence !== null && member.presence.status !== "offline").size;
+
+    const categories = guild!.channels.cache.filter((c) => c.type === "GUILD_CATEGORY").size;
+    const textChannels = guild!.channels.cache.filter((c) => c.type === "GUILD_TEXT").size;
+    const voiceChannels = guild!.channels.cache.filter((c) => c.type === "GUILD_VOICE").size;
 
     const roleCount = guild!.roles.cache.size - 1;
-    const createdTimestamp = Math.round(guild!.createdTimestamp / 1000);
+    const createdTimestamp = Math.floor(guild!.createdTimestamp / 1000);
 
     const msgEmbed = (await client.utils.CustomEmbed({ userID: interaction.user.id }))
         .setAuthor({ name, iconURL: client.utils.getGuildIcon(guild!)! })
@@ -52,17 +50,17 @@ export const guild = async (client: Client, interaction: CommandInteraction) => 
             },
             {
                 name: "**Members**",
-                value: `${members} Member${members !== 1 ? "s" : ""} (${onlineMembers} Online)`,
+                value: `${client.utils.pluralize(totalMembers, "member")} (${onlineMembers} Online)`,
                 inline: true
             },
             {
                 name: "**Bots**",
-                value: `${bots} Bot${bots !== 1 ? "s" : ""} (${onlineBots} Online)`,
+                value: `${client.utils.pluralize(bots, "bot")} (${onlineBots} Online)`,
                 inline: true
             },
             {
                 name: "**Boosts**",
-                value: `${premiumSubscriptionCount} Boost${premiumSubscriptionCount !== 1 ? "s" : ""} (Tier ${premiumTier})`,
+                value: `${client.utils.pluralize(premiumSubscriptionCount ?? 0, "boost")} (Tier ${premiumTier})`,
                 inline: true
             },
             {
