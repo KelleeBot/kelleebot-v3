@@ -12,7 +12,7 @@ export default async (client: Client) => {
             const nextTrack = queue.tracks;
 
             msgEmbed
-                .setAuthor({ name: "Now Playing", iconURL: client.utils.getGuildIcon(guild)! })
+                .setAuthor({ name: "Now Playing", iconURL: client.utils.getGuildIcon(guild) })
                 .setThumbnail(`${track.thumbnail}`)
                 .setDescription(
                     `[${Util.escapeMarkdown(track.title)}](${track.url}) (${track.duration})\n\n**Up Next: **${
@@ -30,7 +30,7 @@ export default async (client: Client) => {
             //@ts-ignore
             const { guild, channel } = queue.metadata;
             msgEmbed
-                .setAuthor({ name: "Track Added", iconURL: client.utils.getGuildIcon(guild)! })
+                .setAuthor({ name: "Track Added", iconURL: client.utils.getGuildIcon(guild) })
                 .setThumbnail(`${track.thumbnail}`)
                 .setDescription(
                     `[${Util.escapeMarkdown(track.title)}](${track.url}) (${track.duration}) has been added to the queue!\n\nThere's now \`${
@@ -47,7 +47,7 @@ export default async (client: Client) => {
             //@ts-ignore
             const { guild, channel } = queue.metadata;
             msgEmbed
-                .setAuthor({ name: "Playlist Added", iconURL: client.utils.getGuildIcon(guild)! })
+                .setAuthor({ name: "Playlist Added", iconURL: client.utils.getGuildIcon(guild) })
                 .setThumbnail(client.user!.displayAvatarURL({ dynamic: true }))
                 .setDescription(
                     `\`${tracks.length}\` track${tracks.length !== 1 ? "s" : ""} have been loaded.\n\nTotal time: \`${client.utils.msToTime(
@@ -64,7 +64,7 @@ export default async (client: Client) => {
             //@ts-ignore
             const { guild, channel } = queue.metadata;
             msgEmbed
-                .setAuthor({ name: "Bot Disconnected", iconURL: client.utils.getGuildIcon(guild)! })
+                .setAuthor({ name: "Bot Disconnected", iconURL: client.utils.getGuildIcon(guild) })
                 .setThumbnail(client.user!.displayAvatarURL({ dynamic: true }))
                 .setDescription("⏹️ | Music stopped as I have been disconnected from the voice channel.");
             return channel.send({ embeds: [msgEmbed] });

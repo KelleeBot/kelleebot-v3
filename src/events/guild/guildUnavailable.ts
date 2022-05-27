@@ -24,7 +24,7 @@ export default async (client: Client, guild: Guild) => {
             )
             .setFooter({
                 text: "Please do not reply to this DM as this is not monitored.",
-                iconURL: client.utils.getGuildIcon(guild)!
+                iconURL: client.utils.getGuildIcon(guild)
             })
             .setTimestamp();
         return owner.send({ embeds: [msgEmbed] });

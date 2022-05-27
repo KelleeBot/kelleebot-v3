@@ -28,8 +28,8 @@ class Utils extends KelleeBotUtils {
         const filtered = choices.filter((choice) => choice.toLowerCase().includes(focusedValue.toLowerCase()));
         await interaction.respond(
             filtered.slice(0, Math.min(25, filtered.length)).map((choice) => ({
-                name: client.utils.titleCase(choice),
-                value: client.utils.titleCase(choice)
+                name: this.titleCase(choice),
+                value: this.titleCase(choice)
             }))
         );
     }
@@ -73,11 +73,10 @@ class Utils extends KelleeBotUtils {
 
     async quickReply(client: Client, interaction: CommandInteraction, content: string) {
         const embed = (await client.utils.CustomEmbed({ userID: interaction.user.id })).setDescription(content);
-
         try {
             await interaction.reply({ embeds: [embed], ephemeral: true });
         } catch (e) {
-            client.utils.log("ERROR", `${__filename}`, "An error has occurred: ${e}");
+            client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
         }
     }
 
@@ -114,7 +113,7 @@ class Utils extends KelleeBotUtils {
     }
 
     getGuildIcon(guild: Guild) {
-        return guild.iconURL() ? guild.iconURL({ dynamic: true }) : "https://i.imgur.com/XhpH3KD.png";
+        return guild.iconURL({ dynamic: true }) ?? "https://i.imgur.com/XhpH3KD.png";
     }
 
     formatNumber(number: number) {
@@ -130,7 +129,7 @@ class Utils extends KelleeBotUtils {
         return numberRegExp.test(str);
     }
 
-    pluralize(amount: number, string: string, format?: boolean) {
+    pluralize(amount: number, string: string, format = false) {
         return amount !== 1
             ? format
                 ? `\`${this.formatNumber(amount)}\` ${string}s`

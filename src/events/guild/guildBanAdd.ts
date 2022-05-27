@@ -6,7 +6,7 @@ export default async (client: Client, guildBan: GuildBan) => {
     const msgEmbed = client.utils
         .createEmbed()
         .setColor(GUILD_BAN_ADD as ColorResolvable)
-        .setAuthor({ name: guildBan.guild.name, iconURL: client.utils.getGuildIcon(guildBan.guild)! })
+        .setAuthor({ name: guildBan.guild.name, iconURL: client.utils.getGuildIcon(guildBan.guild) })
         .setFooter({ text: `ID: ${guildBan.user.id}` })
         .setTimestamp();
 

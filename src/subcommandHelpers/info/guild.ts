@@ -25,8 +25,8 @@ export const guild = async (client: Client, interaction: CommandInteraction) => 
     const createdTimestamp = Math.floor(guild!.createdTimestamp / 1000);
 
     const msgEmbed = (await client.utils.CustomEmbed({ userID: interaction.user.id }))
-        .setAuthor({ name, iconURL: client.utils.getGuildIcon(guild!)! })
-        .setThumbnail(client.utils.getGuildIcon(guild!)!)
+        .setAuthor({ name, iconURL: client.utils.getGuildIcon(guild!) })
+        .setThumbnail(client.utils.getGuildIcon(guild!))
         .setTimestamp()
         .setFooter({
             text: `Requested by ${user.tag}`,

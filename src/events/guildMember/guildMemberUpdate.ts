@@ -80,7 +80,7 @@ const createEmbed = (client: Client, color: ColorResolvable, description: string
         .setColor(color)
         .setAuthor({
             name: options.user ? options.user.tag : `${options.guild?.name}`,
-            iconURL: options.user ? options.user.displayAvatarURL({ dynamic: true }) : client.utils.getGuildIcon(options.guild!)!
+            iconURL: options.user ? options.user.displayAvatarURL({ dynamic: true }) : client.utils.getGuildIcon(options.guild!)
         })
         .setDescription(description)
         .setFooter({ text: `ID: ${options.user ? options.user.id : options.guild?.id}` })

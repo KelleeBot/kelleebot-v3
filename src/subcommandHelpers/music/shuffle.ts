@@ -19,7 +19,7 @@ export const shuffle = async (client: Client, interaction: CommandInteraction) =
         const msgEmbed = client.utils
             .createEmbed()
             .setColor(MUSIC_COMMANDS as ColorResolvable)
-            .setAuthor({ name: "Queue Shuffled", iconURL: client.utils.getGuildIcon(interaction.guild!)! })
+            .setAuthor({ name: "Queue Shuffled", iconURL: client.utils.getGuildIcon(interaction.guild!) })
             .setDescription(shuffled ? "🔀 | Queue has been shuffled." : "❌ | Something went wrong.");
         return await interaction.reply({ embeds: [msgEmbed] });
     } catch (e: any) {

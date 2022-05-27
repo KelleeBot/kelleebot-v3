@@ -19,7 +19,7 @@ export const stop = async (client: Client, interaction: CommandInteraction) => {
         const msgEmbed = client.utils
             .createEmbed()
             .setColor(MUSIC_COMMANDS as ColorResolvable)
-            .setAuthor({ name: "Music Stopped", iconURL: client.utils.getGuildIcon(interaction.guild!)! })
+            .setAuthor({ name: "Music Stopped", iconURL: client.utils.getGuildIcon(interaction.guild!) })
             .setDescription("⏹️ | Music stopped.");
         return await interaction.reply({ embeds: [msgEmbed] });
     } catch (e) {

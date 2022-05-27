@@ -21,7 +21,7 @@ export const np = async (client: Client, interaction: CommandInteraction) => {
 
         const msgEmbed = client.utils
             .createEmbed()
-            .setAuthor({ name: "Currently Playing", iconURL: client.utils.getGuildIcon(guild!)! })
+            .setAuthor({ name: "Currently Playing", iconURL: client.utils.getGuildIcon(guild!) })
             .setColor(MUSIC_COMMANDS as ColorResolvable)
             .setDescription(
                 `🎶 | **${current.title}** (\`${percent.progress}%\`)\n\n**Up Next: ** ${nextTrack ? `\`${nextTrack.title}\`` : "Nothing"}`

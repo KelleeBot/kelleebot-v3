@@ -8,7 +8,7 @@ export default async (client: Client, channel: GuildChannel) => {
     const msgEmbed = client.utils
         .createEmbed()
         .setColor(CHANNEL_EVENTS as ColorResolvable)
-        .setAuthor({ name: channel.guild.name, iconURL: client.utils.getGuildIcon(channel.guild)! })
+        .setAuthor({ name: channel.guild.name, iconURL: client.utils.getGuildIcon(channel.guild) })
         .setFooter({ text: `ID: ${channel.id}` })
         .setTimestamp();
 

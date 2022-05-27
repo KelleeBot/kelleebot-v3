@@ -10,8 +10,8 @@ export const role = async (client: Client, interaction: CommandInteraction) => {
     const msgEmbed = client.utils
         .createEmbed()
         .setColor(role.hexColor)
-        .setAuthor({ name: role.name, iconURL: client.utils.getGuildIcon(role.guild!)! })
-        .setThumbnail(client.utils.getGuildIcon(role.guild!)!)
+        .setAuthor({ name: role.name, iconURL: client.utils.getGuildIcon(role.guild!) })
+        .setThumbnail(client.utils.getGuildIcon(role.guild!))
         .setTimestamp()
         .addFields(
             {

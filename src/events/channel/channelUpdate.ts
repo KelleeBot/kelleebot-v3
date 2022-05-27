@@ -10,7 +10,7 @@ export default async (client: Client, oldChannel: GuildChannel, newChannel: Guil
         const msgEmbed = client.utils
             .createEmbed()
             .setColor(CHANNEL_EVENTS as ColorResolvable)
-            .setAuthor({ name: newChannel.guild.name, iconURL: client.utils.getGuildIcon(newChannel.guild)! })
+            .setAuthor({ name: newChannel.guild.name, iconURL: client.utils.getGuildIcon(newChannel.guild) })
             .setDescription(`${client.utils.getChannelDescription(newChannel.type)} Name Changed**`)
             .setTimestamp()
             .setFooter({ text: `ID: ${oldChannel.id}` });

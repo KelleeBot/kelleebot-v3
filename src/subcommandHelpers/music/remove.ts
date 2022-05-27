@@ -18,7 +18,7 @@ export const remove = async (client: Client, interaction: CommandInteraction) =>
         const msgEmbed = client.utils
             .createEmbed()
             .setColor(MUSIC_COMMANDS as ColorResolvable)
-            .setAuthor({ name: "Track Removed", iconURL: client.utils.getGuildIcon(interaction.guild!)! })
+            .setAuthor({ name: "Track Removed", iconURL: client.utils.getGuildIcon(interaction.guild!) })
 
         const { tracks } = queue;
         if (tracks.length === 0) {

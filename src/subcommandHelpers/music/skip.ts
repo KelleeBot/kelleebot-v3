@@ -19,7 +19,7 @@ export const skip = async (client: Client, interaction: CommandInteraction) => {
         const msgEmbed = client.utils
             .createEmbed()
             .setColor(MUSIC_COMMANDS as ColorResolvable)
-            .setAuthor({ name: "Music Skipped", iconURL: client.utils.getGuildIcon(interaction.guild!)! })
+            .setAuthor({ name: "Music Skipped", iconURL: client.utils.getGuildIcon(interaction.guild!) })
             .setDescription(success ? `⏭️ | Skipped **${queue.current}**!` : "❌ | Failed to skip.");
         return await interaction.reply({ embeds: [msgEmbed] });
     } catch (e: any) {

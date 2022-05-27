@@ -14,7 +14,7 @@ export default class Guilds extends KelleeBotCommand {
                 const msgEmbed = (await client.utils.CustomEmbed({ userID: interaction.user.id }))
                     .setAuthor({
                         name: interaction.guild!.name,
-                        iconURL: client.utils.getGuildIcon(interaction.guild!)!
+                        iconURL: client.utils.getGuildIcon(interaction.guild!)
                     })
                     .setTimestamp();
 
@@ -45,7 +45,7 @@ export default class Guilds extends KelleeBotCommand {
                     const msgEmbed = (await client.utils.CustomEmbed({ userID: interaction.user.id }))
                         .setAuthor({
                             name: interaction.guild!.name,
-                            iconURL: client.utils.getGuildIcon(interaction.guild!)!
+                            iconURL: client.utils.getGuildIcon(interaction.guild!)
                         })
                         .setTimestamp()
                         .setDescription(`I am in a total of **${numGuilds}** guild${numGuilds != 1 ? "s" : ""}.\n\n${desc}`)

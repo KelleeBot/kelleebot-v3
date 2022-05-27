@@ -20,7 +20,7 @@ export const queue = async (client: Client, interaction: CommandInteraction) => 
             const msgEmbed = client.utils
                 .createEmbed()
                 .setColor(MUSIC_COMMANDS as ColorResolvable)
-                .setAuthor({ name: "Music Queue", iconURL: client.utils.getGuildIcon(interaction.guild!)! });
+                .setAuthor({ name: "Music Queue", iconURL: client.utils.getGuildIcon(interaction.guild!) });
 
             if (tracks.length == 0) {
                 msgEmbed.setDescription("There are no songs in the queue.");
@@ -45,7 +45,7 @@ export const queue = async (client: Client, interaction: CommandInteraction) => 
             const msgEmbed = client.utils
                 .createEmbed()
                 .setColor(MUSIC_COMMANDS as ColorResolvable)
-                .setAuthor({ name: "Music Queue", iconURL: client.utils.getGuildIcon(interaction.guild!)! });
+                .setAuthor({ name: "Music Queue", iconURL: client.utils.getGuildIcon(interaction.guild!) });
 
             let counter = (i + 1) * 10 - 10;
             for (let j = 0; j < tracksArray[i].length; j++) {

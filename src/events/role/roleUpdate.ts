@@ -6,7 +6,7 @@ export default async (client: Client, oldRole: Role, newRole: Role) => {
     const msgEmbed = client.utils
         .createEmbed()
         .setColor(ROLE_EVENTS as ColorResolvable)
-        .setAuthor({ name: newRole.guild.name, iconURL: client.utils.getGuildIcon(newRole.guild)! })
+        .setAuthor({ name: newRole.guild.name, iconURL: client.utils.getGuildIcon(newRole.guild) })
         .setFooter({ text: `ID: ${newRole.id}` })
         .setTimestamp();
 

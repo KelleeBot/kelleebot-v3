@@ -18,7 +18,7 @@ export const clear = async (client: Client, interaction: CommandInteraction) => 
 
         const msgEmbed = client.utils
             .createEmbed()
-            .setAuthor({ name: "Queue Cleared", iconURL: client.utils.getGuildIcon(guild!)! })
+            .setAuthor({ name: "Queue Cleared", iconURL: client.utils.getGuildIcon(guild!) })
             .setColor(MUSIC_COMMANDS as ColorResolvable)
             .setDescription("Music queue has been cleared.")
             .setFooter({

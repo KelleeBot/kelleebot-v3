@@ -19,7 +19,7 @@ export const pause = async (client: Client, interaction: CommandInteraction) => 
         const msgEmbed = client.utils
             .createEmbed()
             .setColor(MUSIC_COMMANDS as ColorResolvable)
-            .setAuthor({ name: "Music Paused", iconURL: client.utils.getGuildIcon(interaction.guild!)! })
+            .setAuthor({ name: "Music Paused", iconURL: client.utils.getGuildIcon(interaction.guild!) })
             .setDescription(paused ? `⏸️ | Paused **${queue.current}**` : "❌ | Something went wrong.");
         return await interaction.reply({ embeds: [msgEmbed] });
     } catch (e: any) {

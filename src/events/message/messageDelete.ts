@@ -22,7 +22,7 @@ export default async (client: Client, message: Message) => {
         const msgEmbed = createEmbed(
             client,
             MESSAGE_EVENTS as ColorResolvable,
-            message.guild!,
+            message.guild,
             message,
             `**A message sent by ${message.author} was deleted in ${message.channel}**`
         );
@@ -46,18 +46,18 @@ export default async (client: Client, message: Message) => {
             description += message.content;
         }
 
-        const msgEmbed = createEmbed(client, MESSAGE_EVENTS as ColorResolvable, message.guild!, message, description, message.author);
+        const msgEmbed = createEmbed(client, MESSAGE_EVENTS as ColorResolvable, message.guild, message, description, message.author);
 
         return client.utils.sendMessageToBotLog(client, message.guild!, msgEmbed);
     } else {
         const msgEmbed = createEmbed(
             client,
             MESSAGE_EVENTS as ColorResolvable,
-            message.guild!,
+            message.guild,
             message,
             `**A message was deleted in ${message.channel}**`
         );
-        return client.utils.sendMessageToBotLog(client, message.guild!, msgEmbed);
+        return client.utils.sendMessageToBotLog(client, message.guild, msgEmbed);
     }
 };
 
@@ -66,8 +66,8 @@ const createEmbed = (client: Client, color: ColorResolvable, guild: Guild, messa
         .createEmbed()
         .setColor(color)
         .setAuthor({
-            name: user ? user.tag : guild!.name,
-            iconURL: user ? user.displayAvatarURL({ dynamic: true }) : client.utils.getGuildIcon(guild)!
+            name: user ? user.tag : guild.name,
+            iconURL: user ? user.displayAvatarURL({ dynamic: true }) : client.utils.getGuildIcon(guild)
         })
         .setDescription(description)
         .setTimestamp()
