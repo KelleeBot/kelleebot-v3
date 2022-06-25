@@ -29,77 +29,68 @@ export const ban = async (client: Client, interaction: CommandInteraction) => {
             return interaction.reply({ content: "You can't ban a member with a higher role than you.", ephemeral: true });
     }
 
-    const userInfo = await client.utils.fetchMemberInfo(interaction.guildId!, user.id);
-    const userInfoEmbed = client.utils
-        .createEmbed()
-        .setAuthor({
-            name: user.tag,
-            iconURL: user.displayAvatarURL({ dynamic: true })
-        })
-        .setColor(GUILD_BAN_ADD as ColorResolvable);
+    try {
+        const userInfo = await client.utils.fetchMemberInfo(interaction.guildId!, user.id);
+        const userInfoEmbed = client.utils
+            .createEmbed()
+            .setAuthor({
+                name: user.tag,
+                iconURL: user.displayAvatarURL({ dynamic: true })
+            })
+            .setColor(GUILD_BAN_ADD as ColorResolvable);
 
-    const buttonRow = client.utils
-        .createActionRow()
-        .addComponents(
-            client.utils.createButton().setCustomId("ban_yes").setLabel("Yes").setStyle("SUCCESS"),
-            client.utils.createButton().setCustomId("ban_no").setLabel("No").setStyle("DANGER")
-        );
+        const buttonRow = client.utils
+            .createActionRow()
+            .addComponents(
+                client.utils.createButton().setCustomId("ban_yes").setLabel("Yes").setStyle("SUCCESS"),
+                client.utils.createButton().setCustomId("ban_no").setLabel("No").setStyle("DANGER")
+            );
 
-    if (!userInfo) {
-        userInfoEmbed.setDescription(`• Warns: 0\n• Mutes: 0\n• Kicks: 0\n• Bans: 0\n• Soft Bans: 0\n• Unbans: 0\n`);
-    } else {
-        const { bans, warnings, kicks, unbans, softbans, mutes } = userInfo;
-        userInfoEmbed.setDescription(
-            `• Warns: ${warnings.length}\n• Mutes: ${mutes.length}\n• Kicks: ${kicks.length}\n• Bans: ${bans.length}\n• Soft Bans: ${softbans.length}\n• Unbans: ${unbans.length}\n`
-        );
-    }
+        if (!userInfo) {
+            userInfoEmbed.setDescription(`• Warns: 0\n• Mutes: 0\n• Kicks: 0\n• Bans: 0\n• Soft Bans: 0\n• Unbans: 0\n`);
+        } else {
+            const { bans, warnings, kicks, unbans, softbans, mutes } = userInfo;
+            userInfoEmbed.setDescription(
+                `• Warns: ${warnings.length}\n• Mutes: ${mutes.length}\n• Kicks: ${kicks.length}\n• Bans: ${bans.length}\n• Soft Bans: ${softbans.length}\n• Unbans: ${unbans.length}\n`
+            );
+        }
 
-    const msg = (await interaction
-        .reply({
+        const msg = await client.utils.fetchReply(interaction, {
             content: `Are you sure you want to ban **${user.tag}** for ${reason}?`,
             embeds: [userInfoEmbed],
-            components: [buttonRow],
-            fetchReply: true
-        })
-        .catch((e) => client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`))) as Message;
-
-    if (!msg)
-        return interaction.reply({
-            content: `An error has occurred and **${user.tag}** was not banned. Please try again.`,
-            ephemeral: true
+            components: [buttonRow]
         });
 
-    const filter = async (i: ButtonInteraction) => {
-        await i.deferUpdate();
-        return (i.customId == "ban_yes" || i.customId == "ban_no") && i.user.id == interaction.user.id;
-    };
+        if (!msg) return interaction.reply({ content: `An error has occurred and **${user.tag}** was not banned. Please try again.`, ephemeral: true });
 
-    const collector = msg.createMessageComponentCollector({ filter, componentType: "BUTTON", time: 1000 * 15 });
-    collector.on("collect", async (i) => {
-        if (i.customId === "ban_yes") {
-            await banUser(user, msg, interaction.user, client, reason);
-        } else {
-            await msg.edit({ content: `**${user.tag}** was not banned.`, embeds: [], components: [] });
-        }
-        collector.stop();
-    });
+        const filter = async (i: ButtonInteraction) => {
+            await i.deferUpdate();
+            return (i.customId == "ban_yes" || i.customId == "ban_no") && i.user.id == interaction.user.id;
+        };
 
-    collector.on("end", async (_collected, reason) => {
-        if (reason === "time") {
-            await msg.edit({ content: `You did not choose a response in time. **${user.tag}** was not banned.`, embeds: [], components: [] });
-        }
-    });
-    return;
+        const collector = msg.createMessageComponentCollector({ filter, componentType: "BUTTON", time: 1000 * 15 });
+        collector.on("collect", async (button) => {
+            if (button.customId === "ban_yes") {
+                await banUser(user, button, client, reason);
+            } else {
+                await button.editReply({ content: `**${user.tag}** was not banned.`, embeds: [], components: [] });
+            }
+            collector.stop();
+        });
+
+        collector.on("end", async (_collected, reason) => {
+            if (reason === "time") await msg.edit({ content: `You did not choose a response in time. **${user.tag}** was not banned.`, embeds: [], components: [] });
+        });
+    } catch (e: any) {
+        client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
+        return interaction.reply({ content: `An error has occurred and **${user.tag}** was not kicked. Please try again.`, ephemeral: true });
+    }
 };
 
-const banUser = async (user: User, message: Message, author: User, client: Client, reason: string) => {
-    const banMsg = await message.edit({
-        content: `Banning **${user.tag}**...`,
-        embeds: [],
-        components: []
-    });
+const banUser = async (user: User, button: ButtonInteraction, client: Client, reason: string) => {
+    const banMsg = await button.editReply({ content: `Banning **${user.tag}**...`, embeds: [], components: [] }) as Message;
 
-    const fetchBans = await message.guild!.bans.fetch();
+    const fetchBans = await button.guild!.bans.fetch();
     if (fetchBans) {
         const bannedUser = fetchBans.find((b) => b.user.id === user.id);
         if (bannedUser)
@@ -109,7 +100,7 @@ const banUser = async (user: User, message: Message, author: User, client: Clien
                 components: []
             });
 
-        const banUser = await message.guild!.members.ban(user, { days: 7, reason }).catch((e) => {
+        const banUser = await button.guild!.members.ban(user, { days: 7, reason }).catch((e) => {
             client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
 
             return banMsg.edit({
@@ -119,15 +110,13 @@ const banUser = async (user: User, message: Message, author: User, client: Clien
             });
         });
 
+        if (!(banUser instanceof User) || !(banUser instanceof GuildMember)) return;
+
         if (banUser) {
-            const memberObj = {
-                guildID: message.guild!.id,
-                //@ts-ignore
-                userID: banUser.id
-            };
+            const memberObj = { guildID: button.guildId, userID: banUser.id };
 
             const ban = {
-                executor: author.id,
+                executor: button.user.id,
                 timestamp: new Date().getTime(),
                 reason
             };
@@ -144,14 +133,14 @@ const banUser = async (user: User, message: Message, author: User, client: Clien
                 .createEmbed()
                 .setColor(GUILD_BAN_ADD as ColorResolvable)
                 .setAuthor({
-                    name: author.tag,
-                    iconURL: author.displayAvatarURL({ dynamic: true })
+                    name: button.user.tag,
+                    iconURL: button.user.displayAvatarURL({ dynamic: true })
                 })
                 .setThumbnail(user.displayAvatarURL({ dynamic: true }))
                 .setDescription(`**Member:** ${user.tag}\n**Action:** Ban\n**Reason:** ${reason}`)
                 .setTimestamp()
                 .setFooter({ text: `ID: ${user.id}` });
-            return client.utils.sendMessageToBotLog(client, message.guild!, msgEmbed);
+            return client.utils.sendMessageToBotLog(client, button.guild!, msgEmbed);
         }
     }
     return;

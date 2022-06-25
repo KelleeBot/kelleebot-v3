@@ -38,63 +38,48 @@ export const kick = async (client: Client, interaction: CommandInteraction) => {
             );
         }
 
-        const msg = (await interaction.reply({
+        const msg = await client.utils.fetchReply(interaction, {
             content: `Are you sure you want to kick **${member.user.tag}** for ${reason}?`,
             embeds: [memberInfoEmbed],
-            components: [buttonRow],
-            fetchReply: true
-        })) as Message;
+            components: [buttonRow]
+        });
+
+        if (!msg) return interaction.reply({ content: `An error has occurred and **${member.user.tag}** was not kicked. Please try again.`, ephemeral: true });
 
         const filter = async (i: ButtonInteraction) => {
             await i.deferUpdate();
             return (i.customId == "kick_yes" || i.customId == "kick_no") && i.user.id == interaction.user.id;
         };
         const collector = msg.createMessageComponentCollector({ filter, componentType: "BUTTON", time: 1000 * 15 });
-        collector.on("collect", async (i) => {
-            if (i.customId === "kick_yes") {
-                await kickMember(member, msg, interaction.user, client, reason);
+        collector.on("collect", async (button) => {
+            if (button.customId === "kick_yes") {
+                await kickMember(member, button, client, reason);
             } else {
-                await msg.edit({
-                    content: `**${member.user.tag}** was not kicked.`,
-                    embeds: [],
-                    components: []
-                });
+                await button.editReply({ content: `**${member.user.tag}** was not kicked.`, embeds: [], components: [] });
             }
             collector.stop();
         });
 
         collector.on("end", async (_collected, reason) => {
-            if (reason === "time") {
-                await msg.edit({
-                    content: `You did not choose a response in time. **${member.user.tag}** was not kicked.`,
-                    embeds: [], // Delete the embed from the message
-                    components: [] // Delete the buttons from the message
-                });
-            }
+            if (reason === "time") await msg.edit({ content: `You did not choose a response in time. **${member.user.tag}** was not kicked.`, embeds: [], components: [] });
         });
     } catch (e) {
         client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
-        return interaction.reply({
-            content: `An error has occurred and **${member.user.tag}** was not kicked. Please try again.`,
-            ephemeral: true
-        });
+        return interaction.reply({ content: `An error has occurred and **${member.user.tag}** was not kicked. Please try again.`, ephemeral: true });
     }
 };
 
-const kickMember = async (member: GuildMember, message: Message, author: User, client: Client, reason: string) => {
-    const msg = await message.edit({ content: `Kicking **${member.user.tag}**...`, embeds: [], components: [] });
+const kickMember = async (member: GuildMember, button: ButtonInteraction, client: Client, reason: string) => {
+    const msg = await button.editReply({ content: `Kicking **${member.user.tag}**...`, embeds: [], components: [] }) as Message;
 
     const kickedMember = await member.kick(reason);
     if (!kickedMember)
         return msg.edit({ content: `There was an error and **${member.user.tag}** was not kicked. Please try again.`, embeds: [], components: [] });
 
-    const memberObj = {
-        guildID: message.guild!.id,
-        userID: kickedMember.id
-    };
+    const memberObj = { guildID: button.guildId, userID: kickedMember.id };
 
     const kick = {
-        executor: author.id,
+        executor: button.user.id,
         timestamp: new Date().getTime(),
         reason
     };
@@ -106,13 +91,13 @@ const kickMember = async (member: GuildMember, message: Message, author: User, c
         .createEmbed()
         .setColor(GUILD_MEMBER_EVENTS as ColorResolvable)
         .setAuthor({
-            name: author.tag,
-            iconURL: author.displayAvatarURL({ dynamic: true })
+            name: button.user.tag,
+            iconURL: button.user.displayAvatarURL({ dynamic: true })
         })
         .setThumbnail(kickedMember.user.displayAvatarURL({ dynamic: true }))
         .setDescription(`**Member:** ${kickedMember.user.tag}\n**Action:** Kick\n**Reason:** ${reason}`)
         .setTimestamp()
         .setFooter({ text: `ID: ${kickedMember.id}` });
 
-    return client.utils.sendMessageToBotLog(client, message.guild!, msgEmbed);
+    return client.utils.sendMessageToBotLog(client, button.guild!, msgEmbed);
 };

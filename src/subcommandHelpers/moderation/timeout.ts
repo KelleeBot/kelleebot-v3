@@ -36,10 +36,9 @@ export const timeout = async (client: Client, interaction: CommandInteraction) =
             ephemeral: true
         });
 
-    const msg = (await interaction.reply({
-        content: `Timing out **${member.user.tag}**...`,
-        fetchReply: true
-    })) as Message;
+    const msg = await client.utils.fetchReply(interaction, { content: `Timing out **${member.user.tag}**...` });
+    if (!msg) return interaction.reply({ content: `An error has occurred and **${member.user.tag}** was not timed out. Please try again.`, ephemeral: true });
+
     try {
         const timedoutMember = await member
             .timeout(ms(duration), reason)
@@ -47,10 +46,7 @@ export const timeout = async (client: Client, interaction: CommandInteraction) =
 
         if (!timedoutMember) return msg.edit({ content: `An error has occurred and **${member.user.tag}** was not timed out.` });
 
-        const memberObj = {
-            guildID: guild!.id,
-            userID: timedoutMember.id
-        };
+        const memberObj = { guildID: guild!.id, userID: timedoutMember.id };
 
         const mute = {
             executor: user.id,
@@ -59,16 +55,7 @@ export const timeout = async (client: Client, interaction: CommandInteraction) =
             reason
         };
 
-        await memberInfo.findOneAndUpdate(
-            memberObj,
-            {
-                ...memberObj,
-                $push: {
-                    mutes: mute
-                }
-            },
-            { upsert: true }
-        );
+        await memberInfo.findOneAndUpdate(memberObj, { ...memberObj, $push: { mutes: mute } }, { upsert: true });
 
         const expirationTimestamp = `<t:${Math.round(timedoutMember.communicationDisabledUntilTimestamp! / 1000)}:R>`;
 
