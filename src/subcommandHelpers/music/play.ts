@@ -48,16 +48,15 @@ export const play = async (client: Client, interaction: CommandInteraction) => {
         searchResult.playlist ? queue.addTracks(searchResult.tracks) : queue.addTrack(searchResult.tracks[0]);
 
         await interaction.editReply({
-            content: `Successfully loaded ${
-                searchResult.playlist
-                    ? `playlist **${searchResult.playlist.title}**`
-                    : `track **${searchResult.tracks[0].title} - ${searchResult.tracks[0].author}**`
-            }`
+            content: `Successfully loaded ${searchResult.playlist
+                ? `playlist **${searchResult.playlist.title}**`
+                : `track **${searchResult.tracks[0].title} - ${searchResult.tracks[0].author}**`
+                }`
         });
 
         if (!queue.playing) await queue.play();
     } catch (e) {
         client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
-        return await interaction.reply({ content: "An error has occurred. Please try again.", ephemeral: true });
+        return await interaction.editReply({ content: "An error has occurred. Please try again." });
     }
 };
