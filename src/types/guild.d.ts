@@ -47,6 +47,12 @@ export interface Guild {
         message: string;
     };
 
+    /** Ticketing system */
+    tickets?: {
+        channelCategory: string;
+        modRole: string;
+    };
+
     /** Array with all disabled command names */
     disabledCommands: string[];
 

@@ -1,4 +1,4 @@
-import { Collection, GuildMember, Interaction, MessageSelectMenu, TextChannel } from "discord.js";
+import { Collection, Constants, GuildMember, Interaction, MessageSelectMenu, OverwriteResolvable, TextChannel } from "discord.js";
 //import { interactionCreate } from "../../prefab/events";
 import { Client } from "../../util/client";
 import { NO_GAMBLING_CHANNEL_SET } from "../../../config/messages.json";
@@ -51,6 +51,45 @@ export default async (client: Client, interaction: Interaction) => {
                     content: `Here are all your roles for **${member.guild.name}**:\n${roles.join("\n")}`,
                     ephemeral: true
                 });
+            }
+
+            if (customId === "open-ticket") {
+                const { guild, user } = interaction;
+                const guildInfo = await client.guildInfo.get(guild!.id);
+
+                if (!guildInfo || !guildInfo.tickets! || !guildInfo.tickets.channelCategory)
+                    return interaction.reply({ content: "Looks like the ticketing system for this server hasn't been properly set up yet.", ephemeral: true });
+
+                const channel = guild!.channels.cache.find((c) => c.name === `ticket-${user.id}`);
+                if (channel) return interaction.reply({ content: "Looks like you already have a ticket open.", ephemeral: true });
+
+                await interaction.deferReply({ ephemeral: true });
+                try {
+                    const permissionOverwrites: OverwriteResolvable[] = [{
+                        id: guild!.roles.everyone.id,
+                        deny: ["VIEW_CHANNEL"],
+                        type: "role"
+                    }, {
+                        id: user.id,
+                        allow: ["VIEW_CHANNEL", "SEND_MESSAGES"],
+                        type: "member"
+                    }];
+
+                    if (guildInfo.tickets.modRole)
+                        permissionOverwrites.push({
+                            id: guildInfo.tickets.modRole,
+                            allow: ["VIEW_CHANNEL", "SEND_MESSAGES"],
+                            type: "role"
+                        });
+
+                    const ch = await guild!.channels.create(`ticket-${user.id}`, { type: Constants.ChannelTypes.GUILD_TEXT, reason: "For a ticket", permissionOverwrites, parent: guildInfo.tickets.channelCategory });
+                    const msg = await ch.send({ content: "A ticket has been created for you. Please note that all mods and admins have access to this channel and will see everything you type. Please state your issue and a mod will respond to you soon." });
+                    await msg.pin();
+                    return interaction.editReply({ content: `Your ticket has been created: ${ch}` });
+                } catch (e) {
+                    client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
+                    return interaction.editReply({ content: `An error occurred and I couldn't create a ticket` });
+                }
             }
         } else if (interaction.isAutocomplete()) {
             const command = client.commands.get(interaction.commandName);

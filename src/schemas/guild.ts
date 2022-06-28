@@ -59,6 +59,10 @@ const guild = new Schema({
         twitchChannel: String,
         message: String
     },
+    tickets: {
+        channelCategory: String,
+        modRole: String
+    },
     disabledCommands: Array,
     disabledChannels: Array,
     commandPerms: {},
