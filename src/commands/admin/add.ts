@@ -16,7 +16,7 @@ export default class Add extends KelleeBotCommand {
                 {
                     name: "points",
                     description: "The amount of points to give.",
-                    type: Constants.ApplicationCommandOptionTypes.NUMBER,
+                    type: Constants.ApplicationCommandOptionTypes.INTEGER,
                     required: true,
                     minValue: 1
                 },
