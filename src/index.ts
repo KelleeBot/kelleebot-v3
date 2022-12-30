@@ -13,7 +13,8 @@ const client = new Client({
         Intents.FLAGS.GUILD_MESSAGES,
         Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
         Intents.FLAGS.GUILD_VOICE_STATES,
-        Intents.FLAGS.GUILD_WEBHOOKS
+        Intents.FLAGS.GUILD_WEBHOOKS,
+        Intents.FLAGS.MESSAGE_CONTENT
     ],
     partials: ["MESSAGE", "CHANNEL", "REACTION", "USER", "GUILD_MEMBER"],
     allowedMentions: { parse: ["users", "roles"], repliedUser: false }
