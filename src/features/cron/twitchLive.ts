@@ -76,10 +76,10 @@ const execute = async (client: Client) => {
 						.setColor("#9146FF")
 						.setTitle(title)
 						.setURL(twitchURL)
-						.addFields([
+						.addFields(
 							{ name: "**Game**", value: game_name ?? "None" },
 							{ name: "**Started At**", value: getTimeString(startedAt) }
-						])
+						)
 						.setThumbnail(gameThumbnail)
 						.setImage(currentStream[0].getThumbnailUrl())
 						.setTimestamp(new Date(started_at));
@@ -96,11 +96,7 @@ const execute = async (client: Client) => {
 					const button = client.utils
 						.createActionRow()
 						.addComponents(
-							client.utils
-								.createButton()
-								.setLabel("Watch Stream")
-								.setStyle(Constants.MessageButtonStyles.LINK)
-								.setURL(twitchURL)
+							client.utils.createButton().setLabel("Watch Stream").setStyle(Constants.MessageButtonStyles.LINK).setURL(twitchURL)
 						);
 
 					const msg = await channel.send({
@@ -110,6 +106,8 @@ const execute = async (client: Client) => {
 						allowedMentions: { parse: ["roles", "everyone"] }
 					});
 					if (!msg) return;
+
+					if (msg.crosspostable) await msg.crosspost();
 
 					await client.twitchLiveInfo.findByIdAndUpdate(
 						guild.id,
