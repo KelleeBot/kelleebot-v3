@@ -61,7 +61,7 @@ const execute = async (client: Client) => {
 					const userInfo = await getUser(client, user_id);
 					const gameInfo = await getGameThumbnail(client, game_id);
 
-					const twitchURL = `https://www.twitch.tv/${user_name}`;
+					const twitchURL = `https://www.twitch.tv/${user_name.trim()}`;
 					const userThumbnail = userInfo ? userInfo.profile_image_url : "";
 					const gameThumbnail = gameInfo ? gameInfo.box_art_url.replace(/-{width}x{height}/g, "") : "";
 					const startedAt = DateTime.fromISO(started_at);
@@ -69,17 +69,14 @@ const execute = async (client: Client) => {
 					const embed = client.utils
 						.createEmbed()
 						.setAuthor({
-							name: `${user_name} is now live on Twitch!`,
+							name: `${user_name.trim()} is now live on Twitch!`,
 							iconURL: userThumbnail,
 							url: twitchURL
 						})
 						.setColor("#9146FF")
 						.setTitle(title)
 						.setURL(twitchURL)
-						.addFields(
-							{ name: "**Game**", value: game_name ?? "None" },
-							{ name: "**Started At**", value: getTimeString(startedAt) }
-						)
+						.addFields({ name: "**Game**", value: game_name ?? "None" }, { name: "**Started At**", value: getTimeString(startedAt) })
 						.setThumbnail(gameThumbnail)
 						.setImage(currentStream[0].getThumbnailUrl())
 						.setTimestamp(new Date(started_at));
@@ -89,7 +86,7 @@ const execute = async (client: Client) => {
 
 					const content = message
 						.replace(/{GUILD_NAME}/g, guild!.name)
-						.replace(/{STREAMER}/g, user_name)
+						.replace(/{STREAMER}/g, user_name.trim())
 						.replace(/{STREAM_TITLE}/g, title)
 						.replace(/{GAME}/g, game_name);
 
