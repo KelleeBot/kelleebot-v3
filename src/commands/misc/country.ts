@@ -22,7 +22,7 @@ export default class Country extends KelleeBotCommand {
             ],
             isAutocomplete: true,
             autocomplete: async ({ client, interaction }) => {
-                await client.utils.getAutocomplete(client, interaction, client.country);
+                await client.utils.getAutocomplete(interaction, client.country);
             },
             execute: async ({ client, interaction }) => {
                 await this.setCooldown(interaction);
