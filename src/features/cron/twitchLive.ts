@@ -62,7 +62,9 @@ const execute = async (client: Client) => {
 					const gameInfo = await getGameThumbnail(client, game_id);
 
 					const twitchURL = `https://www.twitch.tv/${user_name.trim()}`;
-					const userThumbnail = userInfo ? userInfo.profile_image_url : "";
+					const userThumbnail = userInfo
+						? userInfo.profile_image_url
+						: "https://static-cdn.jtvnw.net/user-default-pictures-uv/41780b5a-def8-11e9-94d9-784f43822e80-profile_image-300x300.png";
 					const gameThumbnail = gameInfo ? gameInfo.box_art_url.replace(/-{width}x{height}/g, "") : "";
 					const startedAt = DateTime.fromISO(started_at);
 
@@ -76,7 +78,10 @@ const execute = async (client: Client) => {
 						.setColor("#9146FF")
 						.setTitle(title)
 						.setURL(twitchURL)
-						.addFields({ name: "**Game**", value: game_name ?? "None" }, { name: "**Started At**", value: getTimeString(startedAt) })
+						.addFields(
+							{ name: "**Game**", value: game_name ? game_name : "None" },
+							{ name: "**Started At**", value: getTimeString(startedAt) }
+						)
 						.setThumbnail(gameThumbnail)
 						.setImage(currentStream[0].getThumbnailUrl())
 						.setTimestamp(new Date(started_at));
@@ -104,13 +109,14 @@ const execute = async (client: Client) => {
 					});
 					if (!msg) return;
 
-					if (msg.crosspostable) await msg.crosspost();
-
 					await client.twitchLiveInfo.findByIdAndUpdate(
 						guild.id,
 						{ $set: { messageID: msg.id }, $push: { liveChannels: user_name.toLowerCase().trim() } },
 						{ new: true, upsert: true, setDefaultsOnInsert: true }
 					);
+
+					if (msg.crosspostable)
+						await msg.crosspost().catch((e) => client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`));
 				}
 			}
 		});
@@ -121,7 +127,7 @@ const execute = async (client: Client) => {
 
 const getUser = async (client: Client, userID: string) => {
 	const user = await client.twitchApi.getUsers(userID);
-	if (!user || !user.data || user.data.length) return;
+	if (!user || !user.data || !user.data.length) return;
 	return user.data[0];
 };
 
