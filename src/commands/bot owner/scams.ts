@@ -1,4 +1,4 @@
-import { MessageAttachment } from "discord.js";
+import { Constants, MessageAttachment } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 
@@ -15,7 +15,7 @@ export default class Scams extends KelleeBotCommand {
                 {
                     name: "action",
                     description: "Add/remove scam link.",
-                    type: "STRING",
+                    type: Constants.ApplicationCommandOptionTypes.STRING,
                     required: true,
                     choices: [
                         { name: "Add", value: "add" },
@@ -25,7 +25,7 @@ export default class Scams extends KelleeBotCommand {
                 {
                     name: "link",
                     description: "The scam link to add/remove.",
-                    type: "STRING"
+                    type: Constants.ApplicationCommandOptionTypes.STRING
                 }
             ],
             execute: async ({ client, interaction }) => {
@@ -36,8 +36,7 @@ export default class Scams extends KelleeBotCommand {
 
                     switch (action.toLowerCase()) {
                         case "add":
-                            if (!link)
-                                return await interaction.reply({ content: "Please specify a link to add.", ephemeral: true });
+                            if (!link) return await interaction.reply({ content: "Please specify a link to add.", ephemeral: true });
 
                             if (scams.links.includes(link.toLowerCase()))
                                 return await interaction.reply({ content: "That link is already in the database.", ephemeral: true });
@@ -46,12 +45,12 @@ export default class Scams extends KelleeBotCommand {
                                 "scams",
                                 { $push: { links: link.toLowerCase() } },
                                 { new: true, upsert: true, setDefaultsOnInsert: true }
-                            )
+                            );
                             await interaction.reply({ content: "That link has successfully been added to the database.", ephemeral: true });
                             break;
 
                         case "list":
-                            const content = `Here are all the scam links currently added:\n${scams.links.map((link) => `• ${link}`).join("\n")}`
+                            const content = `Here are all the scam links currently added:\n${scams.links.map((link) => `• ${link}`).join("\n")}`;
                             if (content.length < 2000) {
                                 await interaction.reply({ content, ephemeral: true });
                             } else {

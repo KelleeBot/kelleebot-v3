@@ -1,4 +1,3 @@
-import { CommandInteraction } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 
@@ -16,7 +15,10 @@ export default class Fc extends KelleeBotCommand {
                     const owner = await interaction.guild?.fetchOwner();
                     const guildInfo = await client.guildInfo.get(interaction.guildId!);
                     if (!guildInfo.friendCode)
-                        return await interaction.reply({ content: `Looks like ${owner?.user.tag} hasn't set their friend code yet.`, ephemeral: true })
+                        return await interaction.reply({
+                            content: `Looks like ${owner?.user.tag} hasn't set their friend code yet.`,
+                            ephemeral: true
+                        });
 
                     return await interaction.reply({ content: `${owner?.user.tag}'s Nintendo Switch friend code is ${guildInfo.friendCode}.` });
                 } catch (e) {
@@ -26,4 +28,4 @@ export default class Fc extends KelleeBotCommand {
             }
         });
     }
-};
+}

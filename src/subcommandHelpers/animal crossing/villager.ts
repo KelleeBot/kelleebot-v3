@@ -1,7 +1,6 @@
 import { CommandInteraction } from "discord.js";
 import { Client } from "../../util/client";
 import axios from "axios";
-import { MessageEmbed } from "discord.js";
 import { Villagers } from "../../types/animalCrossing";
 
 export const villager = async (client: Client, interaction: CommandInteraction) => {
@@ -11,13 +10,13 @@ export const villager = async (client: Client, interaction: CommandInteraction) 
         const data = await fetchVillagerName(villager);
 
         if (data.length == 1) {
-            const msgEmbed = createVillagerEmbed(data[0]);
+            const msgEmbed = createVillagerEmbed(client, data[0]);
             return interaction.editReply({ embeds: [msgEmbed] });
         }
 
         const embedArray = [];
         for (let i = 0; i < data.length; i++) {
-            const msgEmbed = createVillagerEmbed(data[i]);
+            const msgEmbed = createVillagerEmbed(client, data[i]);
             embedArray.push(msgEmbed);
         }
         return interaction.editReply({ embeds: embedArray });
@@ -30,36 +29,19 @@ export const villager = async (client: Client, interaction: CommandInteraction) 
 };
 
 const fetchVillagerName = async (name: string) => {
-    const resp = await axios.get(
-        `https://api.nookipedia.com/villagers?name=${encodeURIComponent(
-            name.toLowerCase()
-        )}&nhdetails=true`,
-        {
-            headers: {
-                "X-API-KEY": `${process.env.NOOK_API_KEY}`,
-                "Accept-Version": "2.0.0"
-            }
+    const resp = await axios.get(`https://api.nookipedia.com/villagers?name=${encodeURIComponent(name.toLowerCase())}&nhdetails=true`, {
+        headers: {
+            "X-API-KEY": `${process.env.NOOK_API_KEY}`,
+            "Accept-Version": "2.0.0"
         }
-    );
+    });
     return resp.data;
 };
 
-const createVillagerEmbed = (data: Villagers) => {
-    const {
-        title_color,
-        url,
-        name,
-        nh_details,
-        image_url,
-        species,
-        personality,
-        gender,
-        phrase,
-        birthday_month,
-        birthday_day,
-        sign
-    } = data;
-    return new MessageEmbed()
+const createVillagerEmbed = (client: Client, data: Villagers) => {
+    const { title_color, url, name, nh_details, image_url, species, personality, gender, phrase, birthday_month, birthday_day, sign } = data;
+    return client.utils
+        .createEmbed()
         .setColor(title_color ? `#${title_color}` : "ORANGE")
         .setURL(url)
         .setAuthor({
@@ -76,10 +58,7 @@ const createVillagerEmbed = (data: Villagers) => {
             { name: "**Catchphrase**", value: phrase, inline: true },
             {
                 name: "**Birthday**",
-                value:
-                    birthday_month === "" || birthday_day === ""
-                        ? "-"
-                        : `${birthday_month} ${birthday_day}`,
+                value: birthday_month === "" || birthday_day === "" ? "-" : `${birthday_month} ${birthday_day}`,
                 inline: true
             },
             { name: "**Sign**", value: sign, inline: true }

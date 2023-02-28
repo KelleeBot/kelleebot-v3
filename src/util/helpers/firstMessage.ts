@@ -21,6 +21,5 @@ export default async (client: Client, id: Snowflake, text: string, reactions = [
 const addReactions = (message: Message, reactions: string[]) => {
     message.react(reactions[0]);
     reactions.shift();
-    if (reactions.length > 0)
-        setTimeout(() => addReactions(message, reactions), 750);
+    if (reactions.length > 0) setTimeout(() => addReactions(message, reactions), 750);
 };

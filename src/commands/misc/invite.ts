@@ -1,4 +1,4 @@
-import { CommandInteraction, MessageActionRow, MessageButton, Permissions } from "discord.js";
+import { Permissions } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 
@@ -17,11 +17,13 @@ export default class Invite extends KelleeBotCommand {
                 const msgEmbed = (await client.utils.CustomEmbed({ userID: interaction.user.id }))
                     .setTitle("Invite Me!")
                     .setThumbnail(client.user?.displayAvatarURL({ dynamic: true })!)
-                    .setDescription("If you would like me in your server, all you have to do is click on the button below and I will automatically join your server!");
+                    .setDescription(
+                        "If you would like me in your server, all you have to do is click on the button below and I will automatically join your server!"
+                    );
 
-                const button = new MessageActionRow().addComponents(
-                    new MessageButton().setLabel("Invite").setStyle("LINK").setURL(inviteLink)
-                );
+                const button = client.utils
+                    .createActionRow()
+                    .addComponents(client.utils.createButton().setLabel("Invite").setStyle("LINK").setURL(inviteLink));
 
                 return await interaction.reply({ embeds: [msgEmbed], components: [button], ephemeral: true });
             }

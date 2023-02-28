@@ -1,4 +1,4 @@
-import { ButtonInteraction, ColorResolvable, CommandInteraction, GuildMember, Message, MessageActionRow, MessageButton, MessageEmbed } from "discord.js";
+import { ButtonInteraction, ColorResolvable, CommandInteraction, GuildMember, MessageButton } from "discord.js";
 import { Client } from "../../util/client";
 import { addPoints, getPoints } from "../../util";
 import { GAMBLING } from "../../../config/embedColours.json";
@@ -13,19 +13,14 @@ export const scratch = async (client: Client, interaction: CommandInteraction) =
         const amount = interaction.options.getString("amount")!;
 
         const actualPoints = await getPoints(guild!.id, user.id);
-        if (actualPoints === 0)
-            return await interaction.reply({ content: NO_POINTS });
+        if (actualPoints === 0) return await interaction.reply({ content: NO_POINTS });
 
-        if (!client.utils.isValidNumber(amount.trim()))
-            return await interaction.reply({ content: VALID_POINTS });
+        if (!client.utils.isValidNumber(amount.trim())) return await interaction.reply({ content: VALID_POINTS });
 
         const pointsToGamble = client.utils.removeCommas(amount.trim());
-        if (isNaN(+pointsToGamble) || !Number.isInteger(+pointsToGamble))
-            return await interaction.reply({ content: VALID_POINTS });
+        if (isNaN(+pointsToGamble) || !Number.isInteger(+pointsToGamble)) return await interaction.reply({ content: VALID_POINTS });
 
-        if (+pointsToGamble < 1)
-            return await interaction.reply({ content: ONE_POINT });
-
+        if (+pointsToGamble < 1) return await interaction.reply({ content: ONE_POINT });
 
         if (+pointsToGamble > actualPoints) {
             const msg = NOT_ENOUGH.replace(/{POINTS}/g, client.utils.pluralize(actualPoints, "point", true));
@@ -43,7 +38,8 @@ export const scratch = async (client: Client, interaction: CommandInteraction) =
 
         for (let i = 0; i < 2; i++) {
             squares.push(
-                new MessageButton()
+                client.utils
+                    .createButton()
                     .setLabel(" ")
                     .setCustomId(`scratch-${Object.keys(toEmoji)[3]}`)
             );
@@ -51,7 +47,8 @@ export const scratch = async (client: Client, interaction: CommandInteraction) =
 
         for (let i = 0; i < 3; i++) {
             squares.push(
-                new MessageButton()
+                client.utils
+                    .createButton()
                     .setLabel(" ")
                     .setCustomId(`scratch-${Object.keys(toEmoji)[2]}`)
             );
@@ -59,7 +56,8 @@ export const scratch = async (client: Client, interaction: CommandInteraction) =
 
         for (let i = 0; i < 4; i++) {
             squares.push(
-                new MessageButton()
+                client.utils
+                    .createButton()
                     .setLabel(" ")
                     .setCustomId(`scratch-${Object.keys(toEmoji)[1]}`)
             );
@@ -67,7 +65,8 @@ export const scratch = async (client: Client, interaction: CommandInteraction) =
 
         for (let i = 0; i < 20 - squares.length; i++) {
             squares.push(
-                new MessageButton()
+                client.utils
+                    .createButton()
                     .setLabel(" ")
                     .setCustomId(`scratch-${Object.keys(toEmoji)[0]}`)
             );
@@ -81,7 +80,8 @@ export const scratch = async (client: Client, interaction: CommandInteraction) =
         }
 
         const grid = chunk(squares, 3);
-        const embed = new MessageEmbed()
+        const embed = client.utils
+            .createEmbed()
             .setTitle("Scratch Ticket")
             .setColor(GAMBLING as ColorResolvable)
             .setDescription(
@@ -89,16 +89,14 @@ export const scratch = async (client: Client, interaction: CommandInteraction) =
                     `You have **${NUM_MOVES}** turns to choose some squares to scratch off. Each emoji has a different amount that you can win.\n`,
                     Object.keys(toEmoji)
                         .slice(1)
-                        .map((v) => `${toEmoji[v]} gives ${client.utils.pluralize(Math.round((parseInt(v) / 100) * +pointsToGamble), "point", true)}.`)
+                        .map(
+                            (v) => `${toEmoji[v]} gives ${client.utils.pluralize(Math.round((parseInt(v) / 100) * +pointsToGamble), "point", true)}.`
+                        )
                         .join("\n")
                 ].join("\n")
             );
 
-        const msg = (await interaction.reply({
-            embeds: [embed],
-            components: grid.map((row) => new MessageActionRow().addComponents(row)),
-            fetchReply: true
-        })) as Message;
+        const msg = await client.utils.fetchReply(interaction, { embeds: [embed], components: grid.map((row) => client.utils.createActionRow().addComponents(row)) });
         if (!msg) return interaction.reply({ content: "An error has occurred. Please try again.", ephemeral: true });
 
         const collector = msg.createMessageComponentCollector({ componentType: "BUTTON", time: 1000 * 20 });
@@ -107,28 +105,21 @@ export const scratch = async (client: Client, interaction: CommandInteraction) =
         const REASON = "MAX_MOVES";
 
         collector.on("collect", async (i: ButtonInteraction) => {
-            if ((i.member as GuildMember).id !== interaction.user.id) return interaction.reply({ content: "This isn't your scratch ticket", ephemeral: true });
+            if ((i.member as GuildMember).id !== interaction.user.id)
+                return interaction.reply({ content: "This isn't your scratch ticket", ephemeral: true });
 
             let [, id, index] = i.customId.split("-");
             await i.deferUpdate();
 
             total += Math.round((+id / 100) * +pointsToGamble);
-            squares[+index]
-                .setStyle(+id != 0 ? "SUCCESS" : "DANGER")
-                .setDisabled(true);
+            squares[+index].setStyle(+id != 0 ? "SUCCESS" : "DANGER").setDisabled(true);
 
             if (+id != 0) squares[+index].setEmoji(toEmoji[id]);
             await i.editReply({
-                components: chunk(squares, 3).map((row) =>
-                    new MessageActionRow().addComponents(row)
-                ),
+                components: chunk(squares, 3).map((row) => client.utils.createActionRow().addComponents(row)),
                 embeds: [
                     embed.setDescription(
-                        [
-                            `Spent: \`${pointsToGamble}\``,
-                            `Gained: \`${total}\``,
-                            `Profit: \`${total - +pointsToGamble}\``
-                        ].join("\n")
+                        [`Spent: \`${pointsToGamble}\``, `Gained: \`${total}\``, `Profit: \`${total - +pointsToGamble}\``].join("\n")
                     )
                 ]
             });
@@ -154,9 +145,7 @@ export const scratch = async (client: Client, interaction: CommandInteraction) =
 
                 await msg.edit({
                     embeds: [embed],
-                    components: chunk(squares, 3).map((row) =>
-                        new MessageActionRow().addComponents(row)
-                    )
+                    components: chunk(squares, 3).map((row) => client.utils.createActionRow().addComponents(row))
                 });
             } else if (reason === "time") {
                 embed.setDescription("You ran out of time and have forfeited your points.");

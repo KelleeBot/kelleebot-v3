@@ -1,13 +1,14 @@
 import { Client } from "../../util/client";
 import { DEFAULT } from "../../../config/colors.json";
 import { stripIndents } from "common-tags";
-import { ColorResolvable, Guild, MessageEmbed } from "discord.js";
+import { ColorResolvable, Guild } from "discord.js";
 
 export default async (client: Client, guild: Guild) => {
     client.utils.log("WARNING", `${__filename}`, `${guild.name} is currently down.`);
     try {
         const owner = await guild.fetchOwner();
-        const msgEmbed = new MessageEmbed()
+        const msgEmbed = client.utils
+            .createEmbed()
             .setColor(DEFAULT as ColorResolvable)
             .setTitle(`${guild.name} Server Outage`)
             .setDescription(
@@ -23,11 +24,11 @@ export default async (client: Client, guild: Guild) => {
             )
             .setFooter({
                 text: "Please do not reply to this DM as this is not monitored.",
-                iconURL: client.utils.getGuildIcon(guild)!
+                iconURL: client.utils.getGuildIcon(guild)
             })
             .setTimestamp();
         return owner.send({ embeds: [msgEmbed] });
     } catch (e) {
         return client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
     }
-}
+};

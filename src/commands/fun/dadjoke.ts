@@ -16,7 +16,7 @@ export default class Dadjoke extends KelleeBotCommand {
                 await interaction.deferReply();
                 try {
                     const resp = await axios.get("https://icanhazdadjoke.com/", {
-                        headers: { "Accept": "application/json", "User-Agent": `${client.user!.tag}` },
+                        headers: { Accept: "application/json", "User-Agent": `${client.user!.tag}` }
                     });
                     const { data } = resp;
                     return interaction.editReply({ content: data.joke });

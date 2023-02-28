@@ -1,4 +1,4 @@
-import { CommandInteraction } from "discord.js";
+import { Constants } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 
@@ -13,8 +13,8 @@ export default class Setda extends KelleeBotCommand {
                 {
                     name: "address",
                     description: "Your ACNH dreama ddress.",
-                    type: "STRING",
-                    required: true,
+                    type: Constants.ApplicationCommandOptionTypes.STRING,
+                    required: true
                 }
             ],
             execute: async ({ client, interaction }) => {
@@ -22,14 +22,20 @@ export default class Setda extends KelleeBotCommand {
                     const address = interaction.options.getString("address")!;
                     const regex = address.match(/^DA-\d{4}-\d{4}-\d{4}$/g);
                     if (!regex)
-                        return await interaction.reply({ content: "Dream Address is of invalid format. Format must be in `DA-1234-1234-1234`.", ephemeral: true });
+                        return await interaction.reply({
+                            content: "Dream Address is of invalid format. Format must be in `DA-1234-1234-1234`.",
+                            ephemeral: true
+                        });
 
                     await client.guildInfo.findByIdAndUpdate(
                         interaction.guildId!,
                         { $set: { dreamAddress: address } },
                         { new: true, upsert: true, setDefaultsOnInsert: true }
                     );
-                    return await interaction.reply({ content: `Your ACNH Dream Address has been successfully set to \`${address}\`.`, ephemeral: true });
+                    return await interaction.reply({
+                        content: `Your ACNH Dream Address has been successfully set to \`${address}\`.`,
+                        ephemeral: true
+                    });
                 } catch (e) {
                     client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
                     return await interaction.reply({ content: "An error has occurred. Please try again." });
@@ -37,4 +43,4 @@ export default class Setda extends KelleeBotCommand {
             }
         });
     }
-};
+}

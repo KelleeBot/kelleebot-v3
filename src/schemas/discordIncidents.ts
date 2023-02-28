@@ -1,4 +1,3 @@
-
 import { model, Schema } from "mongoose";
 
 const discordIncidents = new Schema({

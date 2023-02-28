@@ -7,7 +7,7 @@ export const fish = async (client: Client, interaction: CommandInteraction) => {
     await interaction.deferReply();
     try {
         const fishName = interaction.options.getString("fish")!;
-        const data = await fetchFish(fishName) as Fish;
+        const data = (await fetchFish(fishName)) as Fish;
 
         const { url, name, image_url, sell_nook, sell_cj, location, shadow_size, north, south } = data;
 
@@ -41,18 +41,14 @@ export const fish = async (client: Client, interaction: CommandInteraction) => {
                     name: "**Months Available**",
                     value: `North:\n${north.availability_array.map(
                         (avail: { months: string }) => `${avail.months}\n`
-                    )}\nSouth:\n${south.availability_array.map(
-                        (avail: { months: string }) => `${avail.months}\n`
-                    )}`,
+                    )}\nSouth:\n${south.availability_array.map((avail: { months: string }) => `${avail.months}\n`)}`,
                     inline: true
                 },
                 {
                     name: "**Times Available**",
                     value: `North:\n${north.availability_array.map(
                         (avail: { time: string }) => `${avail.time}\n`
-                    )}\nSouth:\n${south.availability_array.map(
-                        (avail: { time: string }) => `${avail.time}\n`
-                    )}`,
+                    )}\nSouth:\n${south.availability_array.map((avail: { time: string }) => `${avail.time}\n`)}`,
                     inline: true
                 }
             )
@@ -61,8 +57,7 @@ export const fish = async (client: Client, interaction: CommandInteraction) => {
                 iconURL: `https://nookipedia.com/wikilogo.png`
             });
         return interaction.editReply({ embeds: [msgEmbed] });
-    }
-    catch (e) {
+    } catch (e) {
         client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
         return interaction.editReply({
             content: "An error has occurred. Please try again."
@@ -71,14 +66,11 @@ export const fish = async (client: Client, interaction: CommandInteraction) => {
 };
 
 const fetchFish = async (name: string) => {
-    const resp = await axios.get(
-        `https://api.nookipedia.com/nh/fish/${encodeURIComponent(name.toLowerCase())}`,
-        {
-            headers: {
-                "X-API-KEY": `${process.env.NOOK_API_KEY}`,
-                "Accept-Version": "2.0.0"
-            }
+    const resp = await axios.get(`https://api.nookipedia.com/nh/fish/${encodeURIComponent(name.toLowerCase())}`, {
+        headers: {
+            "X-API-KEY": `${process.env.NOOK_API_KEY}`,
+            "Accept-Version": "2.0.0"
         }
-    );
+    });
     return resp.data;
-}
+};

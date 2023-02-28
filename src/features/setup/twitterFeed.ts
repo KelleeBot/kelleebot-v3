@@ -28,7 +28,8 @@ export default (client: Client) => {
 };
 
 const startTwitterFeed = (client: Client) => {
-    client.twitter.stream("statuses/filter", { follow: followedAccounts.join(",") })
+    client.twitter
+        .stream("statuses/filter", { follow: followedAccounts.join(",") })
         .on("start", () => client.utils.log("WARNING", `${__filename}`, "Started Twitter Feed Stream"))
         .on("data", async (tweet) => {
             if (!tweet.user || tweet.retweeted_status) return;
@@ -37,12 +38,17 @@ const startTwitterFeed = (client: Client) => {
 
             const tweeted = DateTime.fromISO(new Date(tweet.created_at).toISOString());
             const timeString = `<t:${Math.floor(tweeted.toSeconds())}:F> (<t:${Math.floor(tweeted.toSeconds())}:R>)`;
-            const text = `${tweet.user.screen_name} tweeted this on ${timeString}:\n${url}`
+            const text = `${tweet.user.screen_name} tweeted this on ${timeString}:\n${url}`;
 
             switch (tweet.user.id_str) {
                 case "517358431":
-                    if (tweet.in_reply_to_status_id || tweet.in_reply_to_status_id_str ||
-                        tweet.in_reply_to_user_id || tweet.in_reply_to_user_id_str || tweet.in_reply_to_screen_name)
+                    if (
+                        tweet.in_reply_to_status_id ||
+                        tweet.in_reply_to_status_id_str ||
+                        tweet.in_reply_to_user_id ||
+                        tweet.in_reply_to_user_id_str ||
+                        tweet.in_reply_to_screen_name
+                    )
                         return;
                     await acWebhook.send({ content: url });
                     break;
@@ -57,37 +63,62 @@ const startTwitterFeed = (client: Client) => {
 
                 case "96879107":
                 case "1114253221269245952":
-                    if (tweet.in_reply_to_status_id || tweet.in_reply_to_status_id_str ||
-                        tweet.in_reply_to_user_id || tweet.in_reply_to_user_id_str || tweet.in_reply_to_screen_name)
+                    if (
+                        tweet.in_reply_to_status_id ||
+                        tweet.in_reply_to_status_id_str ||
+                        tweet.in_reply_to_user_id ||
+                        tweet.in_reply_to_user_id_str ||
+                        tweet.in_reply_to_screen_name
+                    )
                         return;
                     await pokemonWebhook.send({ content: url });
                     break;
 
                 case "287885794":
-                    if (tweet.in_reply_to_status_id || tweet.in_reply_to_status_id_str ||
-                        tweet.in_reply_to_user_id || tweet.in_reply_to_user_id_str || tweet.in_reply_to_screen_name)
+                    if (
+                        tweet.in_reply_to_status_id ||
+                        tweet.in_reply_to_status_id_str ||
+                        tweet.in_reply_to_user_id ||
+                        tweet.in_reply_to_user_id_str ||
+                        tweet.in_reply_to_screen_name
+                    )
                         return;
                     tetrisWebhook.send({ content: url });
                     break;
 
                 case "437210567":
-                    if (tweet.in_reply_to_status_id || tweet.in_reply_to_status_id_str ||
-                        tweet.in_reply_to_user_id || tweet.in_reply_to_user_id_str || tweet.in_reply_to_screen_name)
+                    if (
+                        tweet.in_reply_to_status_id ||
+                        tweet.in_reply_to_status_id_str ||
+                        tweet.in_reply_to_user_id ||
+                        tweet.in_reply_to_user_id_str ||
+                        tweet.in_reply_to_screen_name
+                    )
                         return;
                     await twitchWebhook.send({ content: url });
                     break;
 
                 case "537917040":
-                    if (tweet.in_reply_to_status_id || tweet.in_reply_to_status_id_str ||
-                        tweet.in_reply_to_user_id || tweet.in_reply_to_user_id_str || tweet.in_reply_to_screen_name)
+                    if (
+                        tweet.in_reply_to_status_id ||
+                        tweet.in_reply_to_status_id_str ||
+                        tweet.in_reply_to_user_id ||
+                        tweet.in_reply_to_user_id_str ||
+                        tweet.in_reply_to_screen_name
+                    )
                         return;
 
                     await krisyWebhook.send({ content: text });
                     break;
 
                 case "1100185089416269824":
-                    if (tweet.in_reply_to_status_id || tweet.in_reply_to_status_id_str ||
-                        tweet.in_reply_to_user_id || tweet.in_reply_to_user_id_str || tweet.in_reply_to_screen_name)
+                    if (
+                        tweet.in_reply_to_status_id ||
+                        tweet.in_reply_to_status_id_str ||
+                        tweet.in_reply_to_user_id ||
+                        tweet.in_reply_to_user_id_str ||
+                        tweet.in_reply_to_screen_name
+                    )
                         return;
 
                     await ramenWebhook.send({ content: text });

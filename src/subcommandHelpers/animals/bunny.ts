@@ -8,9 +8,7 @@ export const bunny = async (client: Client, interaction: CommandInteraction) => 
         const resp = await axios.get("https://api.bunnies.io/v2/loop/random/?media=gif,png");
         const { data } = resp;
 
-        const msgEmbed = (
-            await client.utils.CustomEmbed({ userID: interaction.user.id })
-        )
+        const msgEmbed = (await client.utils.CustomEmbed({ userID: interaction.user.id }))
             .setAuthor({
                 name: "Bunny",
                 iconURL: "https://i.imgur.com/VUbJXOA.png",

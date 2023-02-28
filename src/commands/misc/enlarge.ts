@@ -1,4 +1,4 @@
-import { Util } from "discord.js";
+import { Constants, Util } from "discord.js";
 import { Client } from "../../util/client";
 import { parse } from "twemoji-parser";
 import { KelleeBotCommand } from "../../util/command";
@@ -15,7 +15,7 @@ export default class Enlarge extends KelleeBotCommand {
                 {
                     name: "emoji",
                     description: "The emoji to enlarge",
-                    type: "STRING",
+                    type: Constants.ApplicationCommandOptionTypes.STRING,
                     required: true
                 }
             ],
@@ -30,8 +30,7 @@ export default class Enlarge extends KelleeBotCommand {
                         });
 
                     const parsed = parse(emoji, { assetType: "png" });
-                    if (!parsed[0])
-                        return await interaction.reply({ content: "An invalid emoji was provided.", ephemeral: true });
+                    if (!parsed[0]) return await interaction.reply({ content: "An invalid emoji was provided.", ephemeral: true });
 
                     return await interaction.reply({ content: parsed[0].url });
                 } catch (e) {

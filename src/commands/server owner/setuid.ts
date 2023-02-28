@@ -1,4 +1,4 @@
-import { CommandInteraction } from "discord.js";
+import { Constants } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 
@@ -13,8 +13,8 @@ export default class Setuid extends KelleeBotCommand {
                 {
                     name: "uid",
                     description: "Your Genshin Impact UID.",
-                    type: "STRING",
-                    required: true,
+                    type: Constants.ApplicationCommandOptionTypes.STRING,
+                    required: true
                 }
             ],
             execute: async ({ client, interaction }) => {
@@ -34,4 +34,4 @@ export default class Setuid extends KelleeBotCommand {
             }
         });
     }
-};
+}

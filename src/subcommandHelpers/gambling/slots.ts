@@ -18,16 +18,12 @@ export const slots = async (client: Client, interaction: CommandInteraction) => 
         const points = interaction.options.getString("amount")!;
 
         const actualPoints = await getPoints(guild!.id, user.id);
-        if (actualPoints === 0)
-            return await interaction.reply({ content: NO_POINTS });
+        if (actualPoints === 0) return await interaction.reply({ content: NO_POINTS });
 
-        if (points.toLowerCase() === "all")
-            if (client.utils.isValidNumber(points.trim()))
-                return await interaction.reply({ content: NO_POINTS });
+        if (points.toLowerCase() === "all") if (client.utils.isValidNumber(points.trim())) return await interaction.reply({ content: NO_POINTS });
 
         const pointsToGamble = client.utils.removeCommas(points.trim());
-        if (actualPoints === 0)
-            return await interaction.reply({ content: NO_POINTS });
+        if (actualPoints === 0) return await interaction.reply({ content: NO_POINTS });
 
         const slot1 = client.utils.randomRange(0, slotsEmoji.length - 1);
         const slot2 = client.utils.randomRange(0, slotsEmoji.length - 1);
@@ -50,11 +46,9 @@ export const slots = async (client: Client, interaction: CommandInteraction) => 
             }
         }
 
-        if (isNaN(+pointsToGamble) || !Number.isInteger(+pointsToGamble))
-            return await interaction.reply({ content: VALID_POINTS });
+        if (isNaN(+pointsToGamble) || !Number.isInteger(+pointsToGamble)) return await interaction.reply({ content: VALID_POINTS });
 
-        if (+pointsToGamble < 1)
-            return await interaction.reply({ content: ONE_POINT });
+        if (+pointsToGamble < 1) return await interaction.reply({ content: ONE_POINT });
 
         if (+pointsToGamble > actualPoints) {
             const msg = NOT_ENOUGH.replace(/{POINTS}/g, client.utils.pluralize(actualPoints, "point", true));
@@ -67,11 +61,7 @@ export const slots = async (client: Client, interaction: CommandInteraction) => 
         } else {
             const newPoints = await addPoints(guild!.id, user.id, +pointsToGamble * -1);
             return await interaction.reply({
-                content: `${slotsText} and lost ${client.utils.pluralize(
-                    +pointsToGamble,
-                    "point",
-                    true
-                )}! You now have ${client.utils.pluralize(
+                content: `${slotsText} and lost ${client.utils.pluralize(+pointsToGamble, "point", true)}! You now have ${client.utils.pluralize(
                     newPoints,
                     "point",
                     true
@@ -86,7 +76,14 @@ export const slots = async (client: Client, interaction: CommandInteraction) => 
 
 const isSlotsWin = (slot1: number, slot2: number, slot3: number) => slot1 == slot2 && slot2 == slot3;
 
-const slotsWin = async (client: Client, guildID: Snowflake, userID: Snowflake, pointsWon: number, slotsText: string, interaction: CommandInteraction) => {
+const slotsWin = async (
+    client: Client,
+    guildID: Snowflake,
+    userID: Snowflake,
+    pointsWon: number,
+    slotsText: string,
+    interaction: CommandInteraction
+) => {
     const newPoints = await addPoints(guildID!, userID, pointsWon);
     return await interaction.reply({
         content: `${slotsText} and won ${client.utils.pluralize(pointsWon, "point", true)}! You now have ${client.utils.pluralize(

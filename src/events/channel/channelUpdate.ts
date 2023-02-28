@@ -1,15 +1,16 @@
-import { ColorResolvable, GuildChannel, MessageEmbed } from "discord.js";
+import { ColorResolvable, GuildChannel } from "discord.js";
 import { Client } from "../../util/client";
-import { CHANNEL_EVENTS } from "../../../config/embedColours.json"
+import { CHANNEL_EVENTS } from "../../../config/embedColours.json";
 
 export default async (client: Client, oldChannel: GuildChannel, newChannel: GuildChannel) => {
     if (!oldChannel.guild || !newChannel.guild) return;
 
     // Channel name updated
     if (oldChannel.name !== newChannel.name) {
-        const msgEmbed = new MessageEmbed()
+        const msgEmbed = client.utils
+            .createEmbed()
             .setColor(CHANNEL_EVENTS as ColorResolvable)
-            .setAuthor({ name: newChannel.guild.name, iconURL: client.utils.getGuildIcon(newChannel.guild)! })
+            .setAuthor({ name: newChannel.guild.name, iconURL: client.utils.getGuildIcon(newChannel.guild) })
             .setDescription(`${client.utils.getChannelDescription(newChannel.type)} Name Changed**`)
             .setTimestamp()
             .setFooter({ text: `ID: ${oldChannel.id}` });

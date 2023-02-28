@@ -9,11 +9,9 @@ export const start = async (client: Client, interaction: CommandInteraction) => 
     const prize = interaction.options.getString("prize")!;
     const channel = interaction.options.getChannel("channel") ?? interaction.channel;
 
-    if (isNaN(ms(duration)))
-        return interaction.reply({ content: `"${duration}" is not a valid duration.`, ephemeral: true });
+    if (isNaN(ms(duration))) return interaction.reply({ content: `"${duration}" is not a valid duration.`, ephemeral: true });
 
-    if (channel?.type !== "GUILD_TEXT")
-        return interaction.reply({ content: "You can only hold giveaways in text channels.", ephemeral: true });
+    if (channel?.type !== "GUILD_TEXT") return interaction.reply({ content: "You can only hold giveaways in text channels.", ephemeral: true });
 
     client.giveaways.start(channel, {
         duration: ms(duration),

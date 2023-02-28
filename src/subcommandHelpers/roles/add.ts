@@ -3,20 +3,16 @@ import { CommandInteraction, MessageActionRow, MessageSelectMenu, MessageSelectO
 
 export const add = async (client: Client, interaction: CommandInteraction) => {
     const id = interaction.options.getString("messageid")!;
-    const role = interaction.options.getMentionable("role")! as Role;
-    const channel = interaction.options.getChannel("channel")! as TextChannel ?? interaction.channel as TextChannel;
+    const role = interaction.options.getRole("role")! as Role;
+    const channel = (interaction.options.getChannel("channel")! as TextChannel) ?? (interaction.channel as TextChannel);
     const emoji = interaction.options.getString("emoji")!;
 
     try {
-        if (!(role instanceof Role))
-            return await interaction.reply({ content: "Please ensure that a role is selected.", ephemeral: true });
-
         if (channel.type !== "GUILD_TEXT")
             return await interaction.reply({ content: "Please ensure that the channel selected is a text channel.", ephemeral: true });
 
         const targetMessage = await channel.messages.fetch(id, { cache: true, force: true });
-        if (!targetMessage)
-            return await interaction.reply({ content: "I couldn't find that message", ephemeral: true });
+        if (!targetMessage) return await interaction.reply({ content: "I couldn't find that message", ephemeral: true });
 
         if (targetMessage.author.id !== client.user?.id)
             return await interaction.reply({ content: "Please provide a message ID for a message that was actually sent by me.", ephemeral: true });
@@ -25,11 +21,9 @@ export const add = async (client: Client, interaction: CommandInteraction) => {
             return await interaction.reply({ content: "You can't add a role that is higher than mine.", ephemeral: true });
 
         let row = targetMessage.components[0] as MessageActionRow;
-        if (!row) row = new MessageActionRow();
+        if (!row) row = client.utils.createActionRow();
 
-        const options: MessageSelectOptionData[] = [
-            emoji ? { label: role.name, value: role.id, emoji } : { label: role.name, value: role.id }
-        ];
+        const options: MessageSelectOptionData[] = [emoji ? { label: role.name, value: role.id, emoji } : { label: role.name, value: role.id }];
 
         let menu = row.components[0] as MessageSelectMenu;
         if (menu) {
@@ -44,7 +38,8 @@ export const add = async (client: Client, interaction: CommandInteraction) => {
             menu.setMaxValues(menu.options.length);
         } else {
             row.addComponents(
-                new MessageSelectMenu()
+                client.utils
+                    .createSelectMenu()
                     .setCustomId("auto_roles")
                     .setMinValues(0)
                     .setMaxValues(1)

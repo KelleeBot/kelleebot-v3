@@ -1,3 +1,4 @@
+import { Constants } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 import { NO_GAMBLING_CHANNEL_SET } from "../../../config/messages.json";
@@ -17,13 +18,13 @@ export default class Setnitro extends KelleeBotCommand {
                 {
                     name: "guildid",
                     description: "The ID of the guild to set the Nitro link for.",
-                    type: "STRING",
+                    type: Constants.ApplicationCommandOptionTypes.STRING,
                     required: true
                 },
                 {
                     name: "link",
                     description: "The Nitro link.",
-                    type: "STRING",
+                    type: Constants.ApplicationCommandOptionTypes.STRING,
                     required: true
                 }
             ],
@@ -33,8 +34,7 @@ export default class Setnitro extends KelleeBotCommand {
                     const link = interaction.options.getString("link")!;
 
                     const guildInfo = await client.guildInfo.get(id);
-                    if (!guildInfo.gambling.gamblingChannel)
-                        return await interaction.reply({ content: NO_GAMBLING_CHANNEL_SET, ephemeral: true });
+                    if (!guildInfo.gambling.gamblingChannel) return await interaction.reply({ content: NO_GAMBLING_CHANNEL_SET, ephemeral: true });
 
                     if (!nitroRegExp.test(link))
                         return await interaction.reply({ content: "Invalid Nitro link. Please try again.", ephemeral: true });
@@ -53,4 +53,4 @@ export default class Setnitro extends KelleeBotCommand {
             }
         });
     }
-};
+}

@@ -8,9 +8,7 @@ export const fox = async (client: Client, interaction: CommandInteraction) => {
         const resp = await axios.get("https://some-random-api.ml/animal/fox");
         const { data } = resp;
 
-        const msgEmbed = (
-            await client.utils.CustomEmbed({ userID: interaction.user.id })
-        )
+        const msgEmbed = (await client.utils.CustomEmbed({ userID: interaction.user.id }))
             .setAuthor({
                 name: "Fox",
                 iconURL: "https://i.imgur.com/LlnzRZj.png",

@@ -1,4 +1,4 @@
-import { ColorResolvable, GuildMember, MessageEmbed } from "discord.js";
+import { ColorResolvable, GuildMember } from "discord.js";
 import { Client } from "../../util/client";
 import { GUILD_MEMBER_EVENTS } from "../../../config/embedColours.json";
 import gambling from "../../schemas/gambling";
@@ -12,7 +12,8 @@ export default async (client: Client, member: GuildMember) => {
     const joinedTimestamp = Math.round(member.joinedTimestamp! / 1000);
     const leftTimestamp = Math.round(Date.now() / 1000);
 
-    const msgEmbed = new MessageEmbed()
+    const msgEmbed = client.utils
+        .createEmbed()
         .setColor(GUILD_MEMBER_EVENTS as ColorResolvable)
         .setAuthor({ name: user.tag, iconURL: user.displayAvatarURL({ dynamic: true }) })
         .setDescription(`**${user} has left the server**`)
@@ -20,7 +21,7 @@ export default async (client: Client, member: GuildMember) => {
             { name: "**Joined**", value: `<t:${joinedTimestamp}:F> (<t:${joinedTimestamp}:R>)`, inline: false },
             { name: "**Left**", value: `<t:${leftTimestamp}:F> (<t:${leftTimestamp}:R>)`, inline: false }
         )
-        .setFooter({ text: `ID: ${user.id}` })
+        .setFooter({ text: `Members: ${guild.memberCount} • ID: ${user.id}` })
         .setTimestamp();
 
     // const fetchedLog = await client.utils.fetchAuditLog(guild, "MEMBER_KICK");
@@ -43,4 +44,4 @@ export default async (client: Client, member: GuildMember) => {
     //     }`
     // );
     return client.utils.sendMessageToBotLog(client, guild, msgEmbed);
-}
+};

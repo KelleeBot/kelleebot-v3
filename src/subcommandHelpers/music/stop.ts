@@ -1,6 +1,6 @@
 import { Client } from "../../util/client";
 import { MUSIC_COMMANDS } from "../../../config/embedColours.json";
-import { ColorResolvable, CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
+import { ColorResolvable, CommandInteraction, GuildMember } from "discord.js";
 
 export const stop = async (client: Client, interaction: CommandInteraction) => {
     const { guild } = interaction;
@@ -16,9 +16,10 @@ export const stop = async (client: Client, interaction: CommandInteraction) => {
 
         queue.destroy();
 
-        const msgEmbed = new MessageEmbed()
+        const msgEmbed = client.utils
+            .createEmbed()
             .setColor(MUSIC_COMMANDS as ColorResolvable)
-            .setAuthor({ name: "Music Stopped", iconURL: client.utils.getGuildIcon(interaction.guild!)! })
+            .setAuthor({ name: "Music Stopped", iconURL: client.utils.getGuildIcon(interaction.guild!) })
             .setDescription("⏹️ | Music stopped.");
         return await interaction.reply({ embeds: [msgEmbed] });
     } catch (e) {

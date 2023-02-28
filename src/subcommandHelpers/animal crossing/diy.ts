@@ -7,7 +7,7 @@ export const diy = async (client: Client, interaction: CommandInteraction) => {
     await interaction.deferReply();
     try {
         const recipe = interaction.options.getString("diy")!;
-        const data = await fetchRecipe(recipe) as Recipe;
+        const data = (await fetchRecipe(recipe)) as Recipe;
 
         const { url, name, image_url, availability, materials } = data;
 
@@ -19,30 +19,20 @@ export const diy = async (client: Client, interaction: CommandInteraction) => {
             .addFields(
                 {
                     name: "**Materials**",
-                    value: `${materials
-                        .map(
-                            (mat: { count: number; name: string }) =>
-                                `${mat.count}x ${mat.name}`
-                        )
-                        .join("\n")}`,
+                    value: `${materials.map((mat: { count: number; name: string }) => `${mat.count}x ${mat.name}`).join("\n")}`,
                     inline: true
                 },
                 {
                     name: "**Obtained From**",
-                    value: `${availability
-                        .map((avail: { from: string }) => `${avail.from}`)
-                        .join("\n")}`,
+                    value: `${availability.map((avail: { from: string }) => `${avail.from}`).join("\n")}`,
                     inline: true
                 },
                 {
                     name: "**Note**",
                     value:
-                        availability.map((avail: { note: string }) => `${avail.note}`)
-                            .length == 1
+                        availability.map((avail: { note: string }) => `${avail.note}`).length == 1
                             ? "-"
-                            : `${availability
-                                .map((avail: { note: string }) => `${avail.note}`)
-                                .join("\n")}`,
+                            : `${availability.map((avail: { note: string }) => `${avail.note}`).join("\n")}`,
                     inline: true
                 }
             )
@@ -51,8 +41,7 @@ export const diy = async (client: Client, interaction: CommandInteraction) => {
                 iconURL: `https://nookipedia.com/wikilogo.png`
             });
         return interaction.editReply({ embeds: [msgEmbed] });
-    }
-    catch (e) {
+    } catch (e) {
         client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
         return interaction.editReply({
             content: "An error has occurred. Please try again."
@@ -61,14 +50,11 @@ export const diy = async (client: Client, interaction: CommandInteraction) => {
 };
 
 const fetchRecipe = async (name: string) => {
-    const resp = await axios.get(
-        `https://api.nookipedia.com/nh/recipes/${encodeURIComponent(name.toLowerCase())}`,
-        {
-            headers: {
-                "X-API-KEY": `${process.env.NOOK_API_KEY}`,
-                "Accept-Version": "2.0.0"
-            }
+    const resp = await axios.get(`https://api.nookipedia.com/nh/recipes/${encodeURIComponent(name.toLowerCase())}`, {
+        headers: {
+            "X-API-KEY": `${process.env.NOOK_API_KEY}`,
+            "Accept-Version": "2.0.0"
         }
-    );
+    });
     return resp.data;
-}
+};

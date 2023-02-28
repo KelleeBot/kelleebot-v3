@@ -1,6 +1,6 @@
 import { Client } from "../../util/client";
 import { MUSIC_COMMANDS } from "../../../config/embedColours.json";
-import { ColorResolvable, CommandInteraction, GuildMember, MessageEmbed, Util } from "discord.js";
+import { ColorResolvable, CommandInteraction, GuildMember, Util } from "discord.js";
 
 export const queue = async (client: Client, interaction: CommandInteraction) => {
     const { guild } = interaction;
@@ -17,9 +17,10 @@ export const queue = async (client: Client, interaction: CommandInteraction) => 
         const tracks = queue.tracks;
         let tracksArray = client.utils.chunkArray(tracks, 10);
         if (tracksArray.length == 1) {
-            const msgEmbed = new MessageEmbed()
+            const msgEmbed = client.utils
+                .createEmbed()
                 .setColor(MUSIC_COMMANDS as ColorResolvable)
-                .setAuthor({ name: "Music Queue", iconURL: client.utils.getGuildIcon(interaction.guild!)! });
+                .setAuthor({ name: "Music Queue", iconURL: client.utils.getGuildIcon(interaction.guild!) });
 
             if (tracks.length == 0) {
                 msgEmbed.setDescription("There are no songs in the queue.");
@@ -28,7 +29,9 @@ export const queue = async (client: Client, interaction: CommandInteraction) => 
 
             let text = "";
             for (let i = 0; i < tracks.length; i++) {
-                text += `${i + 1}. [${Util.escapeMarkdown(tracks[i].title)}](${tracks[i].url}) (${tracks[i].duration}) - Requested by ${tracks[i].requestedBy}\n`;
+                text += `${i + 1}. [${Util.escapeMarkdown(tracks[i].title)}](${tracks[i].url}) (${tracks[i].duration}) - Requested by ${
+                    tracks[i].requestedBy
+                }\n`;
             }
             msgEmbed.setDescription(text).setFooter({
                 text: `Total Songs: ${tracks.length} | Total Duration: ${client.utils.msToTime(queue.totalTime)}`
@@ -39,23 +42,27 @@ export const queue = async (client: Client, interaction: CommandInteraction) => 
         const embedArray = [];
         for (let i = 0; i < tracksArray.length; i++) {
             let text = "";
-            const msgEmbed = new MessageEmbed()
+            const msgEmbed = client.utils
+                .createEmbed()
                 .setColor(MUSIC_COMMANDS as ColorResolvable)
-                .setAuthor({ name: "Music Queue", iconURL: client.utils.getGuildIcon(interaction.guild!)! });
+                .setAuthor({ name: "Music Queue", iconURL: client.utils.getGuildIcon(interaction.guild!) });
 
             let counter = (i + 1) * 10 - 10;
             for (let j = 0; j < tracksArray[i].length; j++) {
-                text += `${counter + 1}. [${Util.escapeMarkdown(tracksArray[i][j].title)}](${tracksArray[i][j].url}) (${tracksArray[i][j].duration
-                    }) - Requested by ${tracksArray[i][j].requestedBy}\n`;
+                text += `${counter + 1}. [${Util.escapeMarkdown(tracksArray[i][j].title)}](${tracksArray[i][j].url}) (${
+                    tracksArray[i][j].duration
+                }) - Requested by ${tracksArray[i][j].requestedBy}\n`;
                 counter++;
             }
 
             msgEmbed.setDescription(text).setFooter({
-                text: `Total Songs: ${tracks.length} | Total Duration: ${client.utils.msToTime(queue.totalTime)} | Page ${i + 1} of ${tracksArray.length}`
+                text: `Total Songs: ${tracks.length} | Total Duration: ${client.utils.msToTime(queue.totalTime)} | Page ${i + 1} of ${
+                    tracksArray.length
+                }`
             });
             embedArray.push(msgEmbed);
         }
-        return client.utils.buttonPagination(interaction, embedArray, { time: 1000 * 60 });
+        return client.utils.paginate(interaction, embedArray, { time: 1000 * 60 });
     } catch (e) {
         client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
         return await interaction.reply({ content: "An error has occurred. Please try again.", ephemeral: true });

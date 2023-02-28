@@ -7,7 +7,7 @@ export const artwork = async (client: Client, interaction: CommandInteraction) =
     await interaction.deferReply();
     try {
         const artwork = interaction.options.getString("artwork")!;
-        const data = await fetchArtwork(artwork) as Artwork;
+        const data = (await fetchArtwork(artwork)) as Artwork;
 
         const { url, name, image_url, buy, sell, has_fake, authenticity } = data;
 
@@ -34,9 +34,7 @@ export const artwork = async (client: Client, interaction: CommandInteraction) =
                 },
                 {
                     name: "**Authenticity**",
-                    value: authenticity
-                        ? authenticity
-                        : "This artwork is always genuine.",
+                    value: authenticity ? authenticity : "This artwork is always genuine.",
                     inline: true
                 }
             )
@@ -51,17 +49,14 @@ export const artwork = async (client: Client, interaction: CommandInteraction) =
             content: "An error has occurred. Please try again."
         });
     }
-}
+};
 
 const fetchArtwork = async (name: string) => {
-    const resp = await axios.get(
-        `https://api.nookipedia.com/nh/art/${encodeURIComponent(name.toLowerCase())}`,
-        {
-            headers: {
-                "X-API-KEY": `${process.env.NOOK_API_KEY}`,
-                "Accept-Version": "2.0.0"
-            }
+    const resp = await axios.get(`https://api.nookipedia.com/nh/art/${encodeURIComponent(name.toLowerCase())}`, {
+        headers: {
+            "X-API-KEY": `${process.env.NOOK_API_KEY}`,
+            "Accept-Version": "2.0.0"
         }
-    );
+    });
     return resp.data;
 };

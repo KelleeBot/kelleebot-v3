@@ -7,7 +7,7 @@ export const furniture = async (client: Client, interaction: CommandInteraction)
     await interaction.deferReply();
     try {
         const item = interaction.options.getString("furniture")!;
-        const data = await fetchFurniture(item) as Furniture;
+        const data = (await fetchFurniture(item)) as Furniture;
 
         const { url, name, sell, category, themes, availability, variations, buy } = data;
         const thumbnail = variations.random().image_url;
@@ -23,9 +23,7 @@ export const furniture = async (client: Client, interaction: CommandInteraction)
                 { name: "**Themes**", value: themes.join(", "), inline: true },
                 {
                     name: "**Availability**",
-                    value: `${availability
-                        .map((avail: { from: string }) => `${avail.from}`)
-                        .join("\n")}`,
+                    value: `${availability.map((avail: { from: string }) => `${avail.from}`).join("\n")}`,
                     inline: true
                 }
             )
@@ -37,12 +35,7 @@ export const furniture = async (client: Client, interaction: CommandInteraction)
         if (buy.length > 0) {
             msgEmbed.addFields({
                 name: `**Buy Price**`,
-                value: `${buy
-                    .map(
-                        (b: { price: number; currency: string }) =>
-                            `${client.utils.formatNumber(b.price)} ${b.currency}`
-                    )
-                    .join("\n")}`,
+                value: `${buy.map((b: { price: number; currency: string }) => `${client.utils.formatNumber(b.price)} ${b.currency}`).join("\n")}`,
                 inline: true
             });
         }
@@ -50,16 +43,13 @@ export const furniture = async (client: Client, interaction: CommandInteraction)
         if (variations.length > 1) {
             msgEmbed.addFields({
                 name: `**Variations [${variations.length}]**`,
-                value: `${variations
-                    .map((v: { variation: string }) => `${v.variation}`)
-                    .join(", ")}`,
+                value: `${variations.map((v: { variation: string }) => `${v.variation}`).join(", ")}`,
                 inline: true
             });
         }
 
         return interaction.editReply({ embeds: [msgEmbed] });
-    }
-    catch (e) {
+    } catch (e) {
         client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
         return interaction.editReply({
             content: "An error has occurred. Please try again."
@@ -68,14 +58,11 @@ export const furniture = async (client: Client, interaction: CommandInteraction)
 };
 
 const fetchFurniture = async (name: string) => {
-    const resp = await axios.get(
-        `https://api.nookipedia.com/nh/furniture/${encodeURIComponent(name.toLowerCase())}`,
-        {
-            headers: {
-                "X-API-KEY": `${process.env.NOOK_API_KEY}`,
-                "Accept-Version": "2.0.0"
-            }
+    const resp = await axios.get(`https://api.nookipedia.com/nh/furniture/${encodeURIComponent(name.toLowerCase())}`, {
+        headers: {
+            "X-API-KEY": `${process.env.NOOK_API_KEY}`,
+            "Accept-Version": "2.0.0"
         }
-    );
+    });
     return resp.data;
-}
+};

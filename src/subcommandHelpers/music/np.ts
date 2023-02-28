@@ -1,6 +1,6 @@
 import { Client } from "../../util/client";
 import { MUSIC_COMMANDS } from "../../../config/embedColours.json";
-import { ColorResolvable, CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
+import { ColorResolvable, CommandInteraction, GuildMember } from "discord.js";
 
 export const np = async (client: Client, interaction: CommandInteraction) => {
     const { guild } = interaction;
@@ -19,10 +19,13 @@ export const np = async (client: Client, interaction: CommandInteraction) => {
         const nextTrack = queue.tracks[0];
         const { current } = queue;
 
-        const msgEmbed = new MessageEmbed()
-            .setAuthor({ name: "Currently Playing", iconURL: client.utils.getGuildIcon(guild!)! })
+        const msgEmbed = client.utils
+            .createEmbed()
+            .setAuthor({ name: "Currently Playing", iconURL: client.utils.getGuildIcon(guild!) })
             .setColor(MUSIC_COMMANDS as ColorResolvable)
-            .setDescription(`🎶 | **${current.title}** (\`${percent.progress}%\`)\n\n**Up Next: ** ${nextTrack ? `\`${nextTrack.title}\`` : "Nothing"}`)
+            .setDescription(
+                `🎶 | **${current.title}** (\`${percent.progress}%\`)\n\n**Up Next: ** ${nextTrack ? `\`${nextTrack.title}\`` : "Nothing"}`
+            )
             .setThumbnail(current.thumbnail)
             .addField("\u200b", progress)
             .setFooter({

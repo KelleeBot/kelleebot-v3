@@ -1,7 +1,7 @@
-import { CommandInteraction } from "discord.js";
+import { Constants } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
-import { COMPLIMENTS } from "../../../config/compliments.json"
+import { COMPLIMENTS } from "../../../config/compliments.json";
 
 export default class Ty extends KelleeBotCommand {
     constructor(client: Client) {
@@ -15,13 +15,14 @@ export default class Ty extends KelleeBotCommand {
                 {
                     name: "person",
                     description: "The person you want to thank.",
-                    type: "USER"
-                }],
+                    type: Constants.ApplicationCommandOptionTypes.USER
+                }
+            ],
             execute: async ({ client, interaction }) => {
                 try {
                     this.setCooldown(interaction);
-                    const person = interaction.options.getUser("person");
-                    const compliment = COMPLIMENTS.random().format(person ? person.tag : interaction.user.tag);
+                    const person = interaction.options.getUser("person") ?? interaction.user;
+                    const compliment = COMPLIMENTS.random().format(person.tag);
                     return await interaction.reply({ content: compliment });
                 } catch (e) {
                     client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
@@ -30,4 +31,4 @@ export default class Ty extends KelleeBotCommand {
             }
         });
     }
-};
+}

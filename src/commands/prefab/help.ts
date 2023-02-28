@@ -1,4 +1,4 @@
-import { CommandInteraction } from "discord.js";
+import { Constants, CommandInteraction } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 
@@ -8,12 +8,12 @@ export default class Help extends KelleeBotCommand {
             name: "help",
             description: "Get help on commands",
             category: "Misc",
-            clientPerms: ['SEND_MESSAGES', 'EMBED_LINKS'],
+            clientPerms: ["SEND_MESSAGES", "EMBED_LINKS"],
             options: [
                 {
                     name: "name",
                     description: "A category or command name",
-                    type: "STRING"
+                    type: Constants.ApplicationCommandOptionTypes.STRING
                 }
             ],
             guildOnly: false,
@@ -36,7 +36,7 @@ export default class Help extends KelleeBotCommand {
 
                 const category = client.categories.get(name);
 
-                const embed = (await client.utils.CustomEmbed({ userID: interaction.user.id }));
+                const embed = await client.utils.CustomEmbed({ userID: interaction.user.id });
 
                 //@ts-ignore
                 if (command && !command.hideCommand && !(command.nsfw && !interaction.channel.nsfw)) {
@@ -67,7 +67,7 @@ export default class Help extends KelleeBotCommand {
                     embed
                         .setTitle(category[0])
                         .setTimestamp()
-                        .setDescription('`' + category.slice(1).join('`, `') + '`');
+                        .setDescription("`" + category.slice(1).join("`, `") + "`");
 
                     await interaction.reply({ embeds: [embed] });
                 } else defaultHelp(client, interaction, languageHelp);
@@ -79,10 +79,10 @@ export default class Help extends KelleeBotCommand {
 async function defaultHelp(client: Client, interaction: CommandInteraction, languageHelp: any) {
     const embed = (await client.utils.CustomEmbed({ userID: interaction.user.id }))
         .setTitle(languageHelp.commandCategories)
-        .setDescription(languageHelp.categoriesHelp,)
+        .setDescription(languageHelp.categoriesHelp)
         .setTimestamp()
         .setThumbnail(client.user!.displayAvatarURL())
-        .addField(languageHelp.categoriesName, client.categories.map(c => '> ' + languageHelp.categories[c[0]]).join('\n\n'));
+        .addField(languageHelp.categoriesName, client.categories.map((c) => "> " + languageHelp.categories[c[0]]).join("\n\n"));
 
     await interaction.reply({ embeds: [embed] });
 }

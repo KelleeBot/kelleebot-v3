@@ -30,8 +30,7 @@ export const play = async (client: Client, interaction: CommandInteraction) => {
         });
 
         try {
-            if (!queue.connection)
-                await queue.connect(member.voice.channel);
+            if (!queue.connection) await queue.connect(member.voice.channel);
         } catch (e) {
             client.player.deleteQueue(interaction.guildId!);
             return await interaction.reply({ content: "❌ | I could not join your voice channel.", ephemeral: true });
@@ -42,24 +41,22 @@ export const play = async (client: Client, interaction: CommandInteraction) => {
             searchEngine: query.includes("soundcloud") ? QueryType.SOUNDCLOUD : QueryType.AUTO
         });
 
-        if (!searchResult)
-            return await interaction.reply({ content: `❌ | No results were found for "${query}".`, ephemeral: true });
+        if (!searchResult) return await interaction.reply({ content: `❌ | No results were found for "${query}".`, ephemeral: true });
 
         await interaction.reply({ content: `⏱ | Loading your ${searchResult.playlist ? "playlist" : "track"}...` });
 
-        searchResult.playlist
-            ? queue.addTracks(searchResult.tracks)
-            : queue.addTrack(searchResult.tracks[0]);
+        searchResult.playlist ? queue.addTracks(searchResult.tracks) : queue.addTrack(searchResult.tracks[0]);
 
         await interaction.editReply({
             content: `Successfully loaded ${searchResult.playlist
                 ? `playlist **${searchResult.playlist.title}**`
-                : `track **${searchResult.tracks[0].title} - ${searchResult.tracks[0].author}**`}`
+                : `track **${searchResult.tracks[0].title} - ${searchResult.tracks[0].author}**`
+                }`
         });
 
         if (!queue.playing) await queue.play();
     } catch (e) {
         client.utils.log("ERROR", `${__filename}`, `An error has occurred: ${e}`);
-        return await interaction.reply({ content: "An error has occurred. Please try again.", ephemeral: true });
+        return await interaction.editReply({ content: "An error has occurred. Please try again." });
     }
-}
+};

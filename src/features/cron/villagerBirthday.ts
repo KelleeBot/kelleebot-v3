@@ -1,14 +1,16 @@
 import cron from "cron";
 import axios from "axios";
 import { DateTime } from "luxon";
-import { MessageEmbed, TextChannel } from "discord.js";
+import { TextChannel } from "discord.js";
 import { Client } from "../../util/client";
 import { Villagers } from "../../types/animalCrossing";
 
 export default (client: Client) => {
     new cron.CronJob(
         "00 00 08 * * *",
-        () => { execute(client) },
+        () => {
+            execute(client);
+        },
         null,
         true,
         "America/Denver"
@@ -23,7 +25,10 @@ const execute = async (client: Client) => {
     if (!channel) return;
 
     try {
-        const resp = await axios.get(`https://api.nookipedia.com/villagers?birthmonth=${encodeURIComponent(currentMonth)}&birthday=${encodeURIComponent(currentDay)}&nhdetails=true`,
+        const resp = await axios.get(
+            `https://api.nookipedia.com/villagers?birthmonth=${encodeURIComponent(currentMonth)}&birthday=${encodeURIComponent(
+                currentDay
+            )}&nhdetails=true`,
             {
                 headers: {
                     "X-API-KEY": `${process.env.NOOK_API_KEY}`,
@@ -38,12 +43,12 @@ const execute = async (client: Client) => {
         if (data.length > 1) {
             const embedArray = [];
             for (let i = 0; i < data.length; i++) {
-                let msgEmbed = createEmbed(data[i]);
+                let msgEmbed = createEmbed(client, data[i]);
                 embedArray.push(msgEmbed);
             }
             channel.send({ content: text, embeds: embedArray });
         } else {
-            const msgEmbed = createEmbed(data[0]);
+            const msgEmbed = createEmbed(client, data[0]);
             channel.send({ content: text, embeds: [msgEmbed] });
         }
     } catch (e) {
@@ -51,15 +56,14 @@ const execute = async (client: Client) => {
     }
 };
 
-const createEmbed = (data: Villagers) => {
-    const msgEmbed = new MessageEmbed()
+const createEmbed = (client: Client, data: Villagers) => {
+    return client.utils
+        .createEmbed()
         .setColor(data.title_color ? `#${data.title_color}` : "ORANGE")
         .setURL(data.url)
         .setAuthor({
             name: data.name,
-            iconURL: !data.nh_details
-                ? `${data.image_url}`
-                : `${data.nh_details.icon_url}`,
+            iconURL: !data.nh_details ? `${data.image_url}` : `${data.nh_details.icon_url}`,
             url: data.url
         })
         .setDescription(`More info about ${data.name} can be found [here](${data.url} "${data.name}").`)
@@ -100,5 +104,4 @@ const createEmbed = (data: Villagers) => {
             text: "Powered by Nookipedia",
             iconURL: "https://nookipedia.com/wikilogo.png"
         });
-    return msgEmbed;
 };

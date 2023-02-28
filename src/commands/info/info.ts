@@ -1,6 +1,7 @@
+import { Constants } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
-import { guild, user } from "../../subcommandHelpers/info";
+import { role, guild, user } from "../../subcommandHelpers/info";
 
 export default class Info extends KelleeBotCommand {
     constructor(client: Client) {
@@ -11,18 +12,19 @@ export default class Info extends KelleeBotCommand {
             cooldown: 15,
             clientPerms: ["SEND_MESSAGES", "EMBED_LINKS"],
             subcommands: {
-                user: {
-                    description: "Show information about yourself or another user.",
+                role: {
+                    description: "Show information about a role.",
                     options: [
                         {
-                            name: "user",
-                            description: "The other user to see information about.",
-                            type: "USER"
+                            name: "role",
+                            description: "The role to see information about.",
+                            type: Constants.ApplicationCommandOptionTypes.ROLE,
+                            required: true
                         }
                     ],
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
-                        await user(client, interaction);
+                        await role(client, interaction);
                     }
                 },
                 server: {
@@ -30,6 +32,20 @@ export default class Info extends KelleeBotCommand {
                     execute: async ({ client, interaction }) => {
                         await this.setCooldown(interaction);
                         await guild(client, interaction);
+                    }
+                },
+                user: {
+                    description: "Show information about yourself or another user.",
+                    options: [
+                        {
+                            name: "user",
+                            description: "The other user to see information about.",
+                            type: Constants.ApplicationCommandOptionTypes.USER
+                        }
+                    ],
+                    execute: async ({ client, interaction }) => {
+                        await this.setCooldown(interaction);
+                        await user(client, interaction);
                     }
                 }
             }

@@ -1,11 +1,12 @@
-import { ColorResolvable, GuildChannel, MessageEmbed, Role } from "discord.js";
+import { ColorResolvable, Role } from "discord.js";
 import { Client } from "../../util/client";
 import { ROLE_EVENTS } from "../../../config/embedColours.json";
 
 export default async (client: Client, oldRole: Role, newRole: Role) => {
-    const msgEmbed = new MessageEmbed()
+    const msgEmbed = client.utils
+        .createEmbed()
         .setColor(ROLE_EVENTS as ColorResolvable)
-        .setAuthor({ name: newRole.guild.name, iconURL: client.utils.getGuildIcon(newRole.guild)! })
+        .setAuthor({ name: newRole.guild.name, iconURL: client.utils.getGuildIcon(newRole.guild) })
         .setFooter({ text: `ID: ${newRole.id}` })
         .setTimestamp();
 
@@ -37,4 +38,4 @@ export default async (client: Client, oldRole: Role, newRole: Role) => {
         return client.utils.sendMessageToBotLog(client, newRole.guild, msgEmbed);
     }
     return;
-}
+};

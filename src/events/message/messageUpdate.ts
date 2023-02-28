@@ -1,4 +1,4 @@
-import { ColorResolvable, Message, MessageEmbed } from "discord.js";
+import { ColorResolvable, Message } from "discord.js";
 import { Client } from "../../util/client";
 import { MESSAGE_EVENTS } from "../../../config/embedColours.json";
 
@@ -9,7 +9,8 @@ export default async (client: Client, oldMsg: Message, newMsg: Message) => {
     if (!oldMsg.guild || !newMsg.guild) return;
     if (newMsg.pinned) return;
 
-    const msgEmbed = new MessageEmbed()
+    const msgEmbed = client.utils
+        .createEmbed()
         .setColor(MESSAGE_EVENTS as ColorResolvable)
         .setTimestamp();
 
@@ -27,11 +28,7 @@ export default async (client: Client, oldMsg: Message, newMsg: Message) => {
             msgEmbed.addFields(
                 {
                     name: "**Old Message**",
-                    value: !oldMsg.content
-                        ? "Unknown"
-                        : oldMsg.content.length > 1024
-                            ? "Message too long."
-                            : oldMsg.content
+                    value: !oldMsg.content ? "Unknown" : oldMsg.content.length > 1024 ? "Message too long." : oldMsg.content
                 },
                 { name: "**New Message**", value: newMsg.content.length > 1024 ? "Message too long." : newMsg.content }
             );

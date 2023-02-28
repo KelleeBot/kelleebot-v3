@@ -2,7 +2,7 @@ import { model, Schema } from "mongoose";
 
 const scams = new Schema(
     {
-        _id: String,
+        _id: String
     },
     { strict: false }
 );

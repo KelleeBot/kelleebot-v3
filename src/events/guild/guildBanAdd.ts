@@ -1,11 +1,12 @@
-import { ColorResolvable, GuildBan, MessageEmbed, User } from "discord.js";
+import { ColorResolvable, GuildBan, User } from "discord.js";
 import { Client } from "../../util/client";
-import { GUILD_BAN_ADD } from "../../../config/embedColours.json"
+import { GUILD_BAN_ADD } from "../../../config/embedColours.json";
 
 export default async (client: Client, guildBan: GuildBan) => {
-    const msgEmbed = new MessageEmbed()
+    const msgEmbed = client.utils
+        .createEmbed()
         .setColor(GUILD_BAN_ADD as ColorResolvable)
-        .setAuthor({ name: guildBan.guild.name, iconURL: client.utils.getGuildIcon(guildBan.guild)! })
+        .setAuthor({ name: guildBan.guild.name, iconURL: client.utils.getGuildIcon(guildBan.guild) })
         .setFooter({ text: `ID: ${guildBan.user.id}` })
         .setTimestamp();
 
@@ -17,7 +18,7 @@ export default async (client: Client, guildBan: GuildBan) => {
 
     const banLog = fetchedLogs.entries.first();
     if (!banLog) {
-        msgEmbed.setDescription(`**${guildBan.user.tag} has been banned from the server**`);;
+        msgEmbed.setDescription(`**${guildBan.user.tag} has been banned from the server**`);
         return client.utils.sendMessageToBotLog(client, guildBan.guild, msgEmbed);
     }
 

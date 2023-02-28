@@ -7,7 +7,7 @@ export default class Ping extends KelleeBotCommand {
             name: "ping",
             description: "Get the bots current ping",
             category: "Misc",
-            clientPerms: ['SEND_MESSAGES', 'EMBED_LINKS'],
+            clientPerms: ["SEND_MESSAGES", "EMBED_LINKS"],
             cooldown: 5,
             execute: async ({ client, interaction }) => {
                 await this.setCooldown(interaction);

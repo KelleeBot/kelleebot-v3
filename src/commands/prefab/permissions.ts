@@ -1,46 +1,46 @@
-import { MessageActionRow, MessageButton } from "discord.js";
+import { Constants } from "discord.js";
 import { Client } from "../../util/client";
 import { KelleeBotCommand } from "../../util/command";
 
-const permissions: { [key: string]: string; } = {
-    'a': 'CREATE_INSTANT_INVITE',
-    'b': 'KICK_MEMBERS',
-    'c': 'BAN_MEMBERS',
-    'd': 'ADMINISTRATOR',
-    'e': 'MODERATE_MEMBERS',
-    'f': 'MANAGE_CHANNELS',
-    'g': 'MANAGE_GUILD',
-    'h': 'ADD_REACTIONS',
-    'i': 'VIEW_AUDIT_LOG',
-    'j': 'PRIORITY_SPEAKER',
-    'k': 'STREAM',
-    'l': 'VIEW_CHANNEL',
-    'm': 'SEND_MESSAGES',
-    'n': 'SEND_TTS_MESSAGES',
-    'o': 'MANAGE_MESSAGES',
-    'p': 'EMBED_LINKS',
-    'q': 'ATTACH_FILES',
-    'r': 'READ_MESSAGE_HISTORY',
-    's': 'MENTION_EVERYONE',
-    't': 'USE_EXTERNAL_EMOJIS',
-    'u': 'VIEW_GUILD_INSIGHTS',
-    'v': 'CONNECT',
-    'w': 'SPEAK',
-    'x': 'MUTE_MEMBERS',
-    'y': 'DEAFEN_MEMBERS',
-    'z': 'MOVE_MEMBERS',
-    '0': 'USE_VAD',
-    '1': 'CHANGE_NICKNAME',
-    '2': 'MANAGE_NICKNAMES',
-    '3': 'MANAGE_ROLES',
-    '4': 'MANAGE_WEBHOOKS',
-    '5': 'MANAGE_EMOJIS_AND_STICKERS',
-    '6': 'USE_APPLICATION_COMMANDS',
-    '7': 'REQUEST_TO_SPEAK',
-    '8': 'MANAGE_THREADS',
-    '9': 'USE_PUBLIC_THREADS',
-    '.': 'USE_PRIVATE_THREADS',
-    ',': 'USE_EXTERNAL_STICKERS'
+const permissions: { [key: string]: string } = {
+    a: "CREATE_INSTANT_INVITE",
+    b: "KICK_MEMBERS",
+    c: "BAN_MEMBERS",
+    d: "ADMINISTRATOR",
+    e: "MODERATE_MEMBERS",
+    f: "MANAGE_CHANNELS",
+    g: "MANAGE_GUILD",
+    h: "ADD_REACTIONS",
+    i: "VIEW_AUDIT_LOG",
+    j: "PRIORITY_SPEAKER",
+    k: "STREAM",
+    l: "VIEW_CHANNEL",
+    m: "SEND_MESSAGES",
+    n: "SEND_TTS_MESSAGES",
+    o: "MANAGE_MESSAGES",
+    p: "EMBED_LINKS",
+    q: "ATTACH_FILES",
+    r: "READ_MESSAGE_HISTORY",
+    s: "MENTION_EVERYONE",
+    t: "USE_EXTERNAL_EMOJIS",
+    u: "VIEW_GUILD_INSIGHTS",
+    v: "CONNECT",
+    w: "SPEAK",
+    x: "MUTE_MEMBERS",
+    y: "DEAFEN_MEMBERS",
+    z: "MOVE_MEMBERS",
+    "0": "USE_VAD",
+    "1": "CHANGE_NICKNAME",
+    "2": "MANAGE_NICKNAMES",
+    "3": "MANAGE_ROLES",
+    "4": "MANAGE_WEBHOOKS",
+    "5": "MANAGE_EMOJIS_AND_STICKERS",
+    "6": "USE_APPLICATION_COMMANDS",
+    "7": "REQUEST_TO_SPEAK",
+    "8": "MANAGE_THREADS",
+    "9": "USE_PUBLIC_THREADS",
+    ".": "USE_PRIVATE_THREADS",
+    ",": "USE_EXTERNAL_STICKERS"
 };
 const permsRegEx = /^[0-9a-z\,\.]{1,31}$/i;
 
@@ -55,11 +55,11 @@ export default class Permissions extends KelleeBotCommand {
                 {
                     name: "command",
                     description: "The command you want to change permissions for",
-                    type: "STRING",
+                    type: Constants.ApplicationCommandOptionTypes.STRING,
                     required: true
                 }
             ],
-            clientPerms: ['SEND_MESSAGES', 'EMBED_LINKS', 'ADD_REACTIONS'],
+            clientPerms: ["SEND_MESSAGES", "EMBED_LINKS", "ADD_REACTIONS"],
             cooldown: 5,
             execute: async ({ client, interaction }) => {
                 await this.setCooldown(interaction);
@@ -78,26 +78,30 @@ export default class Permissions extends KelleeBotCommand {
                 const embed = (await client.utils.CustomEmbed({ userID: interaction.user.id }))
                     .setTimestamp()
                     .setTitle(`Command permissions for: ${command.name}`)
-                    .setFooter({ text: 'React with 🔁 to override the permissions.' });
+                    .setFooter({ text: "React with 🔁 to override the permissions." });
 
                 const guildInfo = await client.guildInfo.get(interaction.guildId!);
 
                 if (!guildInfo?.commandPerms || !guildInfo.commandPerms[command.name]) {
-                    if (command.perms && command.perms.length !== 0) embed.setDescription('\`' + command.perms.join('\`, \`') + '\`');
+                    if (command.perms && command.perms.length !== 0) embed.setDescription("`" + command.perms.join("`, `") + "`");
                     else embed.setDescription(`${interaction.user}, you don't need any permissions to run this command.`);
                 } else {
-                    embed.setDescription('\`' + guildInfo.commandPerms[command.name].join('\`, \`') + '\`');
+                    embed.setDescription("`" + guildInfo.commandPerms[command.name].join("`, `") + "`");
                 }
 
                 const msg = await client.utils.fetchReply(interaction, {
-                    embeds: [embed], components: [
-                        new MessageActionRow().addComponents([
-                            new MessageButton().setCustomId("change").setLabel("Change permissions").setStyle("PRIMARY")
-                        ])
+                    embeds: [embed],
+                    components: [
+                        client.utils
+                            .createActionRow()
+                            .addComponents([client.utils.createButton().setCustomId("change").setLabel("Change permissions").setStyle("PRIMARY")])
                     ]
                 });
 
-                const button = await msg.awaitMessageComponent({ filter: (b) => b.customId === "change" && b.user.id === interaction.user.id, time: 30000 });
+                const button = await msg.awaitMessageComponent({
+                    filter: (b) => b.customId === "change" && b.user.id === interaction.user.id,
+                    time: 30000
+                });
 
                 let text = "";
 
@@ -106,8 +110,10 @@ export default class Permissions extends KelleeBotCommand {
                 for (const perm of perms) text += `\`${perm[0]}\` - \`${perm[1]}\`\n`;
 
                 embed
-                    .setDescription(`${interaction.user}, reply with the permissions that you want users to have in order to use this command, e.g.: \`cd2\` If you want them to have the permissions to kick members, ban members and manage roles in order to use this command.\nReply with \`clear\` to reset permissions.`)
-                    .addField('Permissions', text);
+                    .setDescription(
+                        `${interaction.user}, reply with the permissions that you want users to have in order to use this command, e.g.: \`cd2\` If you want them to have the permissions to kick members, ban members and manage roles in order to use this command.\nReply with \`clear\` to reset permissions.`
+                    )
+                    .addField("Permissions", text);
 
                 await button.update({ embeds: [embed], components: [] });
 
@@ -139,7 +145,7 @@ export default class Permissions extends KelleeBotCommand {
                         return await button.editReply({ embeds: [embed] });
                     }
 
-                    const permsArray: string[] = []
+                    const permsArray: string[] = [];
                     for (let i = 0; i < content.length; i++) {
                         if (permsArray.includes(permissions[content[i]])) continue;
                         permsArray.push(permissions[content[i]]);
