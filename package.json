@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "rm -rf ./js/ && tsc",
+    "clean": "tsc --build --clean",
     "start": "prettier --config .prettierrc \"src/**/*.ts\" --write && ts-node ./src/index.ts",
     "run-js": "tsc -p . && node ./dist/src/index.js",
     "compile": "tsc -p .",
@@ -28,7 +30,7 @@
     "discord-api-types": "^0.30.0",
     "discord-giveaways": "^5.1.1",
     "discord-player": "^5.2.2",
-    "discord.js": "^13.6.0",
+    "discord.js": "^13.3.1",
     "dotenv": "^16.0.0",
     "ffmpeg": "^0.0.4",
     "ffmpeg-static": "^5.0.0",
