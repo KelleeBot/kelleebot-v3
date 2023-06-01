@@ -13,7 +13,7 @@ export default class Language extends KelleeBotCommand {
                 {
                     name: "language",
                     description: "The language you want",
-                    type: Constants.ApplicationCommandOptionTypes.STRING
+                    type: "STRING"
                 }
             ],
             execute: async ({ client, interaction }) => {

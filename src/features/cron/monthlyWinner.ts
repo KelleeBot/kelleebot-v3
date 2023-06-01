@@ -79,13 +79,13 @@ const sendDM = async (client: Client, guildInfo: Guild, userID: Snowflake, month
         .setDescription(
             stripIndents`
             Congratulations! You have the most points for the month of ${month} with ${points.toLocaleString()} points and have won a free month of Discord Nitro!
-            
+
             To claim it, please click [here](${nitroLink}).
-            
+
             Please contact <@464635440801251328> if you encounter any problems.
-            
+
             Fun fact: With Discord Nitro, you have two free server boosts to any server you like.
-            
+
             Enjoy the Nitro!`
         )
         .setThumbnail("https://www.howtogeek.com/wp-content/uploads/2020/04/Discord-Nitro-Banner-Image.jpg")

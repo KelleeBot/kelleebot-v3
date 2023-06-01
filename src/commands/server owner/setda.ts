@@ -13,7 +13,7 @@ export default class Setda extends KelleeBotCommand {
                 {
                     name: "address",
                     description: "Your ACNH dreama ddress.",
-                    type: Constants.ApplicationCommandOptionTypes.STRING,
+                    type: "STRING",
                     required: true
                 }
             ],
