@@ -62,7 +62,7 @@ export default class Scams extends KelleeBotCommand {
 
             case "list":
               const content = `Here are all the scam links currently added:\n${scams.links
-                .map((link) => `• ${link}`)
+                .map((link) => `- ${link}`)
                 .join("\n")}`;
               if (content.length < 2000) {
                 await interaction.reply({ content, ephemeral: true });

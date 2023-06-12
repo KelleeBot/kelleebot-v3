@@ -32,8 +32,8 @@ export default async (client: Client, interaction: Interaction) => {
                 const allRemoved = currentRoles.filter((val) => removedRoles.includes(val));
                 const allAdded = addedRoles.filter((val) => !currentRoles.includes(val));
 
-                const addedMsg = allAdded.length ? `\n**Added:**\n${allAdded.map((r) => `• <@&${r}>`).join("\n")}` : "";
-                const removedMsg = allRemoved.length ? `\n**Removed:**\n${allRemoved.map((r) => `• <@&${r}>`).join("\n")}` : "";
+                const addedMsg = allAdded.length ? `\n**Added:**\n${allAdded.map((r) => `- <@&${r}>`).join("\n")}` : "";
+                const removedMsg = allRemoved.length ? `\n**Removed:**\n${allRemoved.map((r) => `- <@&${r}>`).join("\n")}` : "";
                 return interaction.reply({
                     content: `Your roles have been updated!${addedMsg}${removedMsg}`,
                     ephemeral: true,
@@ -46,7 +46,7 @@ export default async (client: Client, interaction: Interaction) => {
                 const roles = member.roles.cache
                     .sort((a, b) => b.position - a.position)
                     .filter((r) => r.name !== "@everyone")
-                    .map((r) => `• ${r.name}`);
+                    .map((r) => `- ${r.name}`);
                 return interaction.reply({
                     content: `Here are all your roles for **${member.guild.name}**:\n${roles.join("\n")}`,
                     ephemeral: true

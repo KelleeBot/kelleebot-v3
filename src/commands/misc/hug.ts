@@ -34,7 +34,7 @@ export default class Hug extends KelleeBotCommand {
             });
 
           return await interaction.reply({
-            content: `**${interaction.user.tag}** hugs **${person}**. I love you ʕっ•ᴥ•ʔっ ${hugEmoji}`
+            content: `**${interaction.user.tag}** hugs **${person}**. I love you ʕっ-ᴥ-ʔっ ${hugEmoji}`
           });
         } catch (e) {
           client.utils.log(

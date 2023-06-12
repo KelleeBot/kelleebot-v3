@@ -134,10 +134,10 @@ const embedFromIncident = (client: Client, incident: StatusPageIncident) => {
     });
   }
 
-  const descriptionParts = [`• Impact: ${incident.impact}`];
+  const descriptionParts = [`- Impact: ${incident.impact}`];
 
   if (affectedNames.length) {
-    descriptionParts.push(`• Affected Components: ${affectedNames.join(", ")}`);
+    descriptionParts.push(`- Affected Components: ${affectedNames.join(", ")}`);
   }
 
   embed.setDescription(descriptionParts.join("\n"));
